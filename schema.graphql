@@ -1,0 +1,14 @@
+type Account @entity {
+  id: ID! # account address
+  soul: Soul!
+}
+
+type Soul @entity {
+  id: ID!
+  owner: String! # account address
+  uri: String # metadata uri
+  uriData: Bytes
+  uriImage: String
+  uriFirstName: String
+  uriLastName: String
+}
