@@ -51,6 +51,29 @@ dataSources:
         - event: ContractCreated(string,indexed address)
           handler: handleContractCreated
       file: ./src/handlers/hubHandlers.ts
+  # Open repo contract
+  - kind: ethereum
+    name: OpenRepo
+    network: optimism-kovan
+    source:
+      address: "0xFF20BA5dcD0485e2587F1a75117c0fc80941B61C"
+      abi: OpenRepo
+      startBlock: 4915276
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Game
+      abis:
+        - name: OpenRepo
+          file: ./abis/OpenRepo.json
+        - name: Game
+          file: ./abis/Game.json
+      eventHandlers:
+        - event: StringSet(address,string,string)
+          handler: handleStringSet
+      file: ./src/handlers/openRepoHandlers.ts
 templates:
   # Game contract template
   - kind: ethereum

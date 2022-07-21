@@ -16,6 +16,7 @@ type Soul @entity {
 type Game @entity {
   id: ID! # contract address
   name: String!
+  type: String
   uri: String # metadata uri
   uriData: Bytes
 }
