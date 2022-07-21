@@ -6,6 +6,7 @@ type Account @entity {
 type Soul @entity {
   id: ID!
   owner: String! # account address
+  type: String! # type to determine that the entity is created by an account or contract
   uri: String # metadata uri
   uriData: Bytes
   uriImage: String

@@ -60,6 +60,7 @@ export class Soul extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("owner", Value.fromString(""));
+    this.set("type", Value.fromString(""));
   }
 
   save(): void {
@@ -94,6 +95,15 @@ export class Soul extends Entity {
 
   set owner(value: string) {
     this.set("owner", Value.fromString(value));
+  }
+
+  get type(): string {
+    let value = this.get("type");
+    return value!.toString();
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
   }
 
   get uri(): string | null {
@@ -273,6 +283,15 @@ export class Game extends Entity {
     } else {
       this.set("uriData", Value.fromBytes(<Bytes>value));
     }
+  }
+
+  get roles(): Array<string> {
+    let value = this.get("roles");
+    return value!.toStringArray();
+  }
+
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
   }
 }
 

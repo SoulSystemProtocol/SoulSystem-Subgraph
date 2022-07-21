@@ -27,6 +27,8 @@ dataSources:
           handler: handleTransfer
         - event: URI(string,indexed uint256)
           handler: handleURI
+        - event: SoulType(indexed uint256,string)
+          handler: handleSoulType
       file: ./src/handlers/soulHandlers.ts
   # Hub contract
   - kind: ethereum

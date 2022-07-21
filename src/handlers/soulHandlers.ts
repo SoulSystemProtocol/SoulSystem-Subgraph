@@ -1,6 +1,6 @@
 import { ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul } from "../../generated/schema";
-import { Transfer, URI } from "../../generated/Soul/Soul";
+import { SoulType, Transfer, URI } from "../../generated/Soul/Soul";
 import { addSoulToAccount } from "../utils";
 
 /**
@@ -11,6 +11,7 @@ export function handleTransfer(event: Transfer): void {
   let soul = Soul.load(event.params.tokenId.toString());
   if (!soul) {
     soul = new Soul(event.params.tokenId.toString());
+    soul.type = "";
   }
   // Update soul params
   soul.owner = event.params.to.toHexString();
@@ -78,5 +79,19 @@ export function handleURI(event: URI): void {
   soul.uriImage = uriJsonImageString;
   soul.uriFirstName = uriFirstNameString;
   soul.uriLastName = uriLastNameString;
+  soul.save();
+}
+
+/**
+ * Handle a soul type event to update a soul.
+ */
+export function handleSoulType(event: SoulType): void {
+  // Find entity and return if not found
+  let soul = Soul.load(event.params.tokenId.toString());
+  if (!soul) {
+    return;
+  }
+  // Update soul
+  soul.type = event.params.soulType;
   soul.save();
 }
