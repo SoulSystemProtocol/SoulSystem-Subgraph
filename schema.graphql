@@ -19,4 +19,13 @@ type Game @entity {
   type: String
   uri: String # metadata uri
   uriData: Bytes
+  roles: [GameRole!]! @derivedFrom(field: "game")
+}
+
+type GameRole @entity {
+  id: ID! # combination of game address and role id
+  game: Game!
+  roleId: BigInt!
+  souls: [String!]!
+  soulsCount: Int!
 }

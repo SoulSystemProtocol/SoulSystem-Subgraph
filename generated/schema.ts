@@ -275,3 +275,76 @@ export class Game extends Entity {
     }
   }
 }
+
+export class GameRole extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("game", Value.fromString(""));
+    this.set("roleId", Value.fromBigInt(BigInt.zero()));
+    this.set("souls", Value.fromStringArray(new Array(0)));
+    this.set("soulsCount", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GameRole entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type GameRole must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("GameRole", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GameRole | null {
+    return changetype<GameRole | null>(store.get("GameRole", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get game(): string {
+    let value = this.get("game");
+    return value!.toString();
+  }
+
+  set game(value: string) {
+    this.set("game", Value.fromString(value));
+  }
+
+  get roleId(): BigInt {
+    let value = this.get("roleId");
+    return value!.toBigInt();
+  }
+
+  set roleId(value: BigInt) {
+    this.set("roleId", Value.fromBigInt(value));
+  }
+
+  get souls(): Array<string> {
+    let value = this.get("souls");
+    return value!.toStringArray();
+  }
+
+  set souls(value: Array<string>) {
+    this.set("souls", Value.fromStringArray(value));
+  }
+
+  get soulsCount(): i32 {
+    let value = this.get("soulsCount");
+    return value!.toI32();
+  }
+
+  set soulsCount(value: i32) {
+    this.set("soulsCount", Value.fromI32(value));
+  }
+}
