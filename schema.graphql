@@ -12,3 +12,10 @@ type Soul @entity {
   uriFirstName: String
   uriLastName: String
 }
+
+type Game @entity {
+  id: ID! # contract address
+  name: String!
+  uri: String # metadata uri
+  uriData: Bytes
+}
