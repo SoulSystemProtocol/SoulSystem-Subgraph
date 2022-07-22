@@ -1,7 +1,13 @@
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
-import { GameRole } from "../../generated/schema";
+import {
+  Account,
+  GameNomination,
+  GameRole,
+  Soul,
+} from "../../generated/schema";
 import {
   ContractURI,
+  Nominate,
   TransferByToken,
 } from "../../generated/templates/Game/Game";
 import { getGame } from "../utils";
@@ -62,4 +68,30 @@ export function handleTransferByToken(event: TransferByToken): void {
     role.soulsCount = soulsCount;
     role.save();
   }
+}
+
+/**
+ * Handle a nominate event to create or update game nomination.
+ */
+export function handleNominate(event: Nominate): void {
+  // Get game
+  let game = getGame(event.address.toHexString());
+  // Skip if nominator account not exists
+  let nominatorAccount = Account.load(event.params.account.toHexString());
+  if (!nominatorAccount) {
+    return;
+  }
+  // Skip if nominated sou; not exists
+  let nominatedSoul = Soul.load(event.params.id.toString());
+  if (!nominatedSoul) {
+    return;
+  }
+  // Create nomination
+  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  let nomination = new GameNomination(nominationId);
+  nomination.game = game.id;
+  nomination.createdDate = event.block.timestamp;
+  nomination.nominator = nominatorAccount.soul;
+  nomination.nominated = nominatedSoul.id;
+  nomination.save();
 }

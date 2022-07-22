@@ -293,6 +293,15 @@ export class Game extends Entity {
   set roles(value: Array<string>) {
     this.set("roles", Value.fromStringArray(value));
   }
+
+  get nominations(): Array<string> {
+    let value = this.get("nominations");
+    return value!.toStringArray();
+  }
+
+  set nominations(value: Array<string>) {
+    this.set("nominations", Value.fromStringArray(value));
+  }
 }
 
 export class GameRole extends Entity {
@@ -365,5 +374,78 @@ export class GameRole extends Entity {
 
   set soulsCount(value: i32) {
     this.set("soulsCount", Value.fromI32(value));
+  }
+}
+
+export class GameNomination extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("game", Value.fromString(""));
+    this.set("createdDate", Value.fromBigInt(BigInt.zero()));
+    this.set("nominator", Value.fromString(""));
+    this.set("nominated", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GameNomination entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type GameNomination must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("GameNomination", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GameNomination | null {
+    return changetype<GameNomination | null>(store.get("GameNomination", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get game(): string {
+    let value = this.get("game");
+    return value!.toString();
+  }
+
+  set game(value: string) {
+    this.set("game", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt {
+    let value = this.get("createdDate");
+    return value!.toBigInt();
+  }
+
+  set createdDate(value: BigInt) {
+    this.set("createdDate", Value.fromBigInt(value));
+  }
+
+  get nominator(): string {
+    let value = this.get("nominator");
+    return value!.toString();
+  }
+
+  set nominator(value: string) {
+    this.set("nominator", Value.fromString(value));
+  }
+
+  get nominated(): string {
+    let value = this.get("nominated");
+    return value!.toString();
+  }
+
+  set nominated(value: string) {
+    this.set("nominated", Value.fromString(value));
   }
 }
