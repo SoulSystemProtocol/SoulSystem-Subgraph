@@ -9,9 +9,9 @@ dataSources:
     name: Soul
     network: optimism-kovan
     source:
-      address: "0x93f5D16e5c590849CdCb4c0CC5666C4c927c92B8"
+      address: "0x5d15e4713fA815D0E9c1B5186C80c689a9a6cA21"
       abi: Soul
-      startBlock: 4959545
+      startBlock: 5075112
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -35,9 +35,9 @@ dataSources:
     name: Hub
     network: optimism-kovan
     source:
-      address: "0x145b34E3BB516FBC47968984dbe0b463f03F32cF"
+      address: "0x274e54BFFDbb94442FC8Df155d47b42BEF90c76B"
       abi: Hub
-      startBlock: 4915350
+      startBlock: 5074998
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
