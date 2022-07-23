@@ -1002,6 +1002,21 @@ export class Game extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getRepoAddr(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   getTargetContract(): Address {
     let result = super.call(
       "getTargetContract",
@@ -1110,21 +1125,6 @@ export class Game extends ethereum.SmartContract {
 
   try_owner(): ethereum.CallResult<Address> {
     let result = super.tryCall("owner", "owner():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  repoAddr(): Address {
-    let result = super.call("repoAddr", "repoAddr():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_repoAddr(): ethereum.CallResult<Address> {
-    let result = super.tryCall("repoAddr", "repoAddr():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }

@@ -15,3 +15,13 @@ export class Game extends DataSourceTemplate {
     DataSourceTemplate.createWithContext("Game", [address.toHex()], context);
   }
 }
+
+export class Claim extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("Claim", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext("Claim", [address.toHex()], context);
+  }
+}

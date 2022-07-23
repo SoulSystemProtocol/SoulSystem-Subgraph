@@ -36,6 +36,28 @@ export class ApprovalForAll__Params {
   }
 }
 
+export class Cancelled extends ethereum.Event {
+  get params(): Cancelled__Params {
+    return new Cancelled__Params(this);
+  }
+}
+
+export class Cancelled__Params {
+  _event: Cancelled;
+
+  constructor(event: Cancelled) {
+    this._event = event;
+  }
+
+  get uri(): string {
+    return this._event.parameters[0].value.toString();
+  }
+
+  get account(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class ContractURI extends ethereum.Event {
   get params(): ContractURI__Params {
     return new ContractURI__Params(this);
@@ -54,29 +76,21 @@ export class ContractURI__Params {
   }
 }
 
-export class EffectsExecuted extends ethereum.Event {
-  get params(): EffectsExecuted__Params {
-    return new EffectsExecuted__Params(this);
+export class Executed extends ethereum.Event {
+  get params(): Executed__Params {
+    return new Executed__Params(this);
   }
 }
 
-export class EffectsExecuted__Params {
-  _event: EffectsExecuted;
+export class Executed__Params {
+  _event: Executed;
 
-  constructor(event: EffectsExecuted) {
+  constructor(event: Executed) {
     this._event = event;
   }
 
-  get targetTokenId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get ruleId(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get data(): Bytes {
-    return this._event.parameters[2].value.toBytes();
+  get account(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -165,44 +179,6 @@ export class Nominate__Params {
 
   get uri(): string {
     return this._event.parameters[2].value.toString();
-  }
-}
-
-export class OpinionChange extends ethereum.Event {
-  get params(): OpinionChange__Params {
-    return new OpinionChange__Params(this);
-  }
-}
-
-export class OpinionChange__Params {
-  _event: OpinionChange;
-
-  constructor(event: OpinionChange) {
-    this._event = event;
-  }
-
-  get chainId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get contractAddr(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get domain(): string {
-    return this._event.parameters[3].value.toString();
-  }
-
-  get rating(): boolean {
-    return this._event.parameters[4].value.toBoolean();
-  }
-
-  get score(): BigInt {
-    return this._event.parameters[5].value.toBigInt();
   }
 }
 
@@ -299,6 +275,64 @@ export class RoleURIChange__Params {
 
   get role(): string {
     return this._event.parameters[1].value.toString();
+  }
+}
+
+export class RuleAdded extends ethereum.Event {
+  get params(): RuleAdded__Params {
+    return new RuleAdded__Params(this);
+  }
+}
+
+export class RuleAdded__Params {
+  _event: RuleAdded;
+
+  constructor(event: RuleAdded) {
+    this._event = event;
+  }
+
+  get game(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get ruleId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class RuleConfirmed extends ethereum.Event {
+  get params(): RuleConfirmed__Params {
+    return new RuleConfirmed__Params(this);
+  }
+}
+
+export class RuleConfirmed__Params {
+  _event: RuleConfirmed;
+
+  constructor(event: RuleConfirmed) {
+    this._event = event;
+  }
+
+  get ruleId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class Stage extends ethereum.Event {
+  get params(): Stage__Params {
+    return new Stage__Params(this);
+  }
+}
+
+export class Stage__Params {
+  _event: Stage;
+
+  constructor(event: Stage) {
+    this._event = event;
+  }
+
+  get stage(): i32 {
+    return this._event.parameters[0].value.toI32();
   }
 }
 
@@ -460,35 +494,29 @@ export class URI__Params {
   }
 }
 
-export class Game__confirmationGetResultValue0Struct extends ethereum.Tuple {
-  get ruling(): string {
-    return this[0].toString();
-  }
-
-  get evidence(): boolean {
-    return this[1].toBoolean();
-  }
-
-  get witness(): BigInt {
-    return this[2].toBigInt();
+export class Verdict extends ethereum.Event {
+  get params(): Verdict__Params {
+    return new Verdict__Params(this);
   }
 }
 
-export class Game__effectsGetResultValue0Struct extends ethereum.Tuple {
-  get name(): string {
-    return this[0].toString();
+export class Verdict__Params {
+  _event: Verdict;
+
+  constructor(event: Verdict) {
+    this._event = event;
   }
 
-  get value(): i32 {
-    return this[1].toI32();
+  get uri(): string {
+    return this._event.parameters[0].value.toString();
   }
 
-  get direction(): boolean {
-    return this[2].toBoolean();
+  get account(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
-export class Game__ruleAddInputRuleStruct extends ethereum.Tuple {
+export class Claim__ruleGetResultValue0Struct extends ethereum.Tuple {
   get about(): Bytes {
     return this[0].toBytes();
   }
@@ -510,7 +538,7 @@ export class Game__ruleAddInputRuleStruct extends ethereum.Tuple {
   }
 }
 
-export class Game__ruleAddInputConfirmationStruct extends ethereum.Tuple {
+export class Claim__ruleGetConfirmationResultValue0Struct extends ethereum.Tuple {
   get ruling(): string {
     return this[0].toString();
   }
@@ -524,7 +552,7 @@ export class Game__ruleAddInputConfirmationStruct extends ethereum.Tuple {
   }
 }
 
-export class Game__ruleAddInputEffectsStruct extends ethereum.Tuple {
+export class Claim__ruleGetEffectsResultValue0Struct extends ethereum.Tuple {
   get name(): string {
     return this[0].toString();
   }
@@ -538,31 +566,9 @@ export class Game__ruleAddInputEffectsStruct extends ethereum.Tuple {
   }
 }
 
-export class Game__ruleGetResultValue0Struct extends ethereum.Tuple {
-  get about(): Bytes {
-    return this[0].toBytes();
-  }
-
-  get affected(): string {
-    return this[1].toString();
-  }
-
-  get negation(): boolean {
-    return this[2].toBoolean();
-  }
-
-  get uri(): string {
-    return this[3].toString();
-  }
-
-  get disabled(): boolean {
-    return this[4].toBoolean();
-  }
-}
-
-export class Game extends ethereum.SmartContract {
-  static bind(address: Address): Game {
-    return new Game("Game", address);
+export class Claim extends ethereum.SmartContract {
+  static bind(address: Address): Claim {
+    return new Claim("Claim", address);
   }
 
   GUIDHas(account: Address, guid: Bytes): boolean {
@@ -730,73 +736,6 @@ export class Game extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  claimHas(claimContract: Address): boolean {
-    let result = super.call("claimHas", "claimHas(address):(bool)", [
-      ethereum.Value.fromAddress(claimContract)
-    ]);
-
-    return result[0].toBoolean();
-  }
-
-  try_claimHas(claimContract: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("claimHas", "claimHas(address):(bool)", [
-      ethereum.Value.fromAddress(claimContract)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  confGet(key: string): string {
-    let result = super.call("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
-    ]);
-
-    return result[0].toString();
-  }
-
-  try_confGet(key: string): ethereum.CallResult<string> {
-    let result = super.tryCall("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toString());
-  }
-
-  confirmationGet(id: BigInt): Game__confirmationGetResultValue0Struct {
-    let result = super.call(
-      "confirmationGet",
-      "confirmationGet(uint256):((string,bool,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
-
-    return changetype<Game__confirmationGetResultValue0Struct>(
-      result[0].toTuple()
-    );
-  }
-
-  try_confirmationGet(
-    id: BigInt
-  ): ethereum.CallResult<Game__confirmationGetResultValue0Struct> {
-    let result = super.tryCall(
-      "confirmationGet",
-      "confirmationGet(uint256):((string,bool,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      changetype<Game__confirmationGetResultValue0Struct>(value[0].toTuple())
-    );
-  }
-
   contractURI(): string {
     let result = super.call("contractURI", "contractURI():(string)", []);
 
@@ -812,31 +751,23 @@ export class Game extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  effectsGet(id: BigInt): Array<Game__effectsGetResultValue0Struct> {
-    let result = super.call(
-      "effectsGet",
-      "effectsGet(uint256):((string,uint8,bool)[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
+  decision(param0: BigInt): boolean {
+    let result = super.call("decision", "decision(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
 
-    return result[0].toTupleArray<Game__effectsGetResultValue0Struct>();
+    return result[0].toBoolean();
   }
 
-  try_effectsGet(
-    id: BigInt
-  ): ethereum.CallResult<Array<Game__effectsGetResultValue0Struct>> {
-    let result = super.tryCall(
-      "effectsGet",
-      "effectsGet(uint256):((string,uint8,bool)[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
-    );
+  try_decision(param0: BigInt): ethereum.CallResult<boolean> {
+    let result = super.tryCall("decision", "decision(uint256):(bool)", [
+      ethereum.Value.fromUnsignedBigInt(param0)
+    ]);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      value[0].toTupleArray<Game__effectsGetResultValue0Struct>()
-    );
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   getExtTokenId(account: Address): BigInt {
@@ -875,131 +806,6 @@ export class Game extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  getRepForDomain(
-    contractAddr: Address,
-    tokenId: BigInt,
-    domain: string,
-    rating: boolean
-  ): BigInt {
-    let result = super.call(
-      "getRepForDomain",
-      "getRepForDomain(address,uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromAddress(contractAddr),
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRepForDomain(
-    contractAddr: Address,
-    tokenId: BigInt,
-    domain: string,
-    rating: boolean
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRepForDomain",
-      "getRepForDomain(address,uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromAddress(contractAddr),
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getRepForDomain1(
-    chainId: BigInt,
-    contractAddr: Address,
-    tokenId: BigInt,
-    domain: string,
-    rating: boolean
-  ): BigInt {
-    let result = super.call(
-      "getRepForDomain",
-      "getRepForDomain(uint256,address,uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromUnsignedBigInt(chainId),
-        ethereum.Value.fromAddress(contractAddr),
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRepForDomain1(
-    chainId: BigInt,
-    contractAddr: Address,
-    tokenId: BigInt,
-    domain: string,
-    rating: boolean
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRepForDomain",
-      "getRepForDomain(uint256,address,uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromUnsignedBigInt(chainId),
-        ethereum.Value.fromAddress(contractAddr),
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  getRepForDomain2(tokenId: BigInt, domain: string, rating: boolean): BigInt {
-    let result = super.call(
-      "getRepForDomain",
-      "getRepForDomain(uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_getRepForDomain2(
-    tokenId: BigInt,
-    domain: string,
-    rating: boolean
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getRepForDomain",
-      "getRepForDomain(uint256,string,bool):(uint256)",
-      [
-        ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getRepoAddr(): Address {
@@ -1070,36 +876,6 @@ export class Game extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  join(): BigInt {
-    let result = super.call("join", "join():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_join(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("join", "join():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  leave(): BigInt {
-    let result = super.call("leave", "leave():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_leave(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("leave", "leave():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   name(): string {
@@ -1251,70 +1027,108 @@ export class Game extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  ruleAdd(
-    rule: Game__ruleAddInputRuleStruct,
-    confirmation: Game__ruleAddInputConfirmationStruct,
-    effects: Array<Game__ruleAddInputEffectsStruct>
-  ): BigInt {
-    let result = super.call(
-      "ruleAdd",
-      "ruleAdd((bytes32,string,bool,string,bool),(string,bool,uint256),(string,uint8,bool)[]):(uint256)",
-      [
-        ethereum.Value.fromTuple(rule),
-        ethereum.Value.fromTuple(confirmation),
-        ethereum.Value.fromTupleArray(effects)
-      ]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_ruleAdd(
-    rule: Game__ruleAddInputRuleStruct,
-    confirmation: Game__ruleAddInputConfirmationStruct,
-    effects: Array<Game__ruleAddInputEffectsStruct>
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "ruleAdd",
-      "ruleAdd((bytes32,string,bool,string,bool),(string,bool,uint256),(string,uint8,bool)[]):(uint256)",
-      [
-        ethereum.Value.fromTuple(rule),
-        ethereum.Value.fromTuple(confirmation),
-        ethereum.Value.fromTupleArray(effects)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  ruleGet(id: BigInt): Game__ruleGetResultValue0Struct {
+  ruleGet(ruleRefId: BigInt): Claim__ruleGetResultValue0Struct {
     let result = super.call(
       "ruleGet",
       "ruleGet(uint256):((bytes32,string,bool,string,bool))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
     );
 
-    return changetype<Game__ruleGetResultValue0Struct>(result[0].toTuple());
+    return changetype<Claim__ruleGetResultValue0Struct>(result[0].toTuple());
   }
 
   try_ruleGet(
-    id: BigInt
-  ): ethereum.CallResult<Game__ruleGetResultValue0Struct> {
+    ruleRefId: BigInt
+  ): ethereum.CallResult<Claim__ruleGetResultValue0Struct> {
     let result = super.tryCall(
       "ruleGet",
       "ruleGet(uint256):((bytes32,string,bool,string,bool))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<Game__ruleGetResultValue0Struct>(value[0].toTuple())
+      changetype<Claim__ruleGetResultValue0Struct>(value[0].toTuple())
     );
+  }
+
+  ruleGetConfirmation(
+    ruleRefId: BigInt
+  ): Claim__ruleGetConfirmationResultValue0Struct {
+    let result = super.call(
+      "ruleGetConfirmation",
+      "ruleGetConfirmation(uint256):((string,bool,uint256))",
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
+    );
+
+    return changetype<Claim__ruleGetConfirmationResultValue0Struct>(
+      result[0].toTuple()
+    );
+  }
+
+  try_ruleGetConfirmation(
+    ruleRefId: BigInt
+  ): ethereum.CallResult<Claim__ruleGetConfirmationResultValue0Struct> {
+    let result = super.tryCall(
+      "ruleGetConfirmation",
+      "ruleGetConfirmation(uint256):((string,bool,uint256))",
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<Claim__ruleGetConfirmationResultValue0Struct>(
+        value[0].toTuple()
+      )
+    );
+  }
+
+  ruleGetEffects(
+    ruleRefId: BigInt
+  ): Array<Claim__ruleGetEffectsResultValue0Struct> {
+    let result = super.call(
+      "ruleGetEffects",
+      "ruleGetEffects(uint256):((string,uint8,bool)[])",
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
+    );
+
+    return result[0].toTupleArray<Claim__ruleGetEffectsResultValue0Struct>();
+  }
+
+  try_ruleGetEffects(
+    ruleRefId: BigInt
+  ): ethereum.CallResult<Array<Claim__ruleGetEffectsResultValue0Struct>> {
+    let result = super.tryCall(
+      "ruleGetEffects",
+      "ruleGetEffects(uint256):((string,uint8,bool)[])",
+      [ethereum.Value.fromUnsignedBigInt(ruleRefId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      value[0].toTupleArray<Claim__ruleGetEffectsResultValue0Struct>()
+    );
+  }
+
+  stage(): i32 {
+    let result = super.call("stage", "stage():(uint8)", []);
+
+    return result[0].toI32();
+  }
+
+  try_stage(): ethereum.CallResult<i32> {
+    let result = super.tryCall("stage", "stage():(uint8)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
   supportsInterface(interfaceId: Bytes): boolean {
@@ -1467,134 +1281,6 @@ export class Game extends ethereum.SmartContract {
   }
 }
 
-export class DefaultCall extends ethereum.Call {
-  get inputs(): DefaultCall__Inputs {
-    return new DefaultCall__Inputs(this);
-  }
-
-  get outputs(): DefaultCall__Outputs {
-    return new DefaultCall__Outputs(this);
-  }
-}
-
-export class DefaultCall__Inputs {
-  _call: DefaultCall;
-
-  constructor(call: DefaultCall) {
-    this._call = call;
-  }
-}
-
-export class DefaultCall__Outputs {
-  _call: DefaultCall;
-
-  constructor(call: DefaultCall) {
-    this._call = call;
-  }
-}
-
-export class ClaimDisableCall extends ethereum.Call {
-  get inputs(): ClaimDisableCall__Inputs {
-    return new ClaimDisableCall__Inputs(this);
-  }
-
-  get outputs(): ClaimDisableCall__Outputs {
-    return new ClaimDisableCall__Outputs(this);
-  }
-}
-
-export class ClaimDisableCall__Inputs {
-  _call: ClaimDisableCall;
-
-  constructor(call: ClaimDisableCall) {
-    this._call = call;
-  }
-
-  get claimContract(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class ClaimDisableCall__Outputs {
-  _call: ClaimDisableCall;
-
-  constructor(call: ClaimDisableCall) {
-    this._call = call;
-  }
-}
-
-export class ConfSetCall extends ethereum.Call {
-  get inputs(): ConfSetCall__Inputs {
-    return new ConfSetCall__Inputs(this);
-  }
-
-  get outputs(): ConfSetCall__Outputs {
-    return new ConfSetCall__Outputs(this);
-  }
-}
-
-export class ConfSetCall__Inputs {
-  _call: ConfSetCall;
-
-  constructor(call: ConfSetCall) {
-    this._call = call;
-  }
-
-  get key(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get value(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-}
-
-export class ConfSetCall__Outputs {
-  _call: ConfSetCall;
-
-  constructor(call: ConfSetCall) {
-    this._call = call;
-  }
-}
-
-export class EffectsExecuteCall extends ethereum.Call {
-  get inputs(): EffectsExecuteCall__Inputs {
-    return new EffectsExecuteCall__Inputs(this);
-  }
-
-  get outputs(): EffectsExecuteCall__Outputs {
-    return new EffectsExecuteCall__Outputs(this);
-  }
-}
-
-export class EffectsExecuteCall__Inputs {
-  _call: EffectsExecuteCall;
-
-  constructor(call: EffectsExecuteCall) {
-    this._call = call;
-  }
-
-  get ruleId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get targetContract(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get targetTokenId(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class EffectsExecuteCall__Outputs {
-  _call: EffectsExecuteCall;
-
-  constructor(call: EffectsExecuteCall) {
-    this._call = call;
-  }
-}
-
 export class InitializeCall extends ethereum.Call {
   get inputs(): InitializeCall__Inputs {
     return new InitializeCall__Inputs(this);
@@ -1612,8 +1298,8 @@ export class InitializeCall__Inputs {
     this._call = call;
   }
 
-  get gameType_(): string {
-    return this._call.inputValues[0].value.toString();
+  get container(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
   get name_(): string {
@@ -1660,66 +1346,6 @@ export class Initialize1Call__Outputs {
 
   constructor(call: Initialize1Call) {
     this._call = call;
-  }
-}
-
-export class JoinCall extends ethereum.Call {
-  get inputs(): JoinCall__Inputs {
-    return new JoinCall__Inputs(this);
-  }
-
-  get outputs(): JoinCall__Outputs {
-    return new JoinCall__Outputs(this);
-  }
-}
-
-export class JoinCall__Inputs {
-  _call: JoinCall;
-
-  constructor(call: JoinCall) {
-    this._call = call;
-  }
-}
-
-export class JoinCall__Outputs {
-  _call: JoinCall;
-
-  constructor(call: JoinCall) {
-    this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class LeaveCall extends ethereum.Call {
-  get inputs(): LeaveCall__Inputs {
-    return new LeaveCall__Inputs(this);
-  }
-
-  get outputs(): LeaveCall__Outputs {
-    return new LeaveCall__Outputs(this);
-  }
-}
-
-export class LeaveCall__Inputs {
-  _call: LeaveCall;
-
-  constructor(call: LeaveCall) {
-    this._call = call;
-  }
-}
-
-export class LeaveCall__Outputs {
-  _call: LeaveCall;
-
-  constructor(call: LeaveCall) {
-    this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
   }
 }
 
@@ -1821,44 +1447,6 @@ export class RenounceOwnershipCall__Outputs {
   }
 }
 
-export class ReportEventCall extends ethereum.Call {
-  get inputs(): ReportEventCall__Inputs {
-    return new ReportEventCall__Inputs(this);
-  }
-
-  get outputs(): ReportEventCall__Outputs {
-    return new ReportEventCall__Outputs(this);
-  }
-}
-
-export class ReportEventCall__Inputs {
-  _call: ReportEventCall;
-
-  constructor(call: ReportEventCall) {
-    this._call = call;
-  }
-
-  get ruleId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get detailsURI_(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-}
-
-export class ReportEventCall__Outputs {
-  _call: ReportEventCall;
-
-  constructor(call: ReportEventCall) {
-    this._call = call;
-  }
-}
-
 export class RoleAssignCall extends ethereum.Call {
   get inputs(): RoleAssignCall__Inputs {
     return new RoleAssignCall__Inputs(this);
@@ -1927,74 +1515,32 @@ export class RoleAssignToTokenCall__Outputs {
   }
 }
 
-export class RoleChangeCall extends ethereum.Call {
-  get inputs(): RoleChangeCall__Inputs {
-    return new RoleChangeCall__Inputs(this);
+export class RoleCreateCall extends ethereum.Call {
+  get inputs(): RoleCreateCall__Inputs {
+    return new RoleCreateCall__Inputs(this);
   }
 
-  get outputs(): RoleChangeCall__Outputs {
-    return new RoleChangeCall__Outputs(this);
+  get outputs(): RoleCreateCall__Outputs {
+    return new RoleCreateCall__Outputs(this);
   }
 }
 
-export class RoleChangeCall__Inputs {
-  _call: RoleChangeCall;
+export class RoleCreateCall__Inputs {
+  _call: RoleCreateCall;
 
-  constructor(call: RoleChangeCall) {
+  constructor(call: RoleCreateCall) {
     this._call = call;
-  }
-
-  get account(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get roleOld(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get roleNew(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-}
-
-export class RoleChangeCall__Outputs {
-  _call: RoleChangeCall;
-
-  constructor(call: RoleChangeCall) {
-    this._call = call;
-  }
-}
-
-export class RoleRemoveCall extends ethereum.Call {
-  get inputs(): RoleRemoveCall__Inputs {
-    return new RoleRemoveCall__Inputs(this);
-  }
-
-  get outputs(): RoleRemoveCall__Outputs {
-    return new RoleRemoveCall__Outputs(this);
-  }
-}
-
-export class RoleRemoveCall__Inputs {
-  _call: RoleRemoveCall;
-
-  constructor(call: RoleRemoveCall) {
-    this._call = call;
-  }
-
-  get account(): Address {
-    return this._call.inputValues[0].value.toAddress();
   }
 
   get role(): string {
-    return this._call.inputValues[1].value.toString();
+    return this._call.inputValues[0].value.toString();
   }
 }
 
-export class RoleRemoveCall__Outputs {
-  _call: RoleRemoveCall;
+export class RoleCreateCall__Outputs {
+  _call: RoleCreateCall;
 
-  constructor(call: RoleRemoveCall) {
+  constructor(call: RoleCreateCall) {
     this._call = call;
   }
 }
@@ -2033,263 +1579,37 @@ export class RoleRemoveFromTokenCall__Outputs {
   }
 }
 
-export class RuleAddCall extends ethereum.Call {
-  get inputs(): RuleAddCall__Inputs {
-    return new RuleAddCall__Inputs(this);
+export class RuleRefAddCall extends ethereum.Call {
+  get inputs(): RuleRefAddCall__Inputs {
+    return new RuleRefAddCall__Inputs(this);
   }
 
-  get outputs(): RuleAddCall__Outputs {
-    return new RuleAddCall__Outputs(this);
+  get outputs(): RuleRefAddCall__Outputs {
+    return new RuleRefAddCall__Outputs(this);
   }
 }
 
-export class RuleAddCall__Inputs {
-  _call: RuleAddCall;
+export class RuleRefAddCall__Inputs {
+  _call: RuleRefAddCall;
 
-  constructor(call: RuleAddCall) {
+  constructor(call: RuleRefAddCall) {
     this._call = call;
   }
 
-  get rule(): RuleAddCallRuleStruct {
-    return changetype<RuleAddCallRuleStruct>(
-      this._call.inputValues[0].value.toTuple()
-    );
+  get game_(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
-  get confirmation(): RuleAddCallConfirmationStruct {
-    return changetype<RuleAddCallConfirmationStruct>(
-      this._call.inputValues[1].value.toTuple()
-    );
-  }
-
-  get effects(): Array<RuleAddCallEffectsStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      RuleAddCallEffectsStruct
-    >();
+  get ruleId_(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
-export class RuleAddCall__Outputs {
-  _call: RuleAddCall;
+export class RuleRefAddCall__Outputs {
+  _call: RuleRefAddCall;
 
-  constructor(call: RuleAddCall) {
+  constructor(call: RuleRefAddCall) {
     this._call = call;
-  }
-
-  get value0(): BigInt {
-    return this._call.outputValues[0].value.toBigInt();
-  }
-}
-
-export class RuleAddCallRuleStruct extends ethereum.Tuple {
-  get about(): Bytes {
-    return this[0].toBytes();
-  }
-
-  get affected(): string {
-    return this[1].toString();
-  }
-
-  get negation(): boolean {
-    return this[2].toBoolean();
-  }
-
-  get uri(): string {
-    return this[3].toString();
-  }
-
-  get disabled(): boolean {
-    return this[4].toBoolean();
-  }
-}
-
-export class RuleAddCallConfirmationStruct extends ethereum.Tuple {
-  get ruling(): string {
-    return this[0].toString();
-  }
-
-  get evidence(): boolean {
-    return this[1].toBoolean();
-  }
-
-  get witness(): BigInt {
-    return this[2].toBigInt();
-  }
-}
-
-export class RuleAddCallEffectsStruct extends ethereum.Tuple {
-  get name(): string {
-    return this[0].toString();
-  }
-
-  get value(): i32 {
-    return this[1].toI32();
-  }
-
-  get direction(): boolean {
-    return this[2].toBoolean();
-  }
-}
-
-export class RuleConfirmationUpdateCall extends ethereum.Call {
-  get inputs(): RuleConfirmationUpdateCall__Inputs {
-    return new RuleConfirmationUpdateCall__Inputs(this);
-  }
-
-  get outputs(): RuleConfirmationUpdateCall__Outputs {
-    return new RuleConfirmationUpdateCall__Outputs(this);
-  }
-}
-
-export class RuleConfirmationUpdateCall__Inputs {
-  _call: RuleConfirmationUpdateCall;
-
-  constructor(call: RuleConfirmationUpdateCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get confirmation(): RuleConfirmationUpdateCallConfirmationStruct {
-    return changetype<RuleConfirmationUpdateCallConfirmationStruct>(
-      this._call.inputValues[1].value.toTuple()
-    );
-  }
-}
-
-export class RuleConfirmationUpdateCall__Outputs {
-  _call: RuleConfirmationUpdateCall;
-
-  constructor(call: RuleConfirmationUpdateCall) {
-    this._call = call;
-  }
-}
-
-export class RuleConfirmationUpdateCallConfirmationStruct extends ethereum.Tuple {
-  get ruling(): string {
-    return this[0].toString();
-  }
-
-  get evidence(): boolean {
-    return this[1].toBoolean();
-  }
-
-  get witness(): BigInt {
-    return this[2].toBigInt();
-  }
-}
-
-export class RuleDisableCall extends ethereum.Call {
-  get inputs(): RuleDisableCall__Inputs {
-    return new RuleDisableCall__Inputs(this);
-  }
-
-  get outputs(): RuleDisableCall__Outputs {
-    return new RuleDisableCall__Outputs(this);
-  }
-}
-
-export class RuleDisableCall__Inputs {
-  _call: RuleDisableCall;
-
-  constructor(call: RuleDisableCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get disabled(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class RuleDisableCall__Outputs {
-  _call: RuleDisableCall;
-
-  constructor(call: RuleDisableCall) {
-    this._call = call;
-  }
-}
-
-export class RuleUpdateCall extends ethereum.Call {
-  get inputs(): RuleUpdateCall__Inputs {
-    return new RuleUpdateCall__Inputs(this);
-  }
-
-  get outputs(): RuleUpdateCall__Outputs {
-    return new RuleUpdateCall__Outputs(this);
-  }
-}
-
-export class RuleUpdateCall__Inputs {
-  _call: RuleUpdateCall;
-
-  constructor(call: RuleUpdateCall) {
-    this._call = call;
-  }
-
-  get id(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get rule(): RuleUpdateCallRuleStruct {
-    return changetype<RuleUpdateCallRuleStruct>(
-      this._call.inputValues[1].value.toTuple()
-    );
-  }
-
-  get effects(): Array<RuleUpdateCallEffectsStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      RuleUpdateCallEffectsStruct
-    >();
-  }
-}
-
-export class RuleUpdateCall__Outputs {
-  _call: RuleUpdateCall;
-
-  constructor(call: RuleUpdateCall) {
-    this._call = call;
-  }
-}
-
-export class RuleUpdateCallRuleStruct extends ethereum.Tuple {
-  get about(): Bytes {
-    return this[0].toBytes();
-  }
-
-  get affected(): string {
-    return this[1].toString();
-  }
-
-  get negation(): boolean {
-    return this[2].toBoolean();
-  }
-
-  get uri(): string {
-    return this[3].toString();
-  }
-
-  get disabled(): boolean {
-    return this[4].toBoolean();
-  }
-}
-
-export class RuleUpdateCallEffectsStruct extends ethereum.Tuple {
-  get name(): string {
-    return this[0].toString();
-  }
-
-  get value(): i32 {
-    return this[1].toI32();
-  }
-
-  get direction(): boolean {
-    return this[2].toBoolean();
   }
 }
 
@@ -2417,6 +1737,134 @@ export class SetRoleURICall__Outputs {
   _call: SetRoleURICall;
 
   constructor(call: SetRoleURICall) {
+    this._call = call;
+  }
+}
+
+export class StageCancelCall extends ethereum.Call {
+  get inputs(): StageCancelCall__Inputs {
+    return new StageCancelCall__Inputs(this);
+  }
+
+  get outputs(): StageCancelCall__Outputs {
+    return new StageCancelCall__Outputs(this);
+  }
+}
+
+export class StageCancelCall__Inputs {
+  _call: StageCancelCall;
+
+  constructor(call: StageCancelCall) {
+    this._call = call;
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class StageCancelCall__Outputs {
+  _call: StageCancelCall;
+
+  constructor(call: StageCancelCall) {
+    this._call = call;
+  }
+}
+
+export class StageDecisionCall extends ethereum.Call {
+  get inputs(): StageDecisionCall__Inputs {
+    return new StageDecisionCall__Inputs(this);
+  }
+
+  get outputs(): StageDecisionCall__Outputs {
+    return new StageDecisionCall__Outputs(this);
+  }
+}
+
+export class StageDecisionCall__Inputs {
+  _call: StageDecisionCall;
+
+  constructor(call: StageDecisionCall) {
+    this._call = call;
+  }
+
+  get verdict(): Array<StageDecisionCallVerdictStruct> {
+    return this._call.inputValues[0].value.toTupleArray<
+      StageDecisionCallVerdictStruct
+    >();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class StageDecisionCall__Outputs {
+  _call: StageDecisionCall;
+
+  constructor(call: StageDecisionCall) {
+    this._call = call;
+  }
+}
+
+export class StageDecisionCallVerdictStruct extends ethereum.Tuple {
+  get ruleId(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get decision(): boolean {
+    return this[1].toBoolean();
+  }
+}
+
+export class StageFileCall extends ethereum.Call {
+  get inputs(): StageFileCall__Inputs {
+    return new StageFileCall__Inputs(this);
+  }
+
+  get outputs(): StageFileCall__Outputs {
+    return new StageFileCall__Outputs(this);
+  }
+}
+
+export class StageFileCall__Inputs {
+  _call: StageFileCall;
+
+  constructor(call: StageFileCall) {
+    this._call = call;
+  }
+}
+
+export class StageFileCall__Outputs {
+  _call: StageFileCall;
+
+  constructor(call: StageFileCall) {
+    this._call = call;
+  }
+}
+
+export class StageWaitForDecisionCall extends ethereum.Call {
+  get inputs(): StageWaitForDecisionCall__Inputs {
+    return new StageWaitForDecisionCall__Inputs(this);
+  }
+
+  get outputs(): StageWaitForDecisionCall__Outputs {
+    return new StageWaitForDecisionCall__Outputs(this);
+  }
+}
+
+export class StageWaitForDecisionCall__Inputs {
+  _call: StageWaitForDecisionCall;
+
+  constructor(call: StageWaitForDecisionCall) {
+    this._call = call;
+  }
+}
+
+export class StageWaitForDecisionCall__Outputs {
+  _call: StageWaitForDecisionCall;
+
+  constructor(call: StageWaitForDecisionCall) {
     this._call = call;
   }
 }

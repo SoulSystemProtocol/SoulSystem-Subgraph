@@ -10,14 +10,14 @@ import {
   Nominate,
   TransferByToken,
 } from "../../generated/templates/Game/Game";
-import { getGame } from "../utils";
+import { loadOrCreateGame } from "../utils";
 
 /**
  * Handle a contract uri event to update game uri.
  */
 export function handleContractUri(event: ContractURI): void {
   // Get game
-  let game = getGame(event.address.toHexString());
+  let game = loadOrCreateGame(event.address.toHexString());
   // Load uri data
   let uriIpfsHash = event.params.param0.split("/").at(-1);
   let uriData = ipfs.cat(uriIpfsHash);
@@ -32,7 +32,7 @@ export function handleContractUri(event: ContractURI): void {
  */
 export function handleTransferByToken(event: TransferByToken): void {
   // Get game
-  let game = getGame(event.address.toHexString());
+  let game = loadOrCreateGame(event.address.toHexString());
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
@@ -75,7 +75,7 @@ export function handleTransferByToken(event: TransferByToken): void {
  */
 export function handleNominate(event: Nominate): void {
   // Get game
-  let game = getGame(event.address.toHexString());
+  let game = loadOrCreateGame(event.address.toHexString());
   // Skip if nominator account not exists
   let nominatorAccount = Account.load(event.params.account.toHexString());
   if (!nominatorAccount) {

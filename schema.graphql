@@ -16,6 +16,7 @@ type Soul @entity {
 
 type Game @entity {
   id: ID! # contract address
+  hub: String! # hub address
   name: String!
   type: String
   uri: String # metadata uri
@@ -38,4 +39,14 @@ type GameNomination @entity {
   createdDate: BigInt!
   nominator: Soul!
   nominated: Soul!
+}
+
+type Claim @entity {
+  id: ID! # contract address
+  name: String!
+  hub: String # hub address
+  game: Game
+  type: String
+  uri: String # metadata uri
+  uriData: Bytes
 }

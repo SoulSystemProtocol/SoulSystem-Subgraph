@@ -1,6 +1,7 @@
 import { Address } from "@graphprotocol/graph-ts";
 import { Game as GameContract } from "../generated/Hub/Game";
-import { Account, Game, Soul } from "../generated/schema";
+import { Claim as ClaimContract } from "../generated/Hub/Claim";
+import { Account, Game, Soul, Claim } from "../generated/schema";
 
 /**
  * Add soul to existing or new account.
@@ -17,7 +18,7 @@ export function addSoulToAccount(accountAddress: Address, soul: Soul): void {
 /**
  * Load game or create new.
  */
-export function getGame(id: string): Game {
+export function loadOrCreateGame(id: string): Game {
   let game = Game.load(id);
   if (!game) {
     // Load game name from contract
@@ -29,4 +30,21 @@ export function getGame(id: string): Game {
     game.save();
   }
   return game;
+}
+
+/**
+ * Load claim or create new.
+ */
+export function loadOrCreateClaim(id: string): Claim {
+  let claim = Claim.load(id);
+  if (!claim) {
+    // Load claim name from contract
+    let claimContract = ClaimContract.bind(Address.fromString(id));
+    let claimContractName = claimContract.name();
+    // Create claim
+    claim = new Claim(id);
+    claim.name = claimContractName;
+    claim.save();
+  }
+  return claim;
 }

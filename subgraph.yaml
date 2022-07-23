@@ -44,11 +44,14 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Game
+        - Claim
       abis:
         - name: Hub
           file: ./abis/Hub.json
         - name: Game
           file: ./abis/Game.json
+        - name: Claim
+          file: ./abis/Claim.json
       eventHandlers:
         - event: ContractCreated(string,indexed address)
           handler: handleContractCreated
@@ -67,14 +70,19 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Game
+        - Claim
       abis:
         - name: OpenRepo
           file: ./abis/OpenRepo.json
         - name: Game
           file: ./abis/Game.json
+        - name: Claim
+          file: ./abis/Claim.json
       eventHandlers:
         - event: StringSet(address,string,string)
           handler: handleStringSet
+        - event: AddressAdd(address,string,address)
+          handler: handleAddressAdd
       file: ./src/handlers/openRepoHandlers.ts
 templates:
   # Game contract template
@@ -102,3 +110,22 @@ templates:
         - event: Nominate(address,indexed uint256,string)
           handler: handleNominate
       file: ./src/handlers/gameHandlers.ts
+  # Claim contract template
+  - kind: ethereum
+    name: Claim
+    network: optimism-kovan
+    source:
+      abi: Claim
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Claim
+      abis:
+        - name: Claim
+          file: ./abis/Claim.json
+      eventHandlers:
+        - event: ContractURI(string)
+          handler: handleContractUri
+      file: ./src/handlers/claimHandlers.ts

@@ -542,6 +542,21 @@ export class Soul extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getRepoAddr(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   hasTokenControl(tokenId: BigInt): boolean {
     let result = super.call(
       "hasTokenControl",
@@ -557,6 +572,38 @@ export class Soul extends ethereum.SmartContract {
       "hasTokenControl",
       "hasTokenControl(uint256):(bool)",
       [ethereum.Value.fromUnsignedBigInt(tokenId)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  hasTokenControlAccount(tokenId: BigInt, account: Address): boolean {
+    let result = super.call(
+      "hasTokenControlAccount",
+      "hasTokenControlAccount(uint256,address):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromAddress(account)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_hasTokenControlAccount(
+    tokenId: BigInt,
+    account: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "hasTokenControlAccount",
+      "hasTokenControlAccount(uint256,address):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromAddress(account)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -697,21 +744,6 @@ export class Soul extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  repoAddr(): Address {
-    let result = super.call("repoAddr", "repoAddr():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_repoAddr(): ethereum.CallResult<Address> {
-    let result = super.tryCall("repoAddr", "repoAddr():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   supportsInterface(interfaceId: Bytes): boolean {
