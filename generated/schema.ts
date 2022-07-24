@@ -587,6 +587,15 @@ export class Claim extends Entity {
     }
   }
 
+  get roles(): Array<string> {
+    let value = this.get("roles");
+    return value!.toStringArray();
+  }
+
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
+  }
+
   get nominations(): Array<string> {
     let value = this.get("nominations");
     return value!.toStringArray();
@@ -597,6 +606,79 @@ export class Claim extends Entity {
   }
 }
 
+export class ClaimRole extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("claim", Value.fromString(""));
+    this.set("roleId", Value.fromBigInt(BigInt.zero()));
+    this.set("souls", Value.fromStringArray(new Array(0)));
+    this.set("soulsCount", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ClaimRole entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ClaimRole must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ClaimRole", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ClaimRole | null {
+    return changetype<ClaimRole | null>(store.get("ClaimRole", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get claim(): string {
+    let value = this.get("claim");
+    return value!.toString();
+  }
+
+  set claim(value: string) {
+    this.set("claim", Value.fromString(value));
+  }
+
+  get roleId(): BigInt {
+    let value = this.get("roleId");
+    return value!.toBigInt();
+  }
+
+  set roleId(value: BigInt) {
+    this.set("roleId", Value.fromBigInt(value));
+  }
+
+  get souls(): Array<string> {
+    let value = this.get("souls");
+    return value!.toStringArray();
+  }
+
+  set souls(value: Array<string>) {
+    this.set("souls", Value.fromStringArray(value));
+  }
+
+  get soulsCount(): i32 {
+    let value = this.get("soulsCount");
+    return value!.toI32();
+  }
+
+  set soulsCount(value: i32) {
+    this.set("soulsCount", Value.fromI32(value));
+  }
+}
+
 export class ClaimNomination extends Entity {
   constructor(id: string) {
     super();
@@ -604,6 +686,7 @@ export class ClaimNomination extends Entity {
 
     this.set("claim", Value.fromString(""));
     this.set("createdDate", Value.fromBigInt(BigInt.zero()));
+    this.set("nominator", Value.fromString(""));
     this.set("nominated", Value.fromString(""));
   }
 
@@ -648,6 +731,15 @@ export class ClaimNomination extends Entity {
 
   set createdDate(value: BigInt) {
     this.set("createdDate", Value.fromBigInt(value));
+  }
+
+  get nominator(): string {
+    let value = this.get("nominator");
+    return value!.toString();
+  }
+
+  set nominator(value: string) {
+    this.set("nominator", Value.fromString(value));
   }
 
   get nominated(): string {

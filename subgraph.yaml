@@ -122,12 +122,16 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Claim
+        - ClaimRole
+        - ClaimNomination
       abis:
         - name: Claim
           file: ./abis/Claim.json
       eventHandlers:
         - event: ContractURI(string)
           handler: handleContractUri
+        - event: TransferByToken(indexed address,indexed uint256,indexed uint256,uint256,uint256)
+          handler: handleTransferByToken
         - event: Nominate(address,indexed uint256,string)
           handler: handleNominate
       file: ./src/handlers/claimHandlers.ts

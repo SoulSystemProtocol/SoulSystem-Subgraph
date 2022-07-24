@@ -49,12 +49,22 @@ type Claim @entity {
   type: String
   uri: String # metadata uri
   uriData: Bytes
+  roles: [ClaimRole!]! @derivedFrom(field: "claim")
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
+}
+
+type ClaimRole @entity {
+  id: ID! # combination of claim address and role id
+  claim: Claim!
+  roleId: BigInt!
+  souls: [String!]!
+  soulsCount: Int!
 }
 
 type ClaimNomination @entity {
   id: ID! # combination of claim address and event transaction address
   claim: Claim!
   createdDate: BigInt!
-  nominated: Game!
+  nominator: Soul!
+  nominated: Soul!
 }

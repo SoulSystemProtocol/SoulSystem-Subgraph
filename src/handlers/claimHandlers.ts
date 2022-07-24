@@ -1,6 +1,15 @@
-import { ipfs } from "@graphprotocol/graph-ts";
-import { ClaimNomination, Game } from "../../generated/schema";
-import { ContractURI, Nominate } from "../../generated/templates/Claim/Claim";
+import { BigInt, ipfs } from "@graphprotocol/graph-ts";
+import {
+  Account,
+  ClaimNomination,
+  ClaimRole,
+  Soul,
+} from "../../generated/schema";
+import {
+  ContractURI,
+  Nominate,
+  TransferByToken,
+} from "../../generated/templates/Claim/Claim";
 import { loadOrCreateClaim } from "../utils";
 
 /**
@@ -19,14 +28,62 @@ export function handleContractUri(event: ContractURI): void {
 }
 
 /**
+ * Handle a tranfer by token event to create or update claim roles.
+ */
+export function handleTransferByToken(event: TransferByToken): void {
+  // Get claim
+  let claim = loadOrCreateClaim(event.address.toHexString());
+  // Define transfer type
+  let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
+  let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
+  if (isTokenMinted || isTokenBurned) {
+    // Find or create role
+    let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+    let role = ClaimRole.load(roleId);
+    if (!role) {
+      role = new ClaimRole(roleId);
+      role.claim = claim.id;
+      role.roleId = event.params.id;
+      role.souls = [];
+      role.soulsCount = 0;
+    }
+    // Define role souls and souls count
+    let souls = role.souls;
+    let soulsCount = role.soulsCount;
+    if (isTokenMinted) {
+      souls.push(event.params.toOwnerToken.toString());
+      soulsCount = soulsCount + 1;
+    }
+    if (isTokenBurned) {
+      const accountIndex = souls.indexOf(
+        event.params.fromOwnerToken.toString()
+      );
+      if (accountIndex > -1) {
+        souls.splice(accountIndex, 1);
+      }
+      soulsCount = soulsCount - 1;
+    }
+    // Update role
+    role.souls = souls;
+    role.soulsCount = soulsCount;
+    role.save();
+  }
+}
+
+/**
  * Handle a nominate event to create or update claim nomination.
  */
 export function handleNominate(event: Nominate): void {
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
-  // Skip if nominated game is not exists
-  let nominatedGame = Game.load(event.params.account.toHexString());
-  if (!nominatedGame) {
+  // Skip if nominator account not exists
+  let nominatorAccount = Account.load(event.params.account.toHexString());
+  if (!nominatorAccount) {
+    return;
+  }
+  // Skip if nominated soul not exists
+  let nominatedSoul = Soul.load(event.params.id.toString());
+  if (!nominatedSoul) {
     return;
   }
   // Create nomination
@@ -34,6 +91,7 @@ export function handleNominate(event: Nominate): void {
   let nomination = new ClaimNomination(nominationId);
   nomination.claim = claim.id;
   nomination.createdDate = event.block.timestamp;
-  nomination.nominated = nominatedGame.id;
+  nomination.nominator = nominatorAccount.soul;
+  nomination.nominated = nominatedSoul.id;
   nomination.save();
 }
