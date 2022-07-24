@@ -604,6 +604,15 @@ export class Claim extends Entity {
   set nominations(value: Array<string>) {
     this.set("nominations", Value.fromStringArray(value));
   }
+
+  get posts(): Array<string> {
+    let value = this.get("posts");
+    return value!.toStringArray();
+  }
+
+  set posts(value: Array<string>) {
+    this.set("posts", Value.fromStringArray(value));
+  }
 }
 
 export class ClaimRole extends Entity {
@@ -749,5 +758,109 @@ export class ClaimNomination extends Entity {
 
   set nominated(value: string) {
     this.set("nominated", Value.fromString(value));
+  }
+}
+
+export class ClaimPost extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("claim", Value.fromString(""));
+    this.set("author", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ClaimPost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ClaimPost must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ClaimPost", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ClaimPost | null {
+    return changetype<ClaimPost | null>(store.get("ClaimPost", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get claim(): string {
+    let value = this.get("claim");
+    return value!.toString();
+  }
+
+  set claim(value: string) {
+    this.set("claim", Value.fromString(value));
+  }
+
+  get author(): string {
+    let value = this.get("author");
+    return value!.toString();
+  }
+
+  set author(value: string) {
+    this.set("author", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt | null {
+    let value = this.get("createdDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdDate(value: BigInt | null) {
+    if (!value) {
+      this.unset("createdDate");
+    } else {
+      this.set("createdDate", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get entityRole(): string | null {
+    let value = this.get("entityRole");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set entityRole(value: string | null) {
+    if (!value) {
+      this.unset("entityRole");
+    } else {
+      this.set("entityRole", Value.fromString(<string>value));
+    }
+  }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
   }
 }

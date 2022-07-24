@@ -2,6 +2,7 @@ import { BigInt, ipfs } from "@graphprotocol/graph-ts";
 import {
   Account,
   ClaimNomination,
+  ClaimPost,
   ClaimRole,
   Soul,
 } from "../../generated/schema";
@@ -9,6 +10,7 @@ import {
   ContractURI,
   Nominate,
   TransferByToken,
+  Post,
 } from "../../generated/templates/Claim/Claim";
 import { loadOrCreateClaim } from "../utils";
 
@@ -94,4 +96,26 @@ export function handleNominate(event: Nominate): void {
   nomination.nominator = nominatorAccount.soul;
   nomination.nominated = nominatedSoul.id;
   nomination.save();
+}
+
+/**
+ * Handle a post event to add a post to claim.
+ */
+export function handlePost(event: Post): void {
+  // Get claim
+  let claim = loadOrCreateClaim(event.address.toHexString());
+  // Skip if author soul is not exists
+  let authorSoul = Soul.load(event.params.tokenId.toString());
+  if (!authorSoul) {
+    return;
+  }
+  // Create post entity
+  let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  let post = new ClaimPost(postId);
+  post.claim = claim.id;
+  post.createdDate = event.block.timestamp;
+  post.author = authorSoul.id;
+  post.entityRole = event.params.entRole.toString();
+  post.uri = event.params.uri;
+  post.save();
 }
