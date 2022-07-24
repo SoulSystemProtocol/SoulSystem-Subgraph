@@ -586,4 +586,76 @@ export class Claim extends Entity {
       this.set("uriData", Value.fromBytes(<Bytes>value));
     }
   }
+
+  get nominations(): Array<string> {
+    let value = this.get("nominations");
+    return value!.toStringArray();
+  }
+
+  set nominations(value: Array<string>) {
+    this.set("nominations", Value.fromStringArray(value));
+  }
+}
+
+export class ClaimNomination extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("claim", Value.fromString(""));
+    this.set("createdDate", Value.fromBigInt(BigInt.zero()));
+    this.set("nominated", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ClaimNomination entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ClaimNomination must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ClaimNomination", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ClaimNomination | null {
+    return changetype<ClaimNomination | null>(store.get("ClaimNomination", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get claim(): string {
+    let value = this.get("claim");
+    return value!.toString();
+  }
+
+  set claim(value: string) {
+    this.set("claim", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt {
+    let value = this.get("createdDate");
+    return value!.toBigInt();
+  }
+
+  set createdDate(value: BigInt) {
+    this.set("createdDate", Value.fromBigInt(value));
+  }
+
+  get nominated(): string {
+    let value = this.get("nominated");
+    return value!.toString();
+  }
+
+  set nominated(value: string) {
+    this.set("nominated", Value.fromString(value));
+  }
 }

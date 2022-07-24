@@ -128,4 +128,6 @@ templates:
       eventHandlers:
         - event: ContractURI(string)
           handler: handleContractUri
+        - event: Nominate(address,indexed uint256,string)
+          handler: handleNominate
       file: ./src/handlers/claimHandlers.ts

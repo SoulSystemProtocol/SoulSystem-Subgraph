@@ -1,5 +1,6 @@
 import { ipfs } from "@graphprotocol/graph-ts";
-import { ContractURI } from "../../generated/templates/Claim/Claim";
+import { ClaimNomination, Game } from "../../generated/schema";
+import { ContractURI, Nominate } from "../../generated/templates/Claim/Claim";
 import { loadOrCreateClaim } from "../utils";
 
 /**
@@ -15,4 +16,24 @@ export function handleContractUri(event: ContractURI): void {
   claim.uri = event.params.param0;
   claim.uriData = uriData;
   claim.save();
+}
+
+/**
+ * Handle a nominate event to create or update claim nomination.
+ */
+export function handleNominate(event: Nominate): void {
+  // Get claim
+  let claim = loadOrCreateClaim(event.address.toHexString());
+  // Skip if nominated game is not exists
+  let nominatedGame = Game.load(event.params.account.toHexString());
+  if (!nominatedGame) {
+    return;
+  }
+  // Create nomination
+  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  let nomination = new ClaimNomination(nominationId);
+  nomination.claim = claim.id;
+  nomination.createdDate = event.block.timestamp;
+  nomination.nominated = nominatedGame.id;
+  nomination.save();
 }

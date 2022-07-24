@@ -81,7 +81,7 @@ export function handleNominate(event: Nominate): void {
   if (!nominatorAccount) {
     return;
   }
-  // Skip if nominated sou; not exists
+  // Skip if nominated soul not exists
   let nominatedSoul = Soul.load(event.params.id.toString());
   if (!nominatedSoul) {
     return;
