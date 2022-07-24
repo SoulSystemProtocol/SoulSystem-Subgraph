@@ -553,6 +553,15 @@ export class Claim extends Entity {
     }
   }
 
+  get stage(): i32 {
+    let value = this.get("stage");
+    return value!.toI32();
+  }
+
+  set stage(value: i32) {
+    this.set("stage", Value.fromI32(value));
+  }
+
   get uri(): string | null {
     let value = this.get("uri");
     if (!value || value.kind == ValueKind.NULL) {
@@ -804,15 +813,6 @@ export class ClaimPost extends Entity {
     this.set("claim", Value.fromString(value));
   }
 
-  get author(): string {
-    let value = this.get("author");
-    return value!.toString();
-  }
-
-  set author(value: string) {
-    this.set("author", Value.fromString(value));
-  }
-
   get createdDate(): BigInt | null {
     let value = this.get("createdDate");
     if (!value || value.kind == ValueKind.NULL) {
@@ -828,6 +828,15 @@ export class ClaimPost extends Entity {
     } else {
       this.set("createdDate", Value.fromBigInt(<BigInt>value));
     }
+  }
+
+  get author(): string {
+    let value = this.get("author");
+    return value!.toString();
+  }
+
+  set author(value: string) {
+    this.set("author", Value.fromString(value));
   }
 
   get entityRole(): string | null {

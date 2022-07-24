@@ -47,6 +47,7 @@ type Claim @entity {
   hub: String # hub address
   game: Game
   type: String
+  stage: Int
   uri: String # metadata uri
   uriData: Bytes
   roles: [ClaimRole!]! @derivedFrom(field: "claim")

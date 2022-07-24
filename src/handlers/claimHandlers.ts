@@ -11,8 +11,20 @@ import {
   Nominate,
   TransferByToken,
   Post,
+  Stage,
 } from "../../generated/templates/Claim/Claim";
 import { loadOrCreateClaim } from "../utils";
+
+/**
+ * Handle a stage event to update claim stage.
+ */
+export function handleStage(event: Stage): void {
+  // Get claim
+  let claim = loadOrCreateClaim(event.address.toHexString());
+  // Update claim stage
+  claim.stage = event.params.stage;
+  claim.save();
+}
 
 /**
  * Handle a contract uri event to update claim uri.
