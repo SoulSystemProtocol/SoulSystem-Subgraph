@@ -29,6 +29,7 @@ export function handleContractCreated(event: ContractCreated): void {
     // Update claim
     claim.hub = event.address.toHexString();
     claim.stage = "draft";
+    claim.createdDate = event.block.timestamp;
     claim.save();
   }
 }
