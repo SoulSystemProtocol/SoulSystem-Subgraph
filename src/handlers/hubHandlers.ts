@@ -28,6 +28,7 @@ export function handleContractCreated(event: ContractCreated): void {
     let claim = loadOrCreateClaim(event.params.contractAddress.toHexString());
     // Update claim
     claim.hub = event.address.toHexString();
+    claim.stage = "draft";
     claim.save();
   }
 }
