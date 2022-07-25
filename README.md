@@ -1,4 +1,4 @@
-# Mentor DAO Subgraph
+# Bounty Protocol Subgraph
 
 ## Commands
 
