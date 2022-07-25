@@ -51,6 +51,7 @@ type Claim @entity {
   uri: String # metadata uri
   uriData: Bytes
   createdDate: BigInt!
+  updatedDate: BigInt
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
   posts: [ClaimPost!]! @derivedFrom(field: "claim")
