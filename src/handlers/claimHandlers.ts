@@ -23,6 +23,8 @@ export function handleStage(event: Stage): void {
   let claim = loadOrCreateClaim(event.address.toHexString());
   // Update claim stage
   claim.stage = event.params.stage;
+  //Update Timestamp on stage changes
+  claim.updatedDate = event.block.timestamp;
   claim.save();
 }
 
