@@ -466,6 +466,7 @@ export class Claim extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("name", Value.fromString(""));
+    this.set("createdDate", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -593,6 +594,32 @@ export class Claim extends Entity {
       this.unset("uriData");
     } else {
       this.set("uriData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get createdDate(): BigInt {
+    let value = this.get("createdDate");
+    return value!.toBigInt();
+  }
+
+  set createdDate(value: BigInt) {
+    this.set("createdDate", Value.fromBigInt(value));
+  }
+
+  get updatedDate(): BigInt | null {
+    let value = this.get("updatedDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set updatedDate(value: BigInt | null) {
+    if (!value) {
+      this.unset("updatedDate");
+    } else {
+      this.set("updatedDate", Value.fromBigInt(<BigInt>value));
     }
   }
 

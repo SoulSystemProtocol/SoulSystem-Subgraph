@@ -28,7 +28,7 @@ export function handleContractCreated(event: ContractCreated): void {
     let claim = loadOrCreateClaim(event.params.contractAddress.toHexString());
     // Update claim
     claim.hub = event.address.toHexString();
-    claim.stage = "draft";
+    claim.stage = 0;
     claim.createdDate = event.block.timestamp;
     claim.updatedDate = event.block.timestamp;
     claim.save();
