@@ -3,7 +3,7 @@ import {
   Game as GameTemplate,
   Claim as ClaimTemplate,
 } from "../../generated/templates";
-import { HUB_CONTRACT_TYPE_GAME, HUB_CONTRACT_TYPE_TASK } from "../constants";
+import { HUB_CONTRACT_TYPE_GAME, HUB_CONTRACT_TYPE_TASK, HUB_CONTRACT_TYPE_CLAIM } from "../constants";
 import { loadOrCreateClaim, loadOrCreateGame } from "../utils";
 
 /**
@@ -20,13 +20,14 @@ export function handleContractCreated(event: ContractCreated): void {
     game.hub = event.address.toHexString();
     game.save();
   }
-  // If created task contract
-  if (event.params.name == HUB_CONTRACT_TYPE_TASK) {
+  // If created task or claim contract
+  if (event.params.name == HUB_CONTRACT_TYPE_TASK || event.params.name == HUB_CONTRACT_TYPE_CLAIM) {
     // Save contract using subgraph template
     ClaimTemplate.create(event.params.contractAddress);
     // Get claim
     let claim = loadOrCreateClaim(event.params.contractAddress.toHexString());
     // Update claim
+    claim.type = event.params.name;
     claim.hub = event.address.toHexString();
     claim.stage = 0;
     claim.createdDate = event.block.timestamp;
