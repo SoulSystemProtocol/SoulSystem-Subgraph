@@ -126,7 +126,7 @@ export function handlePost(event: Post): void {
   // Create post entity
   let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   let post = new ClaimPost(postId);
-  post.claim = claim.id;
+  post.entity = claim.id;
   post.createdDate = event.block.timestamp;
   post.author = authorSoul.id;
   post.entityRole = event.params.entRole.toString();

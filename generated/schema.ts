@@ -482,7 +482,7 @@ export class GamePost extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("game", Value.fromString(""));
+    this.set("entity", Value.fromString(""));
     this.set("author", Value.fromString(""));
   }
 
@@ -512,13 +512,13 @@ export class GamePost extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get game(): string {
-    let value = this.get("game");
+  get entity(): string {
+    let value = this.get("entity");
     return value!.toString();
   }
 
-  set game(value: string) {
-    this.set("game", Value.fromString(value));
+  set entity(value: string) {
+    this.set("entity", Value.fromString(value));
   }
 
   get createdDate(): BigInt | null {
@@ -944,7 +944,7 @@ export class ClaimPost extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("claim", Value.fromString(""));
+    this.set("entity", Value.fromString(""));
     this.set("author", Value.fromString(""));
   }
 
@@ -974,13 +974,13 @@ export class ClaimPost extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get claim(): string {
-    let value = this.get("claim");
+  get entity(): string {
+    let value = this.get("entity");
     return value!.toString();
   }
 
-  set claim(value: string) {
-    this.set("claim", Value.fromString(value));
+  set entity(value: string) {
+    this.set("entity", Value.fromString(value));
   }
 
   get createdDate(): BigInt | null {

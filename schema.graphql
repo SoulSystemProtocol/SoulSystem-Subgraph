@@ -24,7 +24,7 @@ type Game @entity {
   uriData: Bytes
   roles: [GameRole!]! @derivedFrom(field: "game")
   nominations: [GameNomination!]! @derivedFrom(field: "game")
-  posts: [GamePost!]! @derivedFrom(field: "game")
+  posts: [GamePost!]! @derivedFrom(field: "entity")
 }
 
 type GameRole @entity {
@@ -45,7 +45,7 @@ type GameNomination @entity {
 
 type GamePost @entity {
   id: ID! # combination of game address and event transaction address
-  game: Game!
+  entity: Game!
   createdDate: BigInt
   author: Soul!
   entityRole: String
@@ -66,7 +66,7 @@ type Claim @entity {
   updatedDate: BigInt
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
-  posts: [ClaimPost!]! @derivedFrom(field: "claim")
+  posts: [ClaimPost!]! @derivedFrom(field: "entity")
 }
 
 type ClaimRole @entity {
@@ -87,7 +87,7 @@ type ClaimNomination @entity {
 
 type ClaimPost @entity {
   id: ID! # combination of claim address and event transaction address
-  claim: Claim!
+  entity: Claim!
   createdDate: BigInt
   author: Soul!
   entityRole: String
