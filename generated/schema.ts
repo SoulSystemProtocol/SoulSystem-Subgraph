@@ -61,6 +61,7 @@ export class Soul extends Entity {
 
     this.set("owner", Value.fromString(""));
     this.set("type", Value.fromString(""));
+    this.set("searchField", Value.fromString(""));
   }
 
   save(): void {
@@ -104,6 +105,15 @@ export class Soul extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get searchField(): string {
+    let value = this.get("searchField");
+    return value!.toString();
+  }
+
+  set searchField(value: string) {
+    this.set("searchField", Value.fromString(value));
   }
 
   get uri(): string | null {

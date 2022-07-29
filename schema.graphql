@@ -12,6 +12,7 @@ type Soul @entity {
   uriImage: String
   uriFirstName: String
   uriLastName: String
+  searchField: String
 }
 
 type Game @entity {

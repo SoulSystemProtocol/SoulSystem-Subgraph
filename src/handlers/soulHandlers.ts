@@ -1,7 +1,8 @@
 import { ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul } from "../../generated/schema";
 import { SoulType, Transfer, URI } from "../../generated/Soul/Soul";
-import { addSoulToAccount } from "../utils";
+import { addSoulToAccount, makeSearchField } from "../utils";
+
 
 /**
  * Handle a tranfer event to create or update a soul.
@@ -12,6 +13,7 @@ export function handleTransfer(event: Transfer): void {
   if (!soul) {
     soul = new Soul(event.params.tokenId.toString());
     soul.type = "";
+    soul.searchField = makeSearchField(soul);
   }
   // Update soul params
   soul.owner = event.params.to.toHexString();

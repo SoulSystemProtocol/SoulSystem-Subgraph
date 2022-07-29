@@ -48,3 +48,12 @@ export function loadOrCreateClaim(id: string): Claim {
   }
   return claim;
 }
+
+//Searchable Fields as a single string
+export function makeSearchField(entity: Soul): string {
+  let fields = [
+    entity.uriFirstName,
+    entity.uriLastName
+  ];
+  return fields.join('_');
+}
