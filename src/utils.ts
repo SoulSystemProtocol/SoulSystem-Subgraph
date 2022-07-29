@@ -52,7 +52,7 @@ export function loadOrCreateClaim(id: string): Claim {
 //Searchable Fields as a single string
 export function makeSearchField(entity: Soul): string {
   let fields: string[] = [];
-  if (entity.uriFirstName) fields.push(entity.uriFirstName.toLowerCase());
-  if (entity.uriLastName) fields.push(entity.uriLastName.toLowerCase());
-  return fields.join('');
+  if (entity.uriFirstName) fields.push(entity.uriFirstName);
+  if (entity.uriLastName) fields.push(entity.uriLastName);
+  return fields.join('').toLowerCase();
 }
