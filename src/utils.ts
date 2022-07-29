@@ -49,7 +49,9 @@ export function loadOrCreateClaim(id: string): Claim {
   return claim;
 }
 
-//Searchable Fields as a single string
+/**
+ * Searchable Fields as a single string.
+ */
 export function makeSearchField(entity: Soul): string {
   let fields: string[] = [];
   if (entity.uriFirstName) fields.push(entity.uriFirstName);
