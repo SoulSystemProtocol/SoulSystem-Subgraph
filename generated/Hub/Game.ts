@@ -460,6 +460,76 @@ export class URI__Params {
   }
 }
 
+export class ERC20PaymentReleased extends ethereum.Event {
+  get params(): ERC20PaymentReleased__Params {
+    return new ERC20PaymentReleased__Params(this);
+  }
+}
+
+export class ERC20PaymentReleased__Params {
+  _event: ERC20PaymentReleased;
+
+  constructor(event: ERC20PaymentReleased) {
+    this._event = event;
+  }
+
+  get token(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get to(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class PaymentReceived extends ethereum.Event {
+  get params(): PaymentReceived__Params {
+    return new PaymentReceived__Params(this);
+  }
+}
+
+export class PaymentReceived__Params {
+  _event: PaymentReceived;
+
+  constructor(event: PaymentReceived) {
+    this._event = event;
+  }
+
+  get from(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class PaymentReleased extends ethereum.Event {
+  get params(): PaymentReleased__Params {
+    return new PaymentReleased__Params(this);
+  }
+}
+
+export class PaymentReleased__Params {
+  _event: PaymentReleased;
+
+  constructor(event: PaymentReleased) {
+    this._event = event;
+  }
+
+  get to(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class Game__confirmationGetResultValue0Struct extends ethereum.Tuple {
   get ruling(): string {
     return this[0].toString();
@@ -1728,6 +1798,29 @@ export class Game extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  contractBalance(token: Address): BigInt {
+    let result = super.call(
+      "contractBalance",
+      "contractBalance(address):(uint256)",
+      [ethereum.Value.fromAddress(token)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_contractBalance(token: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "contractBalance",
+      "contractBalance(address):(uint256)",
+      [ethereum.Value.fromAddress(token)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 }
 
