@@ -47,8 +47,8 @@ export function handleURI(event: URI): void {
     ? uriJsonAttributes.toArray()
     : new Array<JSONValue>(0);
   // Get uri first name and last name
-  let uriFirstNameString: string | null = null;
-  let uriLastNameString: string | null = null;
+  let uriFirstNameString: string = "";
+  let uriLastNameString: string = "";
   for (let i = 0; i < uriJsonAttributesArray.length; i++) {
     // Get trait type and value
     let uriAttributeTraitType = uriJsonAttributesArray[i]
@@ -62,7 +62,7 @@ export function handleURI(event: URI): void {
     ) {
       uriFirstNameString = uriAttributeValue
         ? uriAttributeValue.toString()
-        : null;
+        : "";
     }
     // Check trait type for getting last name
     if (
@@ -71,7 +71,7 @@ export function handleURI(event: URI): void {
     ) {
       uriLastNameString = uriAttributeValue
         ? uriAttributeValue.toString()
-        : null;
+        : "";
     }
   }
   // Update soul params

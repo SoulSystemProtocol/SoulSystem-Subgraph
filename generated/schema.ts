@@ -167,16 +167,16 @@ export class Soul extends Entity {
     }
   }
 
-  get uriFirstName(): string | null {
+  get uriFirstName(): string {
     let value = this.get("uriFirstName");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      return "";
     } else {
       return value.toString();
     }
   }
 
-  set uriFirstName(value: string | null) {
+  set uriFirstName(value: string) {
     if (!value) {
       this.unset("uriFirstName");
     } else {
@@ -184,16 +184,16 @@ export class Soul extends Entity {
     }
   }
 
-  get uriLastName(): string | null {
+  get uriLastName(): string {
     let value = this.get("uriLastName");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      return "";
     } else {
       return value.toString();
     }
   }
 
-  set uriLastName(value: string | null) {
+  set uriLastName(value: string) {
     if (!value) {
       this.unset("uriLastName");
     } else {
