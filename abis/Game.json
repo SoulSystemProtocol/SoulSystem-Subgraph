@@ -559,7 +559,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "extTokenId",
+        "name": "sbt",
         "type": "uint256"
       },
       {
@@ -920,7 +920,7 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "gameType_",
+        "name": "type_",
         "type": "string"
       },
       {
@@ -1121,7 +1121,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "ownerToken",
+        "name": "sbt",
         "type": "uint256"
       },
       {
@@ -1154,6 +1154,19 @@
       }
     ],
     "name": "roleChange",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "role",
+        "type": "string"
+      }
+    ],
+    "name": "roleCreate",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1247,7 +1260,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "ownerToken",
+        "name": "sbt",
         "type": "uint256"
       },
       {
@@ -1765,5 +1778,437 @@
   {
     "stateMutability": "payable",
     "type": "receive"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "confirmationGet",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "ruling",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "evidence",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witness",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.Confirmation",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "effectsGet",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint8",
+            "name": "value",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "direction",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Effect[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRepoAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "about",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "affected",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "negation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "disabled",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Rule",
+        "name": "rule",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "ruling",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "evidence",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witness",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.Confirmation",
+        "name": "confirmation",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint8",
+            "name": "value",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "direction",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Effect[]",
+        "name": "effects",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "ruleAdd",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "ruling",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "evidence",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "witness",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataTypes.Confirmation",
+        "name": "confirmation",
+        "type": "tuple"
+      }
+    ],
+    "name": "ruleConfirmationUpdate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "disabled",
+        "type": "bool"
+      }
+    ],
+    "name": "ruleDisable",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      }
+    ],
+    "name": "ruleGet",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "about",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "affected",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "negation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "disabled",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Rule",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "about",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "string",
+            "name": "affected",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "negation",
+            "type": "bool"
+          },
+          {
+            "internalType": "string",
+            "name": "uri",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "disabled",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Rule",
+        "name": "rule",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint8",
+            "name": "value",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "direction",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct DataTypes.Effect[]",
+        "name": "effects",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "ruleUpdate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRepoAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "type_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "taskMake",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      }
+    ],
+    "name": "applyToTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "taskAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "uri",
+        "type": "string"
+      }
+    ],
+    "name": "deliverTask",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRepoAddr",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]
