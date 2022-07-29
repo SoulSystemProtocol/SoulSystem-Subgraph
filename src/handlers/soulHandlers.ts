@@ -13,7 +13,6 @@ export function handleTransfer(event: Transfer): void {
   if (!soul) {
     soul = new Soul(event.params.tokenId.toString());
     soul.type = "";
-    soul.searchField = makeSearchField(soul);
   }
   // Update soul params
   soul.owner = event.params.to.toHexString();
@@ -81,6 +80,7 @@ export function handleURI(event: URI): void {
   soul.uriImage = uriJsonImageString;
   soul.uriFirstName = uriFirstNameString;
   soul.uriLastName = uriLastNameString;
+  soul.searchField = makeSearchField(soul);
   soul.save();
 }
 

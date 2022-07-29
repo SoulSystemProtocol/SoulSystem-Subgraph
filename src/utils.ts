@@ -55,5 +55,5 @@ export function makeSearchField(entity: Soul): string {
     entity.uriFirstName,
     entity.uriLastName
   ];
-  return fields.join('_');
+  return fields.join('');
 }
