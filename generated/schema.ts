@@ -25,7 +25,8 @@ export class Account extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Account must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save Account entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("Account", id.toString(), this);
     }
@@ -61,7 +62,8 @@ export class Soul extends Entity {
 
     this.set("owner", Value.fromString(""));
     this.set("type", Value.fromString(""));
-    this.set("searchField", Value.fromString(""));
+    this.set("uriFirstName", Value.fromString(""));
+    this.set("uriLastName", Value.fromString(""));
   }
 
   save(): void {
@@ -70,7 +72,8 @@ export class Soul extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Soul must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save Soul entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("Soul", id.toString(), this);
     }
@@ -105,15 +108,6 @@ export class Soul extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
-  }
-
-  get searchField(): string {
-    let value = this.get("searchField");
-    return value!.toString();
-  }
-
-  set searchField(value: string) {
-    this.set("searchField", Value.fromString(value));
   }
 
   get uri(): string | null {
@@ -169,35 +163,36 @@ export class Soul extends Entity {
 
   get uriFirstName(): string {
     let value = this.get("uriFirstName");
-    if (!value || value.kind == ValueKind.NULL) {
-      return "";
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
   set uriFirstName(value: string) {
-    if (!value) {
-      this.unset("uriFirstName");
-    } else {
-      this.set("uriFirstName", Value.fromString(<string>value));
-    }
+    this.set("uriFirstName", Value.fromString(value));
   }
 
   get uriLastName(): string {
     let value = this.get("uriLastName");
+    return value!.toString();
+  }
+
+  set uriLastName(value: string) {
+    this.set("uriLastName", Value.fromString(value));
+  }
+
+  get searchField(): string | null {
+    let value = this.get("searchField");
     if (!value || value.kind == ValueKind.NULL) {
-      return "";
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set uriLastName(value: string) {
+  set searchField(value: string | null) {
     if (!value) {
-      this.unset("uriLastName");
+      this.unset("searchField");
     } else {
-      this.set("uriLastName", Value.fromString(<string>value));
+      this.set("searchField", Value.fromString(<string>value));
     }
   }
 }
@@ -217,7 +212,8 @@ export class Game extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Game must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save Game entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("Game", id.toString(), this);
     }
@@ -322,6 +318,15 @@ export class Game extends Entity {
   set nominations(value: Array<string>) {
     this.set("nominations", Value.fromStringArray(value));
   }
+
+  get posts(): Array<string> {
+    let value = this.get("posts");
+    return value!.toStringArray();
+  }
+
+  set posts(value: Array<string>) {
+    this.set("posts", Value.fromStringArray(value));
+  }
 }
 
 export class GameRole extends Entity {
@@ -341,7 +346,8 @@ export class GameRole extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type GameRole must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save GameRole entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("GameRole", id.toString(), this);
     }
@@ -414,7 +420,8 @@ export class GameNomination extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type GameNomination must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save GameNomination entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("GameNomination", id.toString(), this);
     }
@@ -470,6 +477,128 @@ export class GameNomination extends Entity {
   }
 }
 
+export class GamePost extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("game", Value.fromString(""));
+    this.set("author", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GamePost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save GamePost entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("GamePost", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GamePost | null {
+    return changetype<GamePost | null>(store.get("GamePost", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get game(): string {
+    let value = this.get("game");
+    return value!.toString();
+  }
+
+  set game(value: string) {
+    this.set("game", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt | null {
+    let value = this.get("createdDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdDate(value: BigInt | null) {
+    if (!value) {
+      this.unset("createdDate");
+    } else {
+      this.set("createdDate", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get author(): string {
+    let value = this.get("author");
+    return value!.toString();
+  }
+
+  set author(value: string) {
+    this.set("author", Value.fromString(value));
+  }
+
+  get entityRole(): string | null {
+    let value = this.get("entityRole");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set entityRole(value: string | null) {
+    if (!value) {
+      this.unset("entityRole");
+    } else {
+      this.set("entityRole", Value.fromString(<string>value));
+    }
+  }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
 export class Claim extends Entity {
   constructor(id: string) {
     super();
@@ -485,7 +614,8 @@ export class Claim extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Claim must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save Claim entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("Claim", id.toString(), this);
     }
@@ -678,7 +808,8 @@ export class ClaimRole extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ClaimRole must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save ClaimRole entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("ClaimRole", id.toString(), this);
     }
@@ -751,7 +882,8 @@ export class ClaimNomination extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ClaimNomination must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save ClaimNomination entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("ClaimNomination", id.toString(), this);
     }
@@ -822,7 +954,8 @@ export class ClaimPost extends Entity {
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ClaimPost must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        "Cannot save ClaimPost entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
       );
       store.set("ClaimPost", id.toString(), this);
     }
@@ -907,6 +1040,23 @@ export class ClaimPost extends Entity {
       this.unset("uri");
     } else {
       this.set("uri", Value.fromString(<string>value));
+    }
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
     }
   }
 }

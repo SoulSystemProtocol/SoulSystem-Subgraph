@@ -131,5 +131,10 @@ export function handlePost(event: Post): void {
   post.author = authorSoul.id;
   post.entityRole = event.params.entRole.toString();
   post.uri = event.params.uri;
+  // Load uri data
+  let ipfsHash = event.params.uri.split("/").at(-1);
+  let metadata = ipfs.cat(ipfsHash);
+  post.metadata = metadata;
+  //Save
   post.save();
 }

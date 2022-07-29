@@ -560,6 +560,106 @@ export class Game__ruleGetResultValue0Struct extends ethereum.Tuple {
   }
 }
 
+export class Game__confirmationGet1ResultValue0Struct extends ethereum.Tuple {
+  get ruling(): string {
+    return this[0].toString();
+  }
+
+  get evidence(): boolean {
+    return this[1].toBoolean();
+  }
+
+  get witness(): BigInt {
+    return this[2].toBigInt();
+  }
+}
+
+export class Game__effectsGet1ResultValue0Struct extends ethereum.Tuple {
+  get name(): string {
+    return this[0].toString();
+  }
+
+  get value(): i32 {
+    return this[1].toI32();
+  }
+
+  get direction(): boolean {
+    return this[2].toBoolean();
+  }
+}
+
+export class Game__ruleAdd1InputRuleStruct extends ethereum.Tuple {
+  get about(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get affected(): string {
+    return this[1].toString();
+  }
+
+  get negation(): boolean {
+    return this[2].toBoolean();
+  }
+
+  get uri(): string {
+    return this[3].toString();
+  }
+
+  get disabled(): boolean {
+    return this[4].toBoolean();
+  }
+}
+
+export class Game__ruleAdd1InputConfirmationStruct extends ethereum.Tuple {
+  get ruling(): string {
+    return this[0].toString();
+  }
+
+  get evidence(): boolean {
+    return this[1].toBoolean();
+  }
+
+  get witness(): BigInt {
+    return this[2].toBigInt();
+  }
+}
+
+export class Game__ruleAdd1InputEffectsStruct extends ethereum.Tuple {
+  get name(): string {
+    return this[0].toString();
+  }
+
+  get value(): i32 {
+    return this[1].toI32();
+  }
+
+  get direction(): boolean {
+    return this[2].toBoolean();
+  }
+}
+
+export class Game__ruleGet1ResultValue0Struct extends ethereum.Tuple {
+  get about(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get affected(): string {
+    return this[1].toString();
+  }
+
+  get negation(): boolean {
+    return this[2].toBoolean();
+  }
+
+  get uri(): string {
+    return this[3].toString();
+  }
+
+  get disabled(): boolean {
+    return this[4].toBoolean();
+  }
+}
+
 export class Game extends ethereum.SmartContract {
   static bind(address: Address): Game {
     return new Game("Game", address);
@@ -698,12 +798,12 @@ export class Game extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigIntArray());
   }
 
-  balanceOfToken(extTokenId: BigInt, id: BigInt): BigInt {
+  balanceOfToken(sbt: BigInt, id: BigInt): BigInt {
     let result = super.call(
       "balanceOfToken",
       "balanceOfToken(uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(extTokenId),
+        ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromUnsignedBigInt(id)
       ]
     );
@@ -711,15 +811,12 @@ export class Game extends ethereum.SmartContract {
     return result[0].toBigInt();
   }
 
-  try_balanceOfToken(
-    extTokenId: BigInt,
-    id: BigInt
-  ): ethereum.CallResult<BigInt> {
+  try_balanceOfToken(sbt: BigInt, id: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "balanceOfToken",
       "balanceOfToken(uint256,uint256):(uint256)",
       [
-        ethereum.Value.fromUnsignedBigInt(extTokenId),
+        ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromUnsignedBigInt(id)
       ]
     );
@@ -1465,6 +1562,173 @@ export class Game extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
   }
+
+  confirmationGet1(id: BigInt): Game__confirmationGet1ResultValue0Struct {
+    let result = super.call(
+      "confirmationGet",
+      "confirmationGet(uint256):((string,bool,uint256))",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+
+    return changetype<Game__confirmationGet1ResultValue0Struct>(
+      result[0].toTuple()
+    );
+  }
+
+  try_confirmationGet1(
+    id: BigInt
+  ): ethereum.CallResult<Game__confirmationGet1ResultValue0Struct> {
+    let result = super.tryCall(
+      "confirmationGet",
+      "confirmationGet(uint256):((string,bool,uint256))",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<Game__confirmationGet1ResultValue0Struct>(value[0].toTuple())
+    );
+  }
+
+  effectsGet1(id: BigInt): Array<Game__effectsGet1ResultValue0Struct> {
+    let result = super.call(
+      "effectsGet",
+      "effectsGet(uint256):((string,uint8,bool)[])",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+
+    return result[0].toTupleArray<Game__effectsGet1ResultValue0Struct>();
+  }
+
+  try_effectsGet1(
+    id: BigInt
+  ): ethereum.CallResult<Array<Game__effectsGet1ResultValue0Struct>> {
+    let result = super.tryCall(
+      "effectsGet",
+      "effectsGet(uint256):((string,uint8,bool)[])",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      value[0].toTupleArray<Game__effectsGet1ResultValue0Struct>()
+    );
+  }
+
+  getRepoAddr1(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr1(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  ruleAdd1(
+    rule: Game__ruleAdd1InputRuleStruct,
+    confirmation: Game__ruleAdd1InputConfirmationStruct,
+    effects: Array<Game__ruleAdd1InputEffectsStruct>
+  ): BigInt {
+    let result = super.call(
+      "ruleAdd",
+      "ruleAdd((bytes32,string,bool,string,bool),(string,bool,uint256),(string,uint8,bool)[]):(uint256)",
+      [
+        ethereum.Value.fromTuple(rule),
+        ethereum.Value.fromTuple(confirmation),
+        ethereum.Value.fromTupleArray(effects)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_ruleAdd1(
+    rule: Game__ruleAdd1InputRuleStruct,
+    confirmation: Game__ruleAdd1InputConfirmationStruct,
+    effects: Array<Game__ruleAdd1InputEffectsStruct>
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "ruleAdd",
+      "ruleAdd((bytes32,string,bool,string,bool),(string,bool,uint256),(string,uint8,bool)[]):(uint256)",
+      [
+        ethereum.Value.fromTuple(rule),
+        ethereum.Value.fromTuple(confirmation),
+        ethereum.Value.fromTupleArray(effects)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  ruleGet1(id: BigInt): Game__ruleGet1ResultValue0Struct {
+    let result = super.call(
+      "ruleGet",
+      "ruleGet(uint256):((bytes32,string,bool,string,bool))",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+
+    return changetype<Game__ruleGet1ResultValue0Struct>(result[0].toTuple());
+  }
+
+  try_ruleGet1(
+    id: BigInt
+  ): ethereum.CallResult<Game__ruleGet1ResultValue0Struct> {
+    let result = super.tryCall(
+      "ruleGet",
+      "ruleGet(uint256):((bytes32,string,bool,string,bool))",
+      [ethereum.Value.fromUnsignedBigInt(id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      changetype<Game__ruleGet1ResultValue0Struct>(value[0].toTuple())
+    );
+  }
+
+  getRepoAddr2(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr2(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getRepoAddr3(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr3(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
 }
 
 export class DefaultCall extends ethereum.Call {
@@ -1612,7 +1876,7 @@ export class InitializeCall__Inputs {
     this._call = call;
   }
 
-  get gameType_(): string {
+  get type_(): string {
     return this._call.inputValues[0].value.toString();
   }
 
@@ -1910,7 +2174,7 @@ export class RoleAssignToTokenCall__Inputs {
     this._call = call;
   }
 
-  get ownerToken(): BigInt {
+  get sbt(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
@@ -1961,6 +2225,36 @@ export class RoleChangeCall__Outputs {
   _call: RoleChangeCall;
 
   constructor(call: RoleChangeCall) {
+    this._call = call;
+  }
+}
+
+export class RoleCreateCall extends ethereum.Call {
+  get inputs(): RoleCreateCall__Inputs {
+    return new RoleCreateCall__Inputs(this);
+  }
+
+  get outputs(): RoleCreateCall__Outputs {
+    return new RoleCreateCall__Outputs(this);
+  }
+}
+
+export class RoleCreateCall__Inputs {
+  _call: RoleCreateCall;
+
+  constructor(call: RoleCreateCall) {
+    this._call = call;
+  }
+
+  get role(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class RoleCreateCall__Outputs {
+  _call: RoleCreateCall;
+
+  constructor(call: RoleCreateCall) {
     this._call = call;
   }
 }
@@ -2016,7 +2310,7 @@ export class RoleRemoveFromTokenCall__Inputs {
     this._call = call;
   }
 
-  get ownerToken(): BigInt {
+  get sbt(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
@@ -2447,6 +2741,376 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class RuleAdd1Call extends ethereum.Call {
+  get inputs(): RuleAdd1Call__Inputs {
+    return new RuleAdd1Call__Inputs(this);
+  }
+
+  get outputs(): RuleAdd1Call__Outputs {
+    return new RuleAdd1Call__Outputs(this);
+  }
+}
+
+export class RuleAdd1Call__Inputs {
+  _call: RuleAdd1Call;
+
+  constructor(call: RuleAdd1Call) {
+    this._call = call;
+  }
+
+  get rule(): RuleAdd1CallRuleStruct {
+    return changetype<RuleAdd1CallRuleStruct>(
+      this._call.inputValues[0].value.toTuple()
+    );
+  }
+
+  get confirmation(): RuleAdd1CallConfirmationStruct {
+    return changetype<RuleAdd1CallConfirmationStruct>(
+      this._call.inputValues[1].value.toTuple()
+    );
+  }
+
+  get effects(): Array<RuleAdd1CallEffectsStruct> {
+    return this._call.inputValues[2].value.toTupleArray<
+      RuleAdd1CallEffectsStruct
+    >();
+  }
+}
+
+export class RuleAdd1Call__Outputs {
+  _call: RuleAdd1Call;
+
+  constructor(call: RuleAdd1Call) {
+    this._call = call;
+  }
+
+  get value0(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class RuleAdd1CallRuleStruct extends ethereum.Tuple {
+  get about(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get affected(): string {
+    return this[1].toString();
+  }
+
+  get negation(): boolean {
+    return this[2].toBoolean();
+  }
+
+  get uri(): string {
+    return this[3].toString();
+  }
+
+  get disabled(): boolean {
+    return this[4].toBoolean();
+  }
+}
+
+export class RuleAdd1CallConfirmationStruct extends ethereum.Tuple {
+  get ruling(): string {
+    return this[0].toString();
+  }
+
+  get evidence(): boolean {
+    return this[1].toBoolean();
+  }
+
+  get witness(): BigInt {
+    return this[2].toBigInt();
+  }
+}
+
+export class RuleAdd1CallEffectsStruct extends ethereum.Tuple {
+  get name(): string {
+    return this[0].toString();
+  }
+
+  get value(): i32 {
+    return this[1].toI32();
+  }
+
+  get direction(): boolean {
+    return this[2].toBoolean();
+  }
+}
+
+export class RuleConfirmationUpdate1Call extends ethereum.Call {
+  get inputs(): RuleConfirmationUpdate1Call__Inputs {
+    return new RuleConfirmationUpdate1Call__Inputs(this);
+  }
+
+  get outputs(): RuleConfirmationUpdate1Call__Outputs {
+    return new RuleConfirmationUpdate1Call__Outputs(this);
+  }
+}
+
+export class RuleConfirmationUpdate1Call__Inputs {
+  _call: RuleConfirmationUpdate1Call;
+
+  constructor(call: RuleConfirmationUpdate1Call) {
+    this._call = call;
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get confirmation(): RuleConfirmationUpdate1CallConfirmationStruct {
+    return changetype<RuleConfirmationUpdate1CallConfirmationStruct>(
+      this._call.inputValues[1].value.toTuple()
+    );
+  }
+}
+
+export class RuleConfirmationUpdate1Call__Outputs {
+  _call: RuleConfirmationUpdate1Call;
+
+  constructor(call: RuleConfirmationUpdate1Call) {
+    this._call = call;
+  }
+}
+
+export class RuleConfirmationUpdate1CallConfirmationStruct extends ethereum.Tuple {
+  get ruling(): string {
+    return this[0].toString();
+  }
+
+  get evidence(): boolean {
+    return this[1].toBoolean();
+  }
+
+  get witness(): BigInt {
+    return this[2].toBigInt();
+  }
+}
+
+export class RuleDisable1Call extends ethereum.Call {
+  get inputs(): RuleDisable1Call__Inputs {
+    return new RuleDisable1Call__Inputs(this);
+  }
+
+  get outputs(): RuleDisable1Call__Outputs {
+    return new RuleDisable1Call__Outputs(this);
+  }
+}
+
+export class RuleDisable1Call__Inputs {
+  _call: RuleDisable1Call;
+
+  constructor(call: RuleDisable1Call) {
+    this._call = call;
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get disabled(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class RuleDisable1Call__Outputs {
+  _call: RuleDisable1Call;
+
+  constructor(call: RuleDisable1Call) {
+    this._call = call;
+  }
+}
+
+export class RuleUpdate1Call extends ethereum.Call {
+  get inputs(): RuleUpdate1Call__Inputs {
+    return new RuleUpdate1Call__Inputs(this);
+  }
+
+  get outputs(): RuleUpdate1Call__Outputs {
+    return new RuleUpdate1Call__Outputs(this);
+  }
+}
+
+export class RuleUpdate1Call__Inputs {
+  _call: RuleUpdate1Call;
+
+  constructor(call: RuleUpdate1Call) {
+    this._call = call;
+  }
+
+  get id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get rule(): RuleUpdate1CallRuleStruct {
+    return changetype<RuleUpdate1CallRuleStruct>(
+      this._call.inputValues[1].value.toTuple()
+    );
+  }
+
+  get effects(): Array<RuleUpdate1CallEffectsStruct> {
+    return this._call.inputValues[2].value.toTupleArray<
+      RuleUpdate1CallEffectsStruct
+    >();
+  }
+}
+
+export class RuleUpdate1Call__Outputs {
+  _call: RuleUpdate1Call;
+
+  constructor(call: RuleUpdate1Call) {
+    this._call = call;
+  }
+}
+
+export class RuleUpdate1CallRuleStruct extends ethereum.Tuple {
+  get about(): Bytes {
+    return this[0].toBytes();
+  }
+
+  get affected(): string {
+    return this[1].toString();
+  }
+
+  get negation(): boolean {
+    return this[2].toBoolean();
+  }
+
+  get uri(): string {
+    return this[3].toString();
+  }
+
+  get disabled(): boolean {
+    return this[4].toBoolean();
+  }
+}
+
+export class RuleUpdate1CallEffectsStruct extends ethereum.Tuple {
+  get name(): string {
+    return this[0].toString();
+  }
+
+  get value(): i32 {
+    return this[1].toI32();
+  }
+
+  get direction(): boolean {
+    return this[2].toBoolean();
+  }
+}
+
+export class TaskMakeCall extends ethereum.Call {
+  get inputs(): TaskMakeCall__Inputs {
+    return new TaskMakeCall__Inputs(this);
+  }
+
+  get outputs(): TaskMakeCall__Outputs {
+    return new TaskMakeCall__Outputs(this);
+  }
+}
+
+export class TaskMakeCall__Inputs {
+  _call: TaskMakeCall;
+
+  constructor(call: TaskMakeCall) {
+    this._call = call;
+  }
+
+  get type_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get name_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class TaskMakeCall__Outputs {
+  _call: TaskMakeCall;
+
+  constructor(call: TaskMakeCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class ApplyToTaskCall extends ethereum.Call {
+  get inputs(): ApplyToTaskCall__Inputs {
+    return new ApplyToTaskCall__Inputs(this);
+  }
+
+  get outputs(): ApplyToTaskCall__Outputs {
+    return new ApplyToTaskCall__Outputs(this);
+  }
+}
+
+export class ApplyToTaskCall__Inputs {
+  _call: ApplyToTaskCall;
+
+  constructor(call: ApplyToTaskCall) {
+    this._call = call;
+  }
+
+  get taskAddr(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get uri(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class ApplyToTaskCall__Outputs {
+  _call: ApplyToTaskCall;
+
+  constructor(call: ApplyToTaskCall) {
+    this._call = call;
+  }
+}
+
+export class DeliverTaskCall extends ethereum.Call {
+  get inputs(): DeliverTaskCall__Inputs {
+    return new DeliverTaskCall__Inputs(this);
+  }
+
+  get outputs(): DeliverTaskCall__Outputs {
+    return new DeliverTaskCall__Outputs(this);
+  }
+}
+
+export class DeliverTaskCall__Inputs {
+  _call: DeliverTaskCall;
+
+  constructor(call: DeliverTaskCall) {
+    this._call = call;
+  }
+
+  get taskAddr(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get uri(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class DeliverTaskCall__Outputs {
+  _call: DeliverTaskCall;
+
+  constructor(call: DeliverTaskCall) {
     this._call = call;
   }
 }

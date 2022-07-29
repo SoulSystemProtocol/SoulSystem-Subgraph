@@ -10,8 +10,8 @@ type Soul @entity {
   uri: String # metadata uri
   uriData: Bytes
   uriImage: String
-  uriFirstName: String
-  uriLastName: String
+  uriFirstName: String!
+  uriLastName: String!
   searchField: String
 }
 
@@ -24,6 +24,7 @@ type Game @entity {
   uriData: Bytes
   roles: [GameRole!]! @derivedFrom(field: "game")
   nominations: [GameNomination!]! @derivedFrom(field: "game")
+  posts: [GamePost!]! @derivedFrom(field: "game")
 }
 
 type GameRole @entity {
@@ -40,6 +41,16 @@ type GameNomination @entity {
   createdDate: BigInt!
   nominator: Soul!
   nominated: Soul!
+}
+
+type GamePost @entity {
+  id: ID! # combination of game address and event transaction address
+  game: Game!
+  createdDate: BigInt
+  author: Soul!
+  entityRole: String
+  uri: String
+  metadata: Bytes
 }
 
 type Claim @entity {
@@ -81,4 +92,5 @@ type ClaimPost @entity {
   author: Soul!
   entityRole: String
   uri: String
+  metadata: Bytes
 }

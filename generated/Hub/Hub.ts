@@ -212,20 +212,33 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  claimMake(name_: string, uri_: string): Address {
-    let result = super.call("claimMake", "claimMake(string,string):(address)", [
-      ethereum.Value.fromString(name_),
-      ethereum.Value.fromString(uri_)
-    ]);
+  claimMake(type_: string, name_: string, uri_: string): Address {
+    let result = super.call(
+      "claimMake",
+      "claimMake(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
 
     return result[0].toAddress();
   }
 
-  try_claimMake(name_: string, uri_: string): ethereum.CallResult<Address> {
+  try_claimMake(
+    type_: string,
+    name_: string,
+    uri_: string
+  ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "claimMake",
-      "claimMake(string,string):(address)",
-      [ethereum.Value.fromString(name_), ethereum.Value.fromString(uri_)]
+      "claimMake(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -249,12 +262,12 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  gameMake(gameType_: string, name_: string, uri_: string): Address {
+  gameMake(type_: string, name_: string, uri_: string): Address {
     let result = super.call(
       "gameMake",
       "gameMake(string,string,string):(address)",
       [
-        ethereum.Value.fromString(gameType_),
+        ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
         ethereum.Value.fromString(uri_)
       ]
@@ -264,7 +277,7 @@ export class Hub extends ethereum.SmartContract {
   }
 
   try_gameMake(
-    gameType_: string,
+    type_: string,
     name_: string,
     uri_: string
   ): ethereum.CallResult<Address> {
@@ -272,7 +285,7 @@ export class Hub extends ethereum.SmartContract {
       "gameMake",
       "gameMake(string,string,string):(address)",
       [
-        ethereum.Value.fromString(gameType_),
+        ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
         ethereum.Value.fromString(uri_)
       ]
@@ -412,20 +425,33 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  taskMake(name_: string, uri_: string): Address {
-    let result = super.call("taskMake", "taskMake(string,string):(address)", [
-      ethereum.Value.fromString(name_),
-      ethereum.Value.fromString(uri_)
-    ]);
+  taskMake(type_: string, name_: string, uri_: string): Address {
+    let result = super.call(
+      "taskMake",
+      "taskMake(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
 
     return result[0].toAddress();
   }
 
-  try_taskMake(name_: string, uri_: string): ethereum.CallResult<Address> {
+  try_taskMake(
+    type_: string,
+    name_: string,
+    uri_: string
+  ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "taskMake",
-      "taskMake(string,string):(address)",
-      [ethereum.Value.fromString(name_), ethereum.Value.fromString(uri_)]
+      "taskMake(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -554,12 +580,16 @@ export class ClaimMakeCall__Inputs {
     this._call = call;
   }
 
-  get name_(): string {
+  get type_(): string {
     return this._call.inputValues[0].value.toString();
   }
 
-  get uri_(): string {
+  get name_(): string {
     return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
   }
 }
 
@@ -592,7 +622,7 @@ export class GameMakeCall__Inputs {
     this._call = call;
   }
 
-  get gameType_(): string {
+  get type_(): string {
     return this._call.inputValues[0].value.toString();
   }
 
@@ -816,12 +846,16 @@ export class TaskMakeCall__Inputs {
     this._call = call;
   }
 
-  get name_(): string {
+  get type_(): string {
     return this._call.inputValues[0].value.toString();
   }
 
-  get uri_(): string {
+  get name_(): string {
     return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
   }
 }
 

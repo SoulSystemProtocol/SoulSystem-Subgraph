@@ -4,11 +4,13 @@ import {
   GameNomination,
   GameRole,
   Soul,
+  GamePost,
 } from "../../generated/schema";
 import {
   ContractURI,
   Nominate,
   TransferByToken,
+  Post,
 } from "../../generated/templates/Game/Game";
 import { loadOrCreateGame } from "../utils";
 
@@ -94,4 +96,31 @@ export function handleNominate(event: Nominate): void {
   nomination.nominator = nominatorAccount.soul;
   nomination.nominated = nominatedSoul.id;
   nomination.save();
+}
+
+/**
+ * Handle a post event to add a post to game.
+ */
+export function handlePost(event: Post): void {
+  // Get game
+  let game = loadOrCreateGame(event.address.toHexString());
+  // Skip if author soul is not exists
+  let authorSoul = Soul.load(event.params.tokenId.toString());
+  if (!authorSoul) {
+    return;
+  }
+  // Create post entity
+  let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  let post = new GamePost(postId);
+  post.game = game.id;
+  post.createdDate = event.block.timestamp;
+  post.author = authorSoul.id;
+  post.entityRole = event.params.entRole.toString();
+  post.uri = event.params.uri;
+  // Load uri data
+  let ipfsHash = event.params.uri.split("/").at(-1);
+  let metadata = ipfs.cat(ipfsHash);
+  post.metadata = metadata;
+  //Save
+  post.save();
 }
