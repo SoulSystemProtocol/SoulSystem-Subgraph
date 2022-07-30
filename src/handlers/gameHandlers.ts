@@ -10,6 +10,7 @@ import {
   ContractURI,
   Nominate,
   TransferByToken,
+  RoleCreated,
   Post,
 } from "../../generated/templates/Game/Game";
 import { loadOrCreateGame } from "../utils";
@@ -27,6 +28,28 @@ export function handleContractUri(event: ContractURI): void {
   game.uri = event.params.param0;
   game.uriData = uriData;
   game.save();
+}
+
+/**
+ * Handle Role creation Event
+ */
+export function handleRoleCreated(event: RoleCreated): void {
+  // Find role
+  let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+  let role = GameRole.load(roleId);
+  if (!role) {
+    // Create Role
+    role = new GameRole(roleId);
+    // Set claim
+    let claim = loadOrCreateGame(event.address.toHexString());
+    role.game = claim.id;
+    role.roleId = event.params.id;
+    role.souls = [];
+    role.soulsCount = 0;
+  }
+  // Add Name
+  role.name = event.params.role;
+  role.save();
 }
 
 /**
@@ -48,6 +71,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       role.roleId = event.params.id;
       role.souls = [];
       role.soulsCount = 0;
+      role.name = "";
     }
     // Define role souls and souls count
     let souls = role.souls;

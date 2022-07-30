@@ -31,6 +31,7 @@ type GameRole @entity {
   id: ID! # combination of game address and role id
   game: Game!
   roleId: BigInt!
+  name: String!
   souls: [String!]!
   soulsCount: Int!
 }
@@ -72,6 +73,7 @@ type Claim @entity {
 type ClaimRole @entity {
   id: ID! # combination of claim address and role id
   claim: Claim!
+  name: String!
   roleId: BigInt!
   souls: [String!]!
   soulsCount: Int!

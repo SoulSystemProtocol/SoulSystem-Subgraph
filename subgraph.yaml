@@ -112,6 +112,8 @@ templates:
           handler: handleNominate
         - event: Post(indexed address,uint256,string,string)
           handler: handlePost
+        - event: RoleCreated(indexed uint256,string)
+          handler: handleRoleCreated
       file: ./src/handlers/gameHandlers.ts
   # Claim contract template
   - kind: ethereum
@@ -142,4 +144,6 @@ templates:
           handler: handleNominate
         - event: Post(indexed address,uint256,string,string)
           handler: handlePost
+        - event: RoleCreated(indexed uint256,string)
+          handler: handleRoleCreated
       file: ./src/handlers/claimHandlers.ts

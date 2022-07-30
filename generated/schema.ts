@@ -336,6 +336,7 @@ export class GameRole extends Entity {
 
     this.set("game", Value.fromString(""));
     this.set("roleId", Value.fromBigInt(BigInt.zero()));
+    this.set("name", Value.fromString(""));
     this.set("souls", Value.fromStringArray(new Array(0)));
     this.set("soulsCount", Value.fromI32(0));
   }
@@ -382,6 +383,15 @@ export class GameRole extends Entity {
 
   set roleId(value: BigInt) {
     this.set("roleId", Value.fromBigInt(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
   get souls(): Array<string> {
@@ -797,6 +807,7 @@ export class ClaimRole extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("claim", Value.fromString(""));
+    this.set("name", Value.fromString(""));
     this.set("roleId", Value.fromBigInt(BigInt.zero()));
     this.set("souls", Value.fromStringArray(new Array(0)));
     this.set("soulsCount", Value.fromI32(0));
@@ -835,6 +846,15 @@ export class ClaimRole extends Entity {
 
   set claim(value: string) {
     this.set("claim", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
   get roleId(): BigInt {
