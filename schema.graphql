@@ -9,22 +9,26 @@ type Soul @entity {
   type: String! # type to determine that the entity is created by an account or contract
   uri: String # metadata uri
   uriData: Bytes
-  uriImage: String
+  uriImage: String!
   uriFirstName: String!
   uriLastName: String!
   searchField: String
+  participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
+  participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
 }
 
 type Game @entity {
   id: ID! # contract address
   hub: String! # hub address
   name: String!
-  type: String
+  type: String!
   uri: String # metadata uri
   uriData: Bytes
   roles: [GameRole!]! @derivedFrom(field: "game")
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
+  participants: [GameParticipant!]! @derivedFrom(field: "entity")
+  assoc: [GameAssoc!]! @derivedFrom(field: "bEnt")
 }
 
 type GameRole @entity {
@@ -49,7 +53,7 @@ type GamePost @entity {
   entity: Game!
   createdDate: BigInt
   author: Soul!
-  entityRole: String
+  entityRole: String!
   uri: String
   metadata: Bytes
 }
@@ -59,8 +63,8 @@ type Claim @entity {
   name: String!
   hub: String # hub address
   game: Game
-  type: String
-  stage: Int
+  type: String!
+  stage: Int!
   uri: String # metadata uri
   uriData: Bytes
   createdDate: BigInt!
@@ -68,9 +72,11 @@ type Claim @entity {
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
   posts: [ClaimPost!]! @derivedFrom(field: "entity")
+  participants: [ProcParticipant!]! @derivedFrom(field: "entity")
+  assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ClaimRole @entity {
+type ClaimRole @entity { # DEPRECATE
   id: ID! # combination of claim address and role id
   claim: Claim!
   name: String!
@@ -95,4 +101,31 @@ type ClaimPost @entity {
   entityRole: String
   uri: String
   metadata: Bytes
+}
+
+#[WIP]
+type GameParticipant @entity {
+  id: ID! 
+  entity: Game!
+  sbt: Soul!
+  roles: [BigInt!]!
+}
+type ProcParticipant @entity {
+  id: ID! 
+  entity: Claim!
+  sbt: Soul!
+  roles: [BigInt!]!
+}
+
+type GameAssoc @entity {
+  id: ID! # combination of claim address and SBT & roleId address
+  bEnt: Game!
+  sbt: Soul!
+  role: BigInt!
+}
+type ProcAssoc @entity {
+  id: ID! # combination of claim address and SBT & roleId address
+  bEnt: Claim!
+  sbt: Soul!
+  role: BigInt!
 }

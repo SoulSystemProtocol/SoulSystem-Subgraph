@@ -1,10 +1,12 @@
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
 import {
   Account,
+  Soul,
   ClaimNomination,
   ClaimPost,
   ClaimRole,
-  Soul,
+  ProcParticipant,
+  ProcAssoc,
 } from "../../generated/schema";
 import {
   ContractURI,
@@ -76,6 +78,45 @@ export function handleTransferByToken(event: TransferByToken): void {
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
+
+
+    //Relation Test 1
+    let participanId = `${event.address.toHexString()}_${event.params.toOwnerToken.toString()}`;
+    let procParticipant = ProcParticipant.load(participanId);
+    if (!procParticipant) {
+      procParticipant = new ProcParticipant(participanId);
+      procParticipant.entity = claim.id;
+      procParticipant.sbt = event.params.toOwnerToken.toString();
+    }
+    if (isTokenMinted) {
+      //Add Token ID to Roles List
+      procParticipant.roles.push(event.params.id);
+    }
+    else if (isTokenBurned) {
+      //Remove Token ID From Roles List
+      const accountIndex = procParticipant.roles.indexOf(event.params.id);
+      if (accountIndex > -1) {
+        procParticipant.roles.splice(accountIndex, 1);
+      }
+    }
+    procParticipant.save();
+
+    //Relation Test 2
+    let sbt = event.params.toOwnerToken.toString();
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${event.params.id.toString()}`;
+    let procAssoc = ProcAssoc.load(participanRoleId);
+    if (isTokenMinted) {
+      if (!procAssoc) {
+        procAssoc = new ProcAssoc(participanRoleId);
+        procAssoc.bEnt = claim.id;
+        procAssoc.sbt = sbt;
+        procAssoc.role = event.params.id;
+        procAssoc.save();
+      }
+    }
+
+
+
     // Find or create role
     let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
     let role = ClaimRole.load(roleId);
@@ -94,7 +135,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       souls.push(event.params.toOwnerToken.toString());
       soulsCount = soulsCount + 1;
     }
-    if (isTokenBurned) {
+    else if (isTokenBurned) {
       const accountIndex = souls.indexOf(
         event.params.fromOwnerToken.toString()
       );

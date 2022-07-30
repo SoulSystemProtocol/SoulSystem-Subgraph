@@ -38,7 +38,7 @@ export function handleURI(event: URI): void {
   let uriJsonObject = uriJson ? uriJson.toObject() : null;
   // Get image from uri data
   let uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
-  let uriJsonImageString = uriJsonImage ? uriJsonImage.toString() : null;
+  let uriJsonImageString = uriJsonImage ? uriJsonImage.toString() : "";
   // Get attributes from uri data
   let uriJsonAttributes = uriJsonObject
     ? uriJsonObject.get("attributes")
