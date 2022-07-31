@@ -5,6 +5,7 @@ import {
   GameRole,
   Soul,
   GamePost,
+  GameParticipant
 } from "../../generated/schema";
 import {
   ContractURI,
@@ -57,7 +58,46 @@ export function handleRoleCreated(event: RoleCreated): void {
  */
 export function handleTransferByToken(event: TransferByToken): void {
   // Get game
-  let game = loadOrCreateGame(event.address.toHexString());
+  let entity = loadOrCreateGame(event.address.toHexString());
+  let tokenId = event.params.id;
+
+
+  //Relation Test 1
+  if (!event.params.toOwnerToken.equals(BigInt.zero())) {
+    //Add to Recepient
+    let sbt = event.params.toOwnerToken;
+    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let participant = GameParticipant.load(participanId);
+    if (!participant) {
+      participant = new GameParticipant(participanId);
+      participant.entity = entity.id;
+      participant.sbt = sbt.toString();
+      participant.roles = [];
+    }
+    let procRoles = participant.roles;
+    //Add Token ID to Roles List
+    procRoles.push(tokenId.toString());
+    participant.roles = procRoles;
+    participant.save();
+  }
+
+  if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
+    //Remove From Origin
+    let sbt = event.params.fromOwnerToken;
+    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let participant = GameParticipant.load(participanId);
+    if (participant) {
+      const accountIndex = participant.roles.indexOf(tokenId.toString());
+      if (accountIndex > -1) {
+        let procRoles = participant.roles;
+        procRoles.splice(accountIndex, 1);
+        participant.roles = procRoles;
+        participant.save();
+      }
+    }
+  }
+
+  // ** DEPRECATE
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
@@ -67,7 +107,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     let role = GameRole.load(roleId);
     if (!role) {
       role = new GameRole(roleId);
-      role.game = game.id;
+      role.game = entity.id;
       role.roleId = event.params.id;
       role.souls = [];
       role.soulsCount = 0;
