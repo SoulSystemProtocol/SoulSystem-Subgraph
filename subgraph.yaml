@@ -114,6 +114,7 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
+      # - event: RoleURIChange(string,string)
       file: ./src/handlers/gameHandlers.ts
   # Claim contract template
   - kind: ethereum
@@ -146,4 +147,5 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
+      # - event: RoleURIChange(string,string)
       file: ./src/handlers/claimHandlers.ts
