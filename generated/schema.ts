@@ -55,6 +55,408 @@ export class Account extends Entity {
   }
 }
 
+export class OpenRepo extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save OpenRepo entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save OpenRepo entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("OpenRepo", id.toString(), this);
+    }
+  }
+
+  static load(id: string): OpenRepo | null {
+    return changetype<OpenRepo | null>(store.get("OpenRepo", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get conf(): Array<string> | null {
+    let value = this.get("conf");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set conf(value: Array<string> | null) {
+    if (!value) {
+      this.unset("conf");
+    } else {
+      this.set("conf", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+}
+
+export class RelAddress extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("owner", Value.fromString(""));
+    this.set("key", Value.fromString(""));
+    this.set("value", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RelAddress entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save RelAddress entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("RelAddress", id.toString(), this);
+    }
+  }
+
+  static load(id: string): RelAddress | null {
+    return changetype<RelAddress | null>(store.get("RelAddress", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value!.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get key(): string {
+    let value = this.get("key");
+    return value!.toString();
+  }
+
+  set key(value: string) {
+    this.set("key", Value.fromString(value));
+  }
+
+  get value(): Array<string> {
+    let value = this.get("value");
+    return value!.toStringArray();
+  }
+
+  set value(value: Array<string>) {
+    this.set("value", Value.fromStringArray(value));
+  }
+}
+
+export class Hub extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("OpenRepo", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Hub entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Hub entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Hub", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Hub | null {
+    return changetype<Hub | null>(store.get("Hub", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get OpenRepo(): string {
+    let value = this.get("OpenRepo");
+    return value!.toString();
+  }
+
+  set OpenRepo(value: string) {
+    this.set("OpenRepo", Value.fromString(value));
+  }
+
+  get conf(): Array<string> | null {
+    let value = this.get("conf");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set conf(value: Array<string> | null) {
+    if (!value) {
+      this.unset("conf");
+    } else {
+      this.set("conf", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+}
+
+export class HubConf extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save HubConf entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save HubConf entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("HubConf", id.toString(), this);
+    }
+  }
+
+  static load(id: string): HubConf | null {
+    return changetype<HubConf | null>(store.get("HubConf", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+}
+
+export class GameRelAddress extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("origin", Value.fromString(""));
+    this.set("key", Value.fromString(""));
+    this.set("value", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GameRelAddress entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save GameRelAddress entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("GameRelAddress", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GameRelAddress | null {
+    return changetype<GameRelAddress | null>(store.get("GameRelAddress", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get origin(): string {
+    let value = this.get("origin");
+    return value!.toString();
+  }
+
+  set origin(value: string) {
+    this.set("origin", Value.fromString(value));
+  }
+
+  get key(): string {
+    let value = this.get("key");
+    return value!.toString();
+  }
+
+  set key(value: string) {
+    this.set("key", Value.fromString(value));
+  }
+
+  get value(): Array<string> {
+    let value = this.get("value");
+    return value!.toStringArray();
+  }
+
+  set value(value: Array<string>) {
+    this.set("value", Value.fromStringArray(value));
+  }
+}
+
+export class ClaimRelAddress extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("origin", Value.fromString(""));
+    this.set("key", Value.fromString(""));
+    this.set("value", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ClaimRelAddress entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ClaimRelAddress entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ClaimRelAddress", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ClaimRelAddress | null {
+    return changetype<ClaimRelAddress | null>(store.get("ClaimRelAddress", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get origin(): string {
+    let value = this.get("origin");
+    return value!.toString();
+  }
+
+  set origin(value: string) {
+    this.set("origin", Value.fromString(value));
+  }
+
+  get key(): string {
+    let value = this.get("key");
+    return value!.toString();
+  }
+
+  set key(value: string) {
+    this.set("key", Value.fromString(value));
+  }
+
+  get value(): Array<string> {
+    let value = this.get("value");
+    return value!.toStringArray();
+  }
+
+  set value(value: Array<string>) {
+    this.set("value", Value.fromStringArray(value));
+  }
+}
+
+export class AccountRelAddress extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("origin", Value.fromString(""));
+    this.set("key", Value.fromString(""));
+    this.set("value", Value.fromStringArray(new Array(0)));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save AccountRelAddress entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save AccountRelAddress entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("AccountRelAddress", id.toString(), this);
+    }
+  }
+
+  static load(id: string): AccountRelAddress | null {
+    return changetype<AccountRelAddress | null>(
+      store.get("AccountRelAddress", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get origin(): string {
+    let value = this.get("origin");
+    return value!.toString();
+  }
+
+  set origin(value: string) {
+    this.set("origin", Value.fromString(value));
+  }
+
+  get key(): string {
+    let value = this.get("key");
+    return value!.toString();
+  }
+
+  set key(value: string) {
+    this.set("key", Value.fromString(value));
+  }
+
+  get value(): Array<string> {
+    let value = this.get("value");
+    return value!.toStringArray();
+  }
+
+  set value(value: Array<string>) {
+    this.set("value", Value.fromStringArray(value));
+  }
+}
+
 export class Soul extends Entity {
   constructor(id: string) {
     super();
@@ -305,15 +707,6 @@ export class Game extends Entity {
     }
   }
 
-  get roles(): Array<string> {
-    let value = this.get("roles");
-    return value!.toStringArray();
-  }
-
-  set roles(value: Array<string>) {
-    this.set("roles", Value.fromStringArray(value));
-  }
-
   get nominations(): Array<string> {
     let value = this.get("nominations");
     return value!.toStringArray();
@@ -330,6 +723,15 @@ export class Game extends Entity {
 
   set posts(value: Array<string>) {
     this.set("posts", Value.fromStringArray(value));
+  }
+
+  get roles(): Array<string> {
+    let value = this.get("roles");
+    return value!.toStringArray();
+  }
+
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
   }
 
   get participants(): Array<string> {
@@ -661,15 +1063,6 @@ export class Claim extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get name(): string {
-    let value = this.get("name");
-    return value!.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
   get hub(): string | null {
     let value = this.get("hub");
     if (!value || value.kind == ValueKind.NULL) {
@@ -685,6 +1078,15 @@ export class Claim extends Entity {
     } else {
       this.set("hub", Value.fromString(<string>value));
     }
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
   get game(): string | null {
@@ -711,15 +1113,6 @@ export class Claim extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
-  }
-
-  get stage(): i32 {
-    let value = this.get("stage");
-    return value!.toI32();
-  }
-
-  set stage(value: i32) {
-    this.set("stage", Value.fromI32(value));
   }
 
   get uri(): string | null {
@@ -756,6 +1149,15 @@ export class Claim extends Entity {
     }
   }
 
+  get stage(): i32 {
+    let value = this.get("stage");
+    return value!.toI32();
+  }
+
+  set stage(value: i32) {
+    this.set("stage", Value.fromI32(value));
+  }
+
   get createdDate(): BigInt {
     let value = this.get("createdDate");
     return value!.toBigInt();
@@ -782,15 +1184,6 @@ export class Claim extends Entity {
     }
   }
 
-  get roles(): Array<string> {
-    let value = this.get("roles");
-    return value!.toStringArray();
-  }
-
-  set roles(value: Array<string>) {
-    this.set("roles", Value.fromStringArray(value));
-  }
-
   get nominations(): Array<string> {
     let value = this.get("nominations");
     return value!.toStringArray();
@@ -807,6 +1200,15 @@ export class Claim extends Entity {
 
   set posts(value: Array<string>) {
     this.set("posts", Value.fromStringArray(value));
+  }
+
+  get roles(): Array<string> {
+    let value = this.get("roles");
+    return value!.toStringArray();
+  }
+
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
   }
 
   get participants(): Array<string> {
@@ -1115,7 +1517,7 @@ export class GameParticipant extends Entity {
 
     this.set("entity", Value.fromString(""));
     this.set("sbt", Value.fromString(""));
-    this.set("roles", Value.fromBigIntArray(new Array(0)));
+    this.set("roles", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -1162,13 +1564,13 @@ export class GameParticipant extends Entity {
     this.set("sbt", Value.fromString(value));
   }
 
-  get roles(): Array<BigInt> {
+  get roles(): Array<string> {
     let value = this.get("roles");
-    return value!.toBigIntArray();
+    return value!.toStringArray();
   }
 
-  set roles(value: Array<BigInt>) {
-    this.set("roles", Value.fromBigIntArray(value));
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
   }
 }
 
@@ -1179,7 +1581,7 @@ export class ProcParticipant extends Entity {
 
     this.set("entity", Value.fromString(""));
     this.set("sbt", Value.fromString(""));
-    this.set("roles", Value.fromBigIntArray(new Array(0)));
+    this.set("roles", Value.fromStringArray(new Array(0)));
   }
 
   save(): void {
@@ -1226,13 +1628,13 @@ export class ProcParticipant extends Entity {
     this.set("sbt", Value.fromString(value));
   }
 
-  get roles(): Array<BigInt> {
+  get roles(): Array<string> {
     let value = this.get("roles");
-    return value!.toBigIntArray();
+    return value!.toStringArray();
   }
 
-  set roles(value: Array<BigInt>) {
-    this.set("roles", Value.fromBigIntArray(value));
+  set roles(value: Array<string>) {
+    this.set("roles", Value.fromStringArray(value));
   }
 }
 

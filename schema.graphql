@@ -3,6 +3,56 @@ type Account @entity {
   soul: Soul!
 }
 
+#Entity: OpenRepo [WIP]
+type OpenRepo @entity {
+  id: ID! # contract address
+  conf: [RelAddress!]
+}
+
+type RelAddress @entity {
+  id: ID! # Unique Combo
+  owner: String! # Address
+  key: String!
+  value: [String!]! # Addresses
+}
+
+
+
+#Entity: Hub [WIP]
+type Hub @entity {
+  id: ID! # Address
+  OpenRepo: String! # Address
+  conf: [HubConf!]
+}
+type HubConf @entity {
+  id: ID! # 
+}
+
+
+#Separate Relations
+type GameRelAddress @entity {
+  id: ID! # Unique Combo
+  origin: Game! 
+  key: String!
+  value: [String!]! # Addresses
+}
+type ClaimRelAddress @entity {
+  id: ID! # Unique Combo
+  origin: Claim! 
+  key: String!
+  value: [String!]! # Addresses
+}
+type AccountRelAddress @entity {
+  id: ID! # Unique Combo
+  origin: Account! 
+  key: String!
+  value: [String!]! # Addresses
+}
+
+
+
+
+#Entity: Soul
 type Soul @entity {
   id: ID!
   owner: String! # account address
@@ -17,6 +67,7 @@ type Soul @entity {
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
 }
 
+#Entity: Game
 type Game @entity {
   id: ID! # contract address
   hub: String! # hub address
@@ -24,9 +75,11 @@ type Game @entity {
   type: String!
   uri: String # metadata uri
   uriData: Bytes
-  roles: [GameRole!]! @derivedFrom(field: "game")
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
+
+  #Relations to Souls (Parts / Members)
+  roles: [GameRole!]! @derivedFrom(field: "game")
   participants: [GameParticipant!]! @derivedFrom(field: "entity")
   assoc: [GameAssoc!]! @derivedFrom(field: "bEnt")
 }
@@ -60,18 +113,20 @@ type GamePost @entity {
 
 type Claim @entity {
   id: ID! # contract address
-  name: String!
   hub: String # hub address
+  name: String!
   game: Game
   type: String!
-  stage: Int!
   uri: String # metadata uri
   uriData: Bytes
+  stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
-  roles: [ClaimRole!]! @derivedFrom(field: "claim")
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
   posts: [ClaimPost!]! @derivedFrom(field: "entity")
+  
+  #Relations to Souls (Parts / Members)
+  roles: [ClaimRole!]! @derivedFrom(field: "claim")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
@@ -108,13 +163,13 @@ type GameParticipant @entity {
   id: ID! 
   entity: Game!
   sbt: Soul!
-  roles: [BigInt!]!
+  roles: [String!]!
 }
 type ProcParticipant @entity {
   id: ID! 
   entity: Claim!
   sbt: Soul!
-  roles: [BigInt!]!
+  roles: [String!]!
 }
 
 type GameAssoc @entity {

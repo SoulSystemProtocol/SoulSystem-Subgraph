@@ -15,18 +15,43 @@ export function addSoulToAccount(accountAddress: Address, soul: Soul): void {
   account.save();
 }
 
+// export function loadAnyEntityByAddress(address: string): Claim {
+
+
+/** [DEV]
+ * Load hub or create new.
+ * /
+export function loadOrCreateHub(id: string): Claim {
+  let claim = Claim.load(id);
+  if (!claim) {
+    // Create claim
+    claim = new Claim(id);
+
+    // Load claim name from contract
+    let claimContract = ClaimContract.bind(Address.fromString(id));
+    let claimContractName = claimContract.name();
+    claim.name = claimContractName;
+
+    claim.save();
+  }
+  return claim;
+}
+
+
 /**
  * Load game or create new.
  */
 export function loadOrCreateGame(id: string): Game {
   let game = Game.load(id);
   if (!game) {
+    // Create game
+    game = new Game(id);
+
     // Load game name from contract
     let gameContract = GameContract.bind(Address.fromString(id));
     let gameContractName = gameContract.name();
-    // Create game
-    game = new Game(id);
     game.name = gameContractName;
+
     game.save();
   }
   return game;
@@ -38,12 +63,14 @@ export function loadOrCreateGame(id: string): Game {
 export function loadOrCreateClaim(id: string): Claim {
   let claim = Claim.load(id);
   if (!claim) {
+    // Create claim
+    claim = new Claim(id);
+
     // Load claim name from contract
     let claimContract = ClaimContract.bind(Address.fromString(id));
     let claimContractName = claimContract.name();
-    // Create claim
-    claim = new Claim(id);
     claim.name = claimContractName;
+
     claim.save();
   }
   return claim;
@@ -57,4 +84,21 @@ export function makeSearchField(entity: Soul): string {
   if (entity.uriFirstName) fields.push(entity.uriFirstName);
   if (entity.uriLastName) fields.push(entity.uriLastName);
   return fields.join('').toLowerCase();
+}
+
+
+interface Relation {
+  origin: any, key: string, value: any, save: Function
+}
+interface Params {
+  originAddress: any, key: string, destinationAddress: any
+}
+/**
+ * Update a Relation Entity
+ */
+export function setRelation(entity: any, params: Params): void {
+  entity.origin = params.originAddress.toHexString();
+  entity.key = params.key;
+  entity.value.push(params.destinationAddress.toHexString());
+  entity.save();
 }

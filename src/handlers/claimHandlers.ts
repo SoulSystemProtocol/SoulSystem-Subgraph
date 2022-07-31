@@ -74,43 +74,59 @@ export function handleRoleCreated(event: RoleCreated): void {
 export function handleTransferByToken(event: TransferByToken): void {
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
+  let tokenId = event.params.id;
+
+  //Relation Test 1
+  if (!event.params.toOwnerToken.equals(BigInt.zero())) {
+    //Add to Recepient
+    let sbt = event.params.toOwnerToken;
+    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let procParticipant = ProcParticipant.load(participanId);
+    if (!procParticipant) {
+      procParticipant = new ProcParticipant(participanId);
+      procParticipant.entity = claim.id;
+      procParticipant.sbt = sbt.toString();
+      procParticipant.roles = [];
+    }
+    let procRoles = procParticipant.roles;
+    //Add Token ID to Roles List
+    procRoles.push(tokenId.toString());
+    procParticipant.roles = procRoles;
+    procParticipant.save();
+  }
+
+  if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
+    //Remove From Origin
+    let sbt = event.params.fromOwnerToken;
+    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let procParticipant = ProcParticipant.load(participanId);
+    if (procParticipant) {
+      const accountIndex = procParticipant.roles.indexOf(tokenId.toString());
+      if (accountIndex > -1) {
+        let procRoles = procParticipant.roles;
+        procRoles.splice(accountIndex, 1);
+        procParticipant.roles = procRoles;
+        procParticipant.save();
+      }
+    }
+  }
+
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
 
 
-    //Relation Test 1
-    let participanId = `${event.address.toHexString()}_${event.params.toOwnerToken.toString()}`;
-    let procParticipant = ProcParticipant.load(participanId);
-    if (!procParticipant) {
-      procParticipant = new ProcParticipant(participanId);
-      procParticipant.entity = claim.id;
-      procParticipant.sbt = event.params.toOwnerToken.toString();
-    }
-    if (isTokenMinted) {
-      //Add Token ID to Roles List
-      procParticipant.roles.push(event.params.id);
-    }
-    else if (isTokenBurned) {
-      //Remove Token ID From Roles List
-      const accountIndex = procParticipant.roles.indexOf(event.params.id);
-      if (accountIndex > -1) {
-        procParticipant.roles.splice(accountIndex, 1);
-      }
-    }
-    procParticipant.save();
-
     //Relation Test 2
     let sbt = event.params.toOwnerToken.toString();
-    let participanRoleId = `${event.address.toHexString()}_${sbt}_${event.params.id.toString()}`;
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let procAssoc = ProcAssoc.load(participanRoleId);
     if (isTokenMinted) {
       if (!procAssoc) {
         procAssoc = new ProcAssoc(participanRoleId);
         procAssoc.bEnt = claim.id;
         procAssoc.sbt = sbt;
-        procAssoc.role = event.params.id;
+        procAssoc.role = tokenId;
         procAssoc.save();
       }
     }
@@ -118,12 +134,12 @@ export function handleTransferByToken(event: TransferByToken): void {
 
 
     // Find or create role
-    let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+    let roleId = `${event.address.toHexString()}_${tokenId}`;
     let role = ClaimRole.load(roleId);
     if (!role) {
       role = new ClaimRole(roleId);
       role.claim = claim.id;
-      role.roleId = event.params.id;
+      role.roleId = tokenId;
       role.souls = [];
       role.soulsCount = 0;
       role.name = "";
@@ -148,6 +164,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     role.souls = souls;
     role.soulsCount = soulsCount;
     role.save();
+
   }
 }
 
