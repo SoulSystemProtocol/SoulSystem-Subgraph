@@ -15,14 +15,15 @@ export function handleStringSet(event: StringSet): void {
   if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
     const id = event.params.originAddress.toHexString();
     // Get Entity
-    // let game = loadOrCreateGame(event.params.originAddress.toHexString());
-    let game = Game.load(id);
+    let game = loadOrCreateGame(event.params.originAddress.toHexString());
+    // let game = Game.load(id);  //This actually runs before the entity created event
     if (game) {
       // Update game type
       game.type = event.params.value;
       game.save();
     } else {
-      let claim = Claim.load(id);
+      let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
+      // let claim = Claim.load(id);  //This actually runs before the entity created event
       if (claim) {
         // Update claim type
         claim.type = event.params.value;
