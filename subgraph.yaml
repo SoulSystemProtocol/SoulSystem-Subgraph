@@ -56,6 +56,29 @@ dataSources:
         - event: ContractCreated(string,indexed address)
           handler: handleContractCreated
       file: ./src/handlers/hubHandlers.ts
+      # Action repository (history) contract
+  - kind: ethereum
+    name: ActionRepo
+    network: optimism-kovan
+    source:
+      address: "0x954b877d371F88238DD7A749BF01758e5f20C3C2"
+      abi: ActionRepo
+      startBlock: 5074998
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Action
+      abis:
+        - name: ActionRepo
+          file: ./abis/ActionRepo.json
+      eventHandlers:
+        - event: ActionAdded(indexed uint256,indexed bytes32,string,string,string,string)
+          handler: handleActionAdded
+        - event: ActionURI(indexed bytes32,string)
+          handler: handleActionURI
+      file: ./src/handlers/actionRepoHandler.ts
   # Open repo contract
   - kind: ethereum
     name: OpenRepo

@@ -939,6 +939,327 @@ export class GameRole extends Entity {
   }
 }
 
+export class GameRule extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("game", Value.fromString(""));
+    this.set("about", Value.fromString(""));
+    this.set("ruleId", Value.fromBigInt(BigInt.zero()));
+    this.set("effects", Value.fromStringArray(new Array(0)));
+    this.set("isDisabled", Value.fromBoolean(false));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GameRule entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save GameRule entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("GameRule", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GameRule | null {
+    return changetype<GameRule | null>(store.get("GameRule", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get game(): string {
+    let value = this.get("game");
+    return value!.toString();
+  }
+
+  set game(value: string) {
+    this.set("game", Value.fromString(value));
+  }
+
+  get about(): string {
+    let value = this.get("about");
+    return value!.toString();
+  }
+
+  set about(value: string) {
+    this.set("about", Value.fromString(value));
+  }
+
+  get aboutSubject(): string | null {
+    let value = this.get("aboutSubject");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set aboutSubject(value: string | null) {
+    if (!value) {
+      this.unset("aboutSubject");
+    } else {
+      this.set("aboutSubject", Value.fromString(<string>value));
+    }
+  }
+
+  get ruleId(): BigInt {
+    let value = this.get("ruleId");
+    return value!.toBigInt();
+  }
+
+  set ruleId(value: BigInt) {
+    this.set("ruleId", Value.fromBigInt(value));
+  }
+
+  get affected(): string | null {
+    let value = this.get("affected");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set affected(value: string | null) {
+    if (!value) {
+      this.unset("affected");
+    } else {
+      this.set("affected", Value.fromString(<string>value));
+    }
+  }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
+  }
+
+  get uriData(): Bytes | null {
+    let value = this.get("uriData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set uriData(value: Bytes | null) {
+    if (!value) {
+      this.unset("uriData");
+    } else {
+      this.set("uriData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get uriName(): string | null {
+    let value = this.get("uriName");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uriName(value: string | null) {
+    if (!value) {
+      this.unset("uriName");
+    } else {
+      this.set("uriName", Value.fromString(<string>value));
+    }
+  }
+
+  get negation(): boolean {
+    let value = this.get("negation");
+    return value!.toBoolean();
+  }
+
+  set negation(value: boolean) {
+    this.set("negation", Value.fromBoolean(value));
+  }
+
+  get effects(): Array<string> {
+    let value = this.get("effects");
+    return value!.toStringArray();
+  }
+
+  set effects(value: Array<string>) {
+    this.set("effects", Value.fromStringArray(value));
+  }
+
+  get effectsBlock(): BigInt | null {
+    let value = this.get("effectsBlock");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set effectsBlock(value: BigInt | null) {
+    if (!value) {
+      this.unset("effectsBlock");
+    } else {
+      this.set("effectsBlock", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get confirmationRuling(): string | null {
+    let value = this.get("confirmationRuling");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set confirmationRuling(value: string | null) {
+    if (!value) {
+      this.unset("confirmationRuling");
+    } else {
+      this.set("confirmationRuling", Value.fromString(<string>value));
+    }
+  }
+
+  get confirmationEvidence(): boolean {
+    let value = this.get("confirmationEvidence");
+    return value!.toBoolean();
+  }
+
+  set confirmationEvidence(value: boolean) {
+    this.set("confirmationEvidence", Value.fromBoolean(value));
+  }
+
+  get confirmationWitness(): BigInt | null {
+    let value = this.get("confirmationWitness");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set confirmationWitness(value: BigInt | null) {
+    if (!value) {
+      this.unset("confirmationWitness");
+    } else {
+      this.set("confirmationWitness", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get isPositive(): boolean {
+    let value = this.get("isPositive");
+    return value!.toBoolean();
+  }
+
+  set isPositive(value: boolean) {
+    this.set("isPositive", Value.fromBoolean(value));
+  }
+
+  get isDisabled(): boolean {
+    let value = this.get("isDisabled");
+    return value!.toBoolean();
+  }
+
+  set isDisabled(value: boolean) {
+    this.set("isDisabled", Value.fromBoolean(value));
+  }
+}
+
+export class GameRuleEffect extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("rule", Value.fromString(""));
+    this.set("name", Value.fromString(""));
+    this.set("direction", Value.fromBoolean(false));
+    this.set("value", Value.fromI32(0));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save GameRuleEffect entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save GameRuleEffect entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("GameRuleEffect", id.toString(), this);
+    }
+  }
+
+  static load(id: string): GameRuleEffect | null {
+    return changetype<GameRuleEffect | null>(store.get("GameRuleEffect", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get rule(): string {
+    let value = this.get("rule");
+    return value!.toString();
+  }
+
+  set rule(value: string) {
+    this.set("rule", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get direction(): boolean {
+    let value = this.get("direction");
+    return value!.toBoolean();
+  }
+
+  set direction(value: boolean) {
+    this.set("direction", Value.fromBoolean(value));
+  }
+
+  get value(): i32 {
+    let value = this.get("value");
+    return value!.toI32();
+  }
+
+  set value(value: i32) {
+    this.set("value", Value.fromI32(value));
+  }
+}
+
 export class GameNomination extends Entity {
   constructor(id: string) {
     super();
@@ -1124,6 +1445,141 @@ export class GamePost extends Entity {
       this.unset("metadata");
     } else {
       this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
+export class Action extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Action entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Action entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Action", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Action | null {
+    return changetype<Action | null>(store.get("Action", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get subject(): string | null {
+    let value = this.get("subject");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set subject(value: string | null) {
+    if (!value) {
+      this.unset("subject");
+    } else {
+      this.set("subject", Value.fromString(<string>value));
+    }
+  }
+
+  get verb(): string | null {
+    let value = this.get("verb");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set verb(value: string | null) {
+    if (!value) {
+      this.unset("verb");
+    } else {
+      this.set("verb", Value.fromString(<string>value));
+    }
+  }
+
+  get object(): string | null {
+    let value = this.get("object");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set object(value: string | null) {
+    if (!value) {
+      this.unset("object");
+    } else {
+      this.set("object", Value.fromString(<string>value));
+    }
+  }
+
+  get tool(): string | null {
+    let value = this.get("tool");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set tool(value: string | null) {
+    if (!value) {
+      this.unset("tool");
+    } else {
+      this.set("tool", Value.fromString(<string>value));
+    }
+  }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
+  }
+
+  get uriData(): Bytes | null {
+    let value = this.get("uriData");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set uriData(value: Bytes | null) {
+    if (!value) {
+      this.unset("uriData");
+    } else {
+      this.set("uriData", Value.fromBytes(<Bytes>value));
     }
   }
 }

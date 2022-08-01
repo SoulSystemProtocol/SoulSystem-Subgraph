@@ -107,6 +107,35 @@ type GameRole @entity {
   soulsCount: Int!
 }
 
+#Entity: Rule
+type GameRule @entity {
+  id: ID! # combination of game address and role id
+  game: Game!
+  about: Action!
+  aboutSubject: String
+  ruleId: BigInt!
+  affected: String
+  uri: String
+  uriData: Bytes
+  uriName: String
+  negation: Boolean
+  effects: [GameRuleEffect!]!
+  effectsBlock: BigInt # number of block where effects were defined
+  confirmationRuling: String
+  confirmationEvidence: Boolean
+  confirmationWitness: BigInt
+  isPositive: Boolean
+  isDisabled: Boolean!
+}
+
+type GameRuleEffect @entity {
+  id: ID! # combination of game address, rule id, effect name
+  rule: GameRule!
+  name: String!
+  direction: Boolean!
+  value: Int!
+}
+
 type GameNomination @entity {
   id: ID! # combination of game address and event transaction address
   game: Game!
@@ -125,6 +154,19 @@ type GamePost @entity {
   metadata: Bytes
 }
 
+#Entity: Action
+type Action @entity {
+  id: ID! # guid
+  subject: String
+  verb: String
+  object: String
+  tool: String
+  uri: String
+  uriData: Bytes
+#  rules: [JurisdictionRuleEntity!]! @derivedFrom(field: "about")
+}
+
+#Entity: Claim/Task/Process
 type Claim @entity {
   id: ID! # contract address
   hub: String # hub address
