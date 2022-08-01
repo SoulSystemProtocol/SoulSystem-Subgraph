@@ -1,6 +1,7 @@
+#Entity: Account
 type Account @entity {
   id: ID! # account address
-  soul: Soul!
+  sbt: Soul!
 }
 
 #Entity: OpenRepo [WIP]
@@ -29,7 +30,7 @@ type HubConf @entity {
 }
 
 
-#Separate Relations
+#Separate Relations [DEV]
 type GameRelAddress @entity {
   id: ID! # Unique Combo
   origin: Game! 
@@ -54,7 +55,7 @@ type AccountRelAddress @entity {
 
 #Entity: Soul
 type Soul @entity {
-  id: ID!
+  id: ID! # Token ID 
   owner: String! # account address
   type: String! # type to determine that the entity is created by an account or contract
   uri: String # metadata uri
@@ -65,6 +66,19 @@ type Soul @entity {
   searchField: String
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
+  #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
+  opinion: [SoulSoulOpinion!]! @derivedFrom(field: "subject")
+  opinionOn: [SoulSoulOpinion!]! @derivedFrom(field: "object")
+}
+
+#Reputation (SBT Opinions on SBT) [DEV]
+type SoulSoulOpinion @entity {
+  id: ID! # combination of subject, object, and domain name
+  subject: Soul!
+  object: Soul!
+  domain: String!
+  negativeRating: BigInt!
+  positiveRating: BigInt!
 }
 
 #Entity: Game

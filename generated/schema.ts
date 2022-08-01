@@ -16,7 +16,7 @@ export class Account extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("soul", Value.fromString(""));
+    this.set("sbt", Value.fromString(""));
   }
 
   save(): void {
@@ -45,13 +45,13 @@ export class Account extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get soul(): string {
-    let value = this.get("soul");
+  get sbt(): string {
+    let value = this.get("sbt");
     return value!.toString();
   }
 
-  set soul(value: string) {
-    this.set("soul", Value.fromString(value));
+  set sbt(value: string) {
+    this.set("sbt", Value.fromString(value));
   }
 }
 
@@ -607,6 +607,108 @@ export class Soul extends Entity {
 
   set participantProc(value: Array<string>) {
     this.set("participantProc", Value.fromStringArray(value));
+  }
+
+  get opinion(): Array<string> {
+    let value = this.get("opinion");
+    return value!.toStringArray();
+  }
+
+  set opinion(value: Array<string>) {
+    this.set("opinion", Value.fromStringArray(value));
+  }
+
+  get opinionOn(): Array<string> {
+    let value = this.get("opinionOn");
+    return value!.toStringArray();
+  }
+
+  set opinionOn(value: Array<string>) {
+    this.set("opinionOn", Value.fromStringArray(value));
+  }
+}
+
+export class SoulSoulOpinion extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("subject", Value.fromString(""));
+    this.set("object", Value.fromString(""));
+    this.set("domain", Value.fromString(""));
+    this.set("negativeRating", Value.fromBigInt(BigInt.zero()));
+    this.set("positiveRating", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SoulSoulOpinion entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulSoulOpinion entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulSoulOpinion", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulSoulOpinion | null {
+    return changetype<SoulSoulOpinion | null>(store.get("SoulSoulOpinion", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get subject(): string {
+    let value = this.get("subject");
+    return value!.toString();
+  }
+
+  set subject(value: string) {
+    this.set("subject", Value.fromString(value));
+  }
+
+  get object(): string {
+    let value = this.get("object");
+    return value!.toString();
+  }
+
+  set object(value: string) {
+    this.set("object", Value.fromString(value));
+  }
+
+  get domain(): string {
+    let value = this.get("domain");
+    return value!.toString();
+  }
+
+  set domain(value: string) {
+    this.set("domain", Value.fromString(value));
+  }
+
+  get negativeRating(): BigInt {
+    let value = this.get("negativeRating");
+    return value!.toBigInt();
+  }
+
+  set negativeRating(value: BigInt) {
+    this.set("negativeRating", Value.fromBigInt(value));
+  }
+
+  get positiveRating(): BigInt {
+    let value = this.get("positiveRating");
+    return value!.toBigInt();
+  }
+
+  set positiveRating(value: BigInt) {
+    this.set("positiveRating", Value.fromBigInt(value));
   }
 }
 

@@ -1,11 +1,14 @@
+import { Address } from "@graphprotocol/graph-ts";
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
 import {
   Account,
+  Game,
   GameNomination,
   GameRole,
   Soul,
   GamePost,
-  GameParticipant
+  GameParticipant,
+  SoulSoulOpinion,
 } from "../../generated/schema";
 import {
   ContractURI,
@@ -13,7 +16,9 @@ import {
   TransferByToken,
   RoleCreated,
   Post,
+  OpinionChange,
 } from "../../generated/templates/Game/Game";
+import { Hub as HubContract } from "../../generated/Hub/Hub";
 import { loadOrCreateGame } from "../utils";
 
 /**
@@ -103,7 +108,7 @@ export function handleTransferByToken(event: TransferByToken): void {
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
     // Find or create role
-    let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+    const roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
     let role = GameRole.load(roleId);
     if (!role) {
       role = new GameRole(roleId);
@@ -157,7 +162,7 @@ export function handleNominate(event: Nominate): void {
   let nomination = new GameNomination(nominationId);
   nomination.game = game.id;
   nomination.createdDate = event.block.timestamp;
-  nomination.nominator = nominatorAccount.soul;
+  nomination.nominator = nominatorAccount.sbt;
   nomination.nominated = nominatedSoul.id;
   nomination.save();
 }
@@ -174,7 +179,7 @@ export function handlePost(event: Post): void {
     return;
   }
   // Create post entity
-  let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   let post = new GamePost(postId);
   post.entity = game.id;
   post.createdDate = event.block.timestamp;
@@ -182,9 +187,71 @@ export function handlePost(event: Post): void {
   post.entityRole = event.params.entRole.toString();
   post.uri = event.params.uri;
   // Load uri data
-  let ipfsHash = event.params.uri.split("/").at(-1);
-  let metadata = ipfs.cat(ipfsHash);
+  const ipfsHash = event.params.uri.split("/").at(-1);
+  const metadata = ipfs.cat(ipfsHash);
   post.metadata = metadata;
   //Save
   post.save();
+}
+
+/** [TEST]
+ * Handle a opinion change event.
+ */
+export function handleOpinionChange(event: OpinionChange): void {
+  // Get Entity
+  const game = Game.load(event.address.toHexString());
+  if (!game) return;
+  // Hub Address
+  const hubAddress = game.hub;
+  // Load claim name from contract
+  const hubContract = HubContract.bind(Address.fromString(hubAddress));
+  // Fetch Soul Contract Address
+  const soulContractAddr = hubContract.assocGet("SBT");
+  //Check if Game's Opinion is About a Soul
+  if (event.params.contractAddr.toString() == soulContractAddr.toString()) {
+    const gameAccount = Account.load(game.id);
+    if (!gameAccount) return;
+    // Fetch Game's Soul
+    const gameSBT = gameAccount.sbt;
+    // Find Opinion's Object
+    const aboutId = event.params.tokenId.toString();
+    const aboutEnt = Soul.load(aboutId);
+    if (!aboutEnt) return;
+    // Load/Make Opinion
+    const opId = `${gameSBT}_${aboutEnt.id}_${event.params.domain.toString()}`;
+    // Find or create Opinion
+    let opinion = SoulSoulOpinion.load(opId);
+    if (!opinion) {
+      // Create opinion
+      opinion = new SoulSoulOpinion(opId);
+      opinion.subject = gameSBT;
+      opinion.object = aboutEnt.id;
+      opinion.domain = event.params.domain;
+      opinion.negativeRating = BigInt.zero();
+      opinion.positiveRating = BigInt.zero();
+    }
+
+    // Update positive rating (rating=true)
+    if (event.params.rating === true) {
+      // aboutEnt.totalPositiveRating = aboutEnt.totalPositiveRating.plus(
+      //   event.params.score
+      // );
+      opinion.positiveRating = opinion.positiveRating.plus(
+        event.params.score
+      );
+    }
+    // Update negative rating (rating=false)
+    else {
+      // aboutEnt.totalNegativeRating = aboutEnt.totalNegativeRating.plus(
+      //   event.params.score
+      // );
+      opinion.negativeRating = opinion.negativeRating.plus(
+        event.params.score
+      );
+    }
+    // Save entities
+    // aboutEnt.save();
+
+    opinion.save();
+  }
 }

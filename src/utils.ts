@@ -11,69 +11,46 @@ export function addSoulToAccount(accountAddress: Address, soul: Soul): void {
   if (!account) {
     account = new Account(accountAddress.toHexString());
   }
-  account.soul = soul.id;
+  account.sbt = soul.id;
   account.save();
 }
-
-// export function loadAnyEntityByAddress(address: string): Claim {
-
-
-/** [DEV]
- * Load hub or create new.
- * /
-export function loadOrCreateHub(id: string): Claim {
-  let claim = Claim.load(id);
-  if (!claim) {
-    // Create claim
-    claim = new Claim(id);
-
-    // Load claim name from contract
-    let claimContract = ClaimContract.bind(Address.fromString(id));
-    let claimContractName = claimContract.name();
-    claim.name = claimContractName;
-
-    claim.save();
-  }
-  return claim;
-}
-
 
 /**
  * Load game or create new.
  */
 export function loadOrCreateGame(id: string): Game {
-  let game = Game.load(id);
-  if (!game) {
-    // Create game
-    game = new Game(id);
+  let ent = Game.load(id);
+  if (!ent) {
+    // Create entity
+    ent = new Game(id);
 
     // Load game name from contract
     let gameContract = GameContract.bind(Address.fromString(id));
     let gameContractName = gameContract.name();
-    game.name = gameContractName;
+    ent.name = gameContractName;
 
-    game.save();
+    ent.save();
   }
-  return game;
+  return ent;
 }
 
 /**
  * Load claim or create new.
  */
 export function loadOrCreateClaim(id: string): Claim {
-  let claim = Claim.load(id);
-  if (!claim) {
-    // Create claim
-    claim = new Claim(id);
+  let ent = Claim.load(id);
+  if (!ent) {
+    // Create entity
+    ent = new Claim(id);
 
     // Load claim name from contract
     let claimContract = ClaimContract.bind(Address.fromString(id));
     let claimContractName = claimContract.name();
-    claim.name = claimContractName;
+    ent.name = claimContractName;
 
-    claim.save();
+    ent.save();
   }
-  return claim;
+  return ent;
 }
 
 /**

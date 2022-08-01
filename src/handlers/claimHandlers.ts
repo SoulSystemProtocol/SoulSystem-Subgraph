@@ -188,7 +188,7 @@ export function handleNominate(event: Nominate): void {
   let nomination = new ClaimNomination(nominationId);
   nomination.claim = claim.id;
   nomination.createdDate = event.block.timestamp;
-  nomination.nominator = nominatorAccount.soul;
+  nomination.nominator = nominatorAccount.sbt;
   nomination.nominated = nominatedSoul.id;
   nomination.save();
 }
