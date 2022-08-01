@@ -163,7 +163,7 @@ type Action @entity {
   tool: String
   uri: String
   uriData: Bytes
-#  rules: [JurisdictionRuleEntity!]! @derivedFrom(field: "about")
+  rules: [GameRule!]! @derivedFrom(field: "about")
 }
 
 #Entity: Claim/Task/Process

@@ -1582,6 +1582,15 @@ export class Action extends Entity {
       this.set("uriData", Value.fromBytes(<Bytes>value));
     }
   }
+
+  get rules(): Array<string> {
+    let value = this.get("rules");
+    return value!.toStringArray();
+  }
+
+  set rules(value: Array<string>) {
+    this.set("rules", Value.fromStringArray(value));
+  }
 }
 
 export class Claim extends Entity {

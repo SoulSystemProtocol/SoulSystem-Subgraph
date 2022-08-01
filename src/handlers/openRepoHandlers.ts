@@ -31,7 +31,6 @@ export function handleStringSet(event: StringSet): void {
       }
     }
   }
-
 }
 
 /**
