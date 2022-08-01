@@ -180,11 +180,19 @@ type Claim @entity {
   updatedDate: BigInt
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
   posts: [ClaimPost!]! @derivedFrom(field: "entity")
+  stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
   
   #Relations to Souls (Parts / Members)
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
+}
+
+type ClaimStageURI @entity { # [DEV]
+  id: ID! # combination of claim address and stage name
+  entity: Claim!
+  stage: Int!
+  uri: String!
 }
 
 type ClaimRole @entity { # DEPRECATE

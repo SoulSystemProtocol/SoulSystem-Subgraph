@@ -1769,6 +1769,15 @@ export class Claim extends Entity {
     this.set("posts", Value.fromStringArray(value));
   }
 
+  get stageURI(): Array<string> {
+    let value = this.get("stageURI");
+    return value!.toStringArray();
+  }
+
+  set stageURI(value: Array<string>) {
+    this.set("stageURI", Value.fromStringArray(value));
+  }
+
   get roles(): Array<string> {
     let value = this.get("roles");
     return value!.toStringArray();
@@ -1794,6 +1803,70 @@ export class Claim extends Entity {
 
   set assoc(value: Array<string>) {
     this.set("assoc", Value.fromStringArray(value));
+  }
+}
+
+export class ClaimStageURI extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("entity", Value.fromString(""));
+    this.set("stage", Value.fromI32(0));
+    this.set("uri", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ClaimStageURI entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save ClaimStageURI entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("ClaimStageURI", id.toString(), this);
+    }
+  }
+
+  static load(id: string): ClaimStageURI | null {
+    return changetype<ClaimStageURI | null>(store.get("ClaimStageURI", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get entity(): string {
+    let value = this.get("entity");
+    return value!.toString();
+  }
+
+  set entity(value: string) {
+    this.set("entity", Value.fromString(value));
+  }
+
+  get stage(): i32 {
+    let value = this.get("stage");
+    return value!.toI32();
+  }
+
+  set stage(value: i32) {
+    this.set("stage", Value.fromI32(value));
+  }
+
+  get uri(): string {
+    let value = this.get("uri");
+    return value!.toString();
+  }
+
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
   }
 }
 
