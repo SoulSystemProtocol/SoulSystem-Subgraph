@@ -1868,6 +1868,23 @@ export class ClaimStageURI extends Entity {
   set uri(value: string) {
     this.set("uri", Value.fromString(value));
   }
+
+  get Author(): string | null {
+    let value = this.get("Author");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set Author(value: string | null) {
+    if (!value) {
+      this.unset("Author");
+    } else {
+      this.set("Author", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class ClaimRole extends Entity {
