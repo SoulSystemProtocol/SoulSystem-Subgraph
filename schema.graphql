@@ -193,6 +193,7 @@ type ClaimStageURI @entity { # [DEV]
   entity: Claim!
   stage: Int!
   uri: String!
+  Author: String # SBT
 }
 
 type ClaimRole @entity { # DEPRECATE
