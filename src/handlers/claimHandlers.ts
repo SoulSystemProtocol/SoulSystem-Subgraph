@@ -3,10 +3,11 @@ import {
   Account,
   Soul,
   ClaimNomination,
-  ClaimPost,
   ClaimRole,
   ProcParticipant,
   ProcAssoc,
+  ClaimPost,
+  // CTXPost,
 } from "../../generated/schema";
 import {
   ContractURI,
@@ -31,9 +32,9 @@ export function handleStage(event: Stage): void {
   claim.save();
 }
 
-/**
+/** DEPRECATE
  * Handle a contract uri event to update claim uri.
- */
+ */ 
 export function handleContractUri(event: ContractURI): void {
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
@@ -43,11 +44,9 @@ export function handleContractUri(event: ContractURI): void {
   // Update claim
   claim.uri = event.params.param0;
   claim.uriData = uriData;
-
-  //TODO: Extract 'tags' and save that as 'post.tags'
-
   claim.save();
 }
+
 
 /**
  * Handle Role creation Event
@@ -210,6 +209,7 @@ export function handlePost(event: Post): void {
   // Create post entity
   let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   let post = new ClaimPost(postId);
+  // let post = new CTXPost(postId);
   post.entity = claim.id;
   post.createdDate = event.block.timestamp;
   post.author = authorSoul.id;

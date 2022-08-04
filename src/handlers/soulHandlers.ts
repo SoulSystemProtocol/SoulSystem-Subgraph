@@ -27,9 +27,10 @@ export function handleTransfer(event: Transfer): void {
 export function handleURI(event: URI): void {
   // Find soul and return if not found
   let soul = Soul.load(event.params.id.toString());
-  if (!soul) {
-    return;
-  }
+  if (!soul) return;
+  
+  //TODO: Extract 'tags' and save that as 'post.tags'
+  
   // Load uri data
   let uriIpfsHash = event.params.value.split("/").at(-1);
   let uriData = ipfs.cat(uriIpfsHash);

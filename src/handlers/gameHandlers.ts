@@ -7,6 +7,7 @@ import {
   GameRole,
   Soul,
   GamePost,
+  // CTXPost,
   GameParticipant,
   SoulSoulOpinion,
 } from "../../generated/schema";
@@ -21,9 +22,9 @@ import {
 import { Hub as HubContract } from "../../generated/Hub/Hub";
 import { loadOrCreateGame } from "../utils";
 
-/**
+/** DEPRECATE
  * Handle a contract uri event to update game uri.
- */
+ */ 
 export function handleContractUri(event: ContractURI): void {
   // Get game
   let game = loadOrCreateGame(event.address.toHexString());
@@ -181,6 +182,7 @@ export function handlePost(event: Post): void {
   // Create post entity
   const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   let post = new GamePost(postId);
+  // let post = new CTXPost(postId);
   post.entity = game.id;
   post.createdDate = event.block.timestamp;
   post.author = authorSoul.id;

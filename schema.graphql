@@ -1,3 +1,23 @@
+#Interfaces
+
+interface CTX {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+# [DEV] UNUSED
+type CTXPost @entity {
+  id: ID! # combination of ctx address and event transaction address
+  entity: CTX!
+  createdDate: BigInt
+  author: Soul!
+  entityRole: String!
+  uri: String
+  metadata: Bytes
+}
+
+
 #Entity: Account
 type Account @entity {
   id: ID! # account address
@@ -63,6 +83,7 @@ type Soul @entity {
   uriImage: String!
   uriFirstName: String!
   uriLastName: String!
+  tags: [String!]
   searchField: String
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
@@ -82,7 +103,7 @@ type SoulSoulOpinion @entity {
 }
 
 #Entity: Game
-type Game @entity {
+type Game implements CTX @entity {
   id: ID! # contract address
   hub: String! # hub address
   name: String!
@@ -167,7 +188,7 @@ type Action @entity {
 }
 
 #Entity: Claim/Task/Process
-type Claim @entity {
+type Claim implements CTX @entity {
   id: ID! # contract address
   hub: String # hub address
   name: String!
@@ -176,7 +197,6 @@ type Claim @entity {
   uri: String # metadata uri
   uriData: Bytes
   stage: Int!
-  tags: [String!]
   createdDate: BigInt!
   updatedDate: BigInt
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
