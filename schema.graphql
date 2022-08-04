@@ -94,7 +94,7 @@ type Game @entity {
 
   #Relations to Souls (Parts / Members)
   roles: [GameRole!]! @derivedFrom(field: "game")
-  participants: [GameParticipant!]! @derivedFrom(field: "entity")
+  parts: [GameParticipant!]! @derivedFrom(field: "entity")
   assoc: [GameAssoc!]! @derivedFrom(field: "bEnt")
 }
 
@@ -176,6 +176,7 @@ type Claim @entity {
   uri: String # metadata uri
   uriData: Bytes
   stage: Int!
+  tags: [String!]
   createdDate: BigInt!
   updatedDate: BigInt
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
@@ -184,7 +185,7 @@ type Claim @entity {
   
   #Relations to Souls (Parts / Members)
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
-  participants: [ProcParticipant!]! @derivedFrom(field: "entity")
+  parts: [ProcParticipant!]! @derivedFrom(field: "entity")
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 

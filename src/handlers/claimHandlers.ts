@@ -43,6 +43,9 @@ export function handleContractUri(event: ContractURI): void {
   // Update claim
   claim.uri = event.params.param0;
   claim.uriData = uriData;
+
+  //TODO: Extract 'tags' and save that as 'post.tags'
+
   claim.save();
 }
 

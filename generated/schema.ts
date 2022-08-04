@@ -836,13 +836,13 @@ export class Game extends Entity {
     this.set("roles", Value.fromStringArray(value));
   }
 
-  get participants(): Array<string> {
-    let value = this.get("participants");
+  get parts(): Array<string> {
+    let value = this.get("parts");
     return value!.toStringArray();
   }
 
-  set participants(value: Array<string>) {
-    this.set("participants", Value.fromStringArray(value));
+  set parts(value: Array<string>) {
+    this.set("parts", Value.fromStringArray(value));
   }
 
   get assoc(): Array<string> {
@@ -1725,6 +1725,23 @@ export class Claim extends Entity {
     this.set("stage", Value.fromI32(value));
   }
 
+  get tags(): Array<string> | null {
+    let value = this.get("tags");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tags(value: Array<string> | null) {
+    if (!value) {
+      this.unset("tags");
+    } else {
+      this.set("tags", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
   get createdDate(): BigInt {
     let value = this.get("createdDate");
     return value!.toBigInt();
@@ -1787,13 +1804,13 @@ export class Claim extends Entity {
     this.set("roles", Value.fromStringArray(value));
   }
 
-  get participants(): Array<string> {
-    let value = this.get("participants");
+  get parts(): Array<string> {
+    let value = this.get("parts");
     return value!.toStringArray();
   }
 
-  set participants(value: Array<string>) {
-    this.set("participants", Value.fromStringArray(value));
+  set parts(value: Array<string>) {
+    this.set("parts", Value.fromStringArray(value));
   }
 
   get assoc(): Array<string> {
