@@ -80,6 +80,7 @@ type Soul @entity {
   type: String! # type to determine that the entity is created by an account or contract
   uri: String # metadata uri
   uriData: Bytes
+  metadata: Bytes
   uriImage: String!
   uriFirstName: String!
   uriLastName: String!
@@ -110,6 +111,8 @@ type Game implements CTX @entity {
   type: String!
   uri: String # metadata uri
   uriData: Bytes
+  metadata: Bytes
+  createdDate: BigInt!
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
 
@@ -138,6 +141,7 @@ type GameRule @entity {
   affected: String
   uri: String
   uriData: Bytes
+  metadata: Bytes
   uriName: String
   negation: Boolean
   effects: [GameRuleEffect!]!
@@ -184,6 +188,7 @@ type Action @entity {
   tool: String
   uri: String
   uriData: Bytes
+  metadata: Bytes
   rules: [GameRule!]! @derivedFrom(field: "about")
 }
 
@@ -196,6 +201,7 @@ type Claim implements CTX @entity {
   type: String!
   uri: String # metadata uri
   uriData: Bytes
+  metadata: Bytes
   stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
