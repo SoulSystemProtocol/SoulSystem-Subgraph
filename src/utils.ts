@@ -1,7 +1,16 @@
 import { Address } from "@graphprotocol/graph-ts";
 import { Game as GameContract } from "../generated/Hub/Game";
-import { Claim as ClaimContract } from "../generated/Hub/Claim";
+// import { Claim as ClaimContract } from "../generated/Hub/Claim";
 import { Account, Game, Soul, Claim } from "../generated/schema";
+
+/**
+ * Get Contract's Name
+ */
+export function getContractName(address: Address): string{
+  // Load name from contract
+  let gameContract = GameContract.bind(address);
+  return gameContract.name();
+}
 
 /**
  * Add soul to existing or new account.
@@ -23,12 +32,13 @@ export function loadOrCreateGame(id: string): Game {
   if (!ent) {
     // Create entity
     ent = new Game(id);
-
+    /*
     // Load game name from contract
     let gameContract = GameContract.bind(Address.fromString(id));
     let gameContractName = gameContract.name();
     ent.name = gameContractName;
-
+    */
+    ent.name = getContractName(Address.fromString(id));
     ent.save();
   }
   return ent;
@@ -42,12 +52,13 @@ export function loadOrCreateClaim(id: string): Claim {
   if (!ent) {
     // Create entity
     ent = new Claim(id);
-
+    /*
     // Load claim name from contract
     let claimContract = ClaimContract.bind(Address.fromString(id));
     let claimContractName = claimContract.name();
     ent.name = claimContractName;
-
+    */
+    ent.name = getContractName(Address.fromString(id));
     ent.save();
   }
   return ent;
