@@ -45,6 +45,7 @@ dataSources:
       entities:
         - Game
         - Claim
+        - Soul
       abis:
         - name: Hub
           file: ./abis/Hub.json
@@ -52,6 +53,8 @@ dataSources:
           file: ./abis/Game.json
         - name: Claim
           file: ./abis/Claim.json
+        - name: Soul
+          file: ./abis/Soul.json
       eventHandlers:
         - event: ContractCreated(string,indexed address)
           handler: handleContractCreated

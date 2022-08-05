@@ -43,7 +43,8 @@ export function handleContractUri(event: ContractURI): void {
   let uriData = ipfs.cat(uriIpfsHash);
   // Update claim
   claim.uri = event.params.param0;
-  claim.uriData = uriData;
+  claim.uriData = uriData; //DEPRECATE
+  claim.metadata = uriData;
   claim.save();
 }
 
@@ -77,12 +78,13 @@ export function handleTransferByToken(event: TransferByToken): void {
   // Get claim
   let entity = loadOrCreateClaim(event.address.toHexString());
   let tokenId = event.params.id;
+  let amount = event.params.value;
 
   //Relation Test 1
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
     //Add to Recepient
-    let sbt = event.params.toOwnerToken;
-    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let sbt = event.params.toOwnerToken.toString();
+    let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (!participant) {
       participant = new ProcParticipant(participanId);
@@ -95,12 +97,30 @@ export function handleTransferByToken(event: TransferByToken): void {
     procRoles.push(tokenId.toString());
     participant.roles = procRoles;
     participant.save();
+
+    //Relation Test 2
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
+    let assoc = ProcAssoc.load(participanRoleId);
+    if (!assoc) {
+      //New Association
+      assoc = new ProcAssoc(participanRoleId);
+      assoc.bEnt = entity.id;
+      assoc.sbt = sbt;
+      assoc.role = tokenId;
+      //Set Amount
+      assoc.qty = amount;
+    } else{
+      //Add Amount
+      assoc.qty = assoc.qty.plus(amount);
+    }
+    assoc.save();
+
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
     //Remove From Origin
-    let sbt = event.params.fromOwnerToken;
-    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let sbt = event.params.fromOwnerToken.toString();
+    let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (participant) {
       const accountIndex = participant.roles.indexOf(tokenId.toString());
@@ -111,6 +131,16 @@ export function handleTransferByToken(event: TransferByToken): void {
         participant.save();
       }
     }
+
+    //Relation Test 2
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
+    let assoc = ProcAssoc.load(participanRoleId);
+    if (assoc) {
+      //Subtract Amount
+      assoc.qty = assoc.qty.minus(amount);
+      assoc.save();
+    }
+    
   }
 
 
@@ -119,20 +149,6 @@ export function handleTransferByToken(event: TransferByToken): void {
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
-
-    //Relation Test 2
-    let sbt = event.params.toOwnerToken.toString();
-    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
-    let procAssoc = ProcAssoc.load(participanRoleId);
-    if (isTokenMinted) {
-      if (!procAssoc) {
-        procAssoc = new ProcAssoc(participanRoleId);
-        procAssoc.bEnt = entity.id;
-        procAssoc.sbt = sbt;
-        procAssoc.role = tokenId;
-        procAssoc.save();
-      }
-    }
 
     // Find or create role
     let roleId = `${event.address.toHexString()}_${tokenId}`;

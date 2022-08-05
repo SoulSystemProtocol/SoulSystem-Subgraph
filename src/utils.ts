@@ -1,15 +1,28 @@
-import { Address } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { Game as GameContract } from "../generated/Hub/Game";
 // import { Claim as ClaimContract } from "../generated/Hub/Claim";
+import { Hub as HubContract } from "../generated/Hub/Hub";
+import { Soul as SoulContract } from "../generated/Hub/Soul";
 import { Account, Game, Soul, Claim } from "../generated/schema";
 
 /**
  * Get Contract's Name
  */
-export function getContractName(address: Address): string{
+function getContractName(address: Address): string{
   // Load name from contract
   let gameContract = GameContract.bind(address);
   return gameContract.name();
+}
+
+/**
+ * Get Soul ID by Owner
+ */
+ function getSoulId(hubAddress: Address, address: Address): BigInt {
+  let hub = HubContract.bind(hubAddress);
+  let sbtContractAddr = hub.assocGet("SBT");
+  // Load name from contract
+  let sbtContract = SoulContract.bind(sbtContractAddr);
+  return sbtContract.tokenByAddress(address);
 }
 
 /**

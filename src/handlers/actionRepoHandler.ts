@@ -33,6 +33,7 @@ export function handleActionURI(event: ActionURI): void {
   let uriData = ipfs.cat(uriIpfsHash);
   // Update entity's params
   entity.uri = event.params.uri;
-  entity.uriData = uriData;
+  entity.uriData = uriData; //DEPRECATE
+  entity.metadata = uriData;
   entity.save();
 }

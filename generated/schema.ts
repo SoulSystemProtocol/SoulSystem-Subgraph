@@ -11,6 +11,121 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class CTXPost extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("entity", Value.fromString(""));
+    this.set("author", Value.fromString(""));
+    this.set("entityRole", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CTXPost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save CTXPost entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("CTXPost", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CTXPost | null {
+    return changetype<CTXPost | null>(store.get("CTXPost", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get entity(): string {
+    let value = this.get("entity");
+    return value!.toString();
+  }
+
+  set entity(value: string) {
+    this.set("entity", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt | null {
+    let value = this.get("createdDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdDate(value: BigInt | null) {
+    if (!value) {
+      this.unset("createdDate");
+    } else {
+      this.set("createdDate", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get author(): string {
+    let value = this.get("author");
+    return value!.toString();
+  }
+
+  set author(value: string) {
+    this.set("author", Value.fromString(value));
+  }
+
+  get entityRole(): string {
+    let value = this.get("entityRole");
+    return value!.toString();
+  }
+
+  set entityRole(value: string) {
+    this.set("entityRole", Value.fromString(value));
+  }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+}
+
 export class Account extends Entity {
   constructor(id: string) {
     super();
@@ -467,6 +582,7 @@ export class Soul extends Entity {
     this.set("uriImage", Value.fromString(""));
     this.set("uriFirstName", Value.fromString(""));
     this.set("uriLastName", Value.fromString(""));
+    this.set("name", Value.fromString(""));
   }
 
   save(): void {
@@ -547,6 +663,23 @@ export class Soul extends Entity {
     }
   }
 
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+
   get uriImage(): string {
     let value = this.get("uriImage");
     return value!.toString();
@@ -572,6 +705,32 @@ export class Soul extends Entity {
 
   set uriLastName(value: string) {
     this.set("uriLastName", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value!.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get tags(): Array<string> | null {
+    let value = this.get("tags");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tags(value: Array<string> | null) {
+    if (!value) {
+      this.unset("tags");
+    } else {
+      this.set("tags", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get searchField(): string | null {
@@ -625,6 +784,15 @@ export class Soul extends Entity {
 
   set opinionOn(value: Array<string>) {
     this.set("opinionOn", Value.fromStringArray(value));
+  }
+
+  get assoc(): Array<string> {
+    let value = this.get("assoc");
+    return value!.toStringArray();
+  }
+
+  set assoc(value: Array<string>) {
+    this.set("assoc", Value.fromStringArray(value));
   }
 }
 
@@ -720,6 +888,7 @@ export class Game extends Entity {
     this.set("hub", Value.fromString(""));
     this.set("name", Value.fromString(""));
     this.set("type", Value.fromString(""));
+    this.set("createdDate", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -807,6 +976,32 @@ export class Game extends Entity {
     } else {
       this.set("uriData", Value.fromBytes(<Bytes>value));
     }
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get createdDate(): BigInt {
+    let value = this.get("createdDate");
+    return value!.toBigInt();
+  }
+
+  set createdDate(value: BigInt) {
+    this.set("createdDate", Value.fromBigInt(value));
   }
 
   get nominations(): Array<string> {
@@ -1069,6 +1264,23 @@ export class GameRule extends Entity {
       this.unset("uriData");
     } else {
       this.set("uriData", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
     }
   }
 
@@ -1583,6 +1795,23 @@ export class Action extends Entity {
     }
   }
 
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+
   get rules(): Array<string> {
     let value = this.get("rules");
     return value!.toStringArray();
@@ -1716,6 +1945,23 @@ export class Claim extends Entity {
     }
   }
 
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
+  }
+
   get stage(): i32 {
     let value = this.get("stage");
     return value!.toI32();
@@ -1723,23 +1969,6 @@ export class Claim extends Entity {
 
   set stage(value: i32) {
     this.set("stage", Value.fromI32(value));
-  }
-
-  get tags(): Array<string> | null {
-    let value = this.get("tags");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set tags(value: Array<string> | null) {
-    if (!value) {
-      this.unset("tags");
-    } else {
-      this.set("tags", Value.fromStringArray(<Array<string>>value));
-    }
   }
 
   get createdDate(): BigInt {
@@ -2320,6 +2549,7 @@ export class GameAssoc extends Entity {
     this.set("bEnt", Value.fromString(""));
     this.set("sbt", Value.fromString(""));
     this.set("role", Value.fromBigInt(BigInt.zero()));
+    this.set("qty", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -2374,6 +2604,15 @@ export class GameAssoc extends Entity {
   set role(value: BigInt) {
     this.set("role", Value.fromBigInt(value));
   }
+
+  get qty(): BigInt {
+    let value = this.get("qty");
+    return value!.toBigInt();
+  }
+
+  set qty(value: BigInt) {
+    this.set("qty", Value.fromBigInt(value));
+  }
 }
 
 export class ProcAssoc extends Entity {
@@ -2384,6 +2623,7 @@ export class ProcAssoc extends Entity {
     this.set("bEnt", Value.fromString(""));
     this.set("sbt", Value.fromString(""));
     this.set("role", Value.fromBigInt(BigInt.zero()));
+    this.set("qty", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -2437,5 +2677,88 @@ export class ProcAssoc extends Entity {
 
   set role(value: BigInt) {
     this.set("role", Value.fromBigInt(value));
+  }
+
+  get qty(): BigInt {
+    let value = this.get("qty");
+    return value!.toBigInt();
+  }
+
+  set qty(value: BigInt) {
+    this.set("qty", Value.fromBigInt(value));
+  }
+}
+
+export class Assoc extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("aEnd", Value.fromString(""));
+    this.set("bEnd", Value.fromString(""));
+    this.set("role", Value.fromBigInt(BigInt.zero()));
+    this.set("qty", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Assoc entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Assoc entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Assoc", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Assoc | null {
+    return changetype<Assoc | null>(store.get("Assoc", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get aEnd(): string {
+    let value = this.get("aEnd");
+    return value!.toString();
+  }
+
+  set aEnd(value: string) {
+    this.set("aEnd", Value.fromString(value));
+  }
+
+  get bEnd(): string {
+    let value = this.get("bEnd");
+    return value!.toString();
+  }
+
+  set bEnd(value: string) {
+    this.set("bEnd", Value.fromString(value));
+  }
+
+  get role(): BigInt {
+    let value = this.get("role");
+    return value!.toBigInt();
+  }
+
+  set role(value: BigInt) {
+    this.set("role", Value.fromBigInt(value));
+  }
+
+  get qty(): BigInt {
+    let value = this.get("qty");
+    return value!.toBigInt();
+  }
+
+  set qty(value: BigInt) {
+    this.set("qty", Value.fromBigInt(value));
   }
 }

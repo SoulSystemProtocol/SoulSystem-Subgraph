@@ -10,6 +10,7 @@ import {
   // CTXPost,
   GameParticipant,
   SoulSoulOpinion,
+  GameAssoc,
 } from "../../generated/schema";
 import {
   ContractURI,
@@ -33,7 +34,8 @@ export function handleContractUri(event: ContractURI): void {
   let uriData = ipfs.cat(uriIpfsHash);
   // Update game
   game.uri = event.params.param0;
-  game.uriData = uriData;
+  game.uriData = uriData; //DEPRECATE
+  game.metadata = uriData;
   game.save();
 }
 
@@ -66,18 +68,19 @@ export function handleTransferByToken(event: TransferByToken): void {
   // Get game
   let entity = loadOrCreateGame(event.address.toHexString());
   let tokenId = event.params.id;
-
+  let amount = event.params.value;
+  
 
   //Relation Test 1
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
     //Add to Recepient
-    let sbt = event.params.toOwnerToken;
-    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let sbt = event.params.toOwnerToken.toString();
+    let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = GameParticipant.load(participanId);
     if (!participant) {
       participant = new GameParticipant(participanId);
       participant.entity = entity.id;
-      participant.sbt = sbt.toString();
+      participant.sbt = sbt;
       participant.roles = [];
     }
     let procRoles = participant.roles;
@@ -85,12 +88,31 @@ export function handleTransferByToken(event: TransferByToken): void {
     procRoles.push(tokenId.toString());
     participant.roles = procRoles;
     participant.save();
+
+    
+    //Relation Test 2
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
+    let assoc = GameAssoc.load(participanRoleId);
+    if (!assoc) {
+      //New Association
+      assoc = new GameAssoc(participanRoleId);
+      assoc.bEnt = entity.id;
+      assoc.sbt = sbt;
+      assoc.role = tokenId;
+      //Set Amount
+      assoc.qty = amount;
+    } else{
+      //Add Amount
+      assoc.qty = assoc.qty.plus(amount);
+    }
+    assoc.save();
+
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
     //Remove From Origin
-    let sbt = event.params.fromOwnerToken;
-    let participanId = `${event.address.toHexString()}_${sbt.toString()}`;
+    let sbt = event.params.fromOwnerToken.toString();
+    let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = GameParticipant.load(participanId);
     if (participant) {
       const accountIndex = participant.roles.indexOf(tokenId.toString());
@@ -101,6 +123,16 @@ export function handleTransferByToken(event: TransferByToken): void {
         participant.save();
       }
     }
+
+    //Relation Test 2
+    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
+    let assoc = GameAssoc.load(participanRoleId);
+    if (assoc) {
+      //Subtract Amount
+      assoc.qty = assoc.qty.minus(amount);
+      assoc.save();
+    }
+
   }
 
   // ** DEPRECATE

@@ -71,19 +71,22 @@ type AccountRelAddress @entity {
 }
 
 
-
-
 #Entity: Soul
 type Soul @entity {
   id: ID! # Token ID 
   owner: String! # account address
   type: String! # type to determine that the entity is created by an account or contract
+  # role: String # ?
   uri: String # metadata uri
   uriData: Bytes
   metadata: Bytes
+
+  #DEPRECATE THESE
   uriImage: String!
   uriFirstName: String!
   uriLastName: String!
+
+  name: String!
   tags: [String!]
   searchField: String
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
@@ -91,6 +94,7 @@ type Soul @entity {
   #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
   opinion: [SoulSoulOpinion!]! @derivedFrom(field: "subject")
   opinionOn: [SoulSoulOpinion!]! @derivedFrom(field: "object")
+  assoc: [Assoc!]! @derivedFrom(field: "aEnd")
 }
 
 #Reputation (SBT Opinions on SBT) [DEV]
@@ -266,13 +270,23 @@ type ProcParticipant @entity {
 
 type GameAssoc @entity {
   id: ID! # combination of claim address and SBT & roleId address
-  bEnt: Game!
-  sbt: Soul!
+  bEnt: Game! # Group
+  sbt: Soul! # Entity
   role: BigInt!
+  qty: BigInt!
 }
 type ProcAssoc @entity {
   id: ID! # combination of claim address and SBT & roleId address
-  bEnt: Claim!
-  sbt: Soul!
+  bEnt: Claim! # Group
+  sbt: Soul! # Entity
   role: BigInt!
+  qty: BigInt!
+}
+
+type Assoc @entity {
+  id: ID! # combination of claim address and SBT & roleId address
+  aEnd: Soul!
+  bEnd: Soul!
+  role: BigInt!
+  qty: BigInt! # Influence
 }
