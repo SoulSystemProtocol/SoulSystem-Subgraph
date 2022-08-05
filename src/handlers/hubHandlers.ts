@@ -18,6 +18,7 @@ export function handleContractCreated(event: ContractCreated): void {
     let game = loadOrCreateGame(event.params.contractAddress.toHexString());
     // Update game
     game.hub = event.address.toHexString();
+    game.createdDate = event.block.timestamp;
     game.save();
   }
   // If created task or claim contract
