@@ -794,6 +794,15 @@ export class Soul extends Entity {
   set assoc(value: Array<string>) {
     this.set("assoc", Value.fromStringArray(value));
   }
+
+  get parts(): Array<string> {
+    let value = this.get("parts");
+    return value!.toStringArray();
+  }
+
+  set parts(value: Array<string>) {
+    this.set("parts", Value.fromStringArray(value));
+  }
 }
 
 export class SoulSoulOpinion extends Entity {
@@ -1029,6 +1038,15 @@ export class Game extends Entity {
 
   set roles(value: Array<string>) {
     this.set("roles", Value.fromStringArray(value));
+  }
+
+  get rulse(): Array<string> {
+    let value = this.get("rulse");
+    return value!.toStringArray();
+  }
+
+  set rulse(value: Array<string>) {
+    this.set("rulse", Value.fromStringArray(value));
   }
 
   get parts(): Array<string> {
@@ -2033,13 +2051,13 @@ export class Claim extends Entity {
     this.set("roles", Value.fromStringArray(value));
   }
 
-  get parts(): Array<string> {
-    let value = this.get("parts");
+  get participants(): Array<string> {
+    let value = this.get("participants");
     return value!.toStringArray();
   }
 
-  set parts(value: Array<string>) {
-    this.set("parts", Value.fromStringArray(value));
+  set participants(value: Array<string>) {
+    this.set("participants", Value.fromStringArray(value));
   }
 
   get assoc(): Array<string> {
@@ -2689,7 +2707,7 @@ export class ProcAssoc extends Entity {
   }
 }
 
-export class Assoc extends Entity {
+export class SoulAssoc extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -2702,19 +2720,93 @@ export class Assoc extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Assoc entity without an ID");
+    assert(id != null, "Cannot save SoulAssoc entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save Assoc entity with non-string ID. " +
+        "Cannot save SoulAssoc entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("Assoc", id.toString(), this);
+      store.set("SoulAssoc", id.toString(), this);
     }
   }
 
-  static load(id: string): Assoc | null {
-    return changetype<Assoc | null>(store.get("Assoc", id));
+  static load(id: string): SoulAssoc | null {
+    return changetype<SoulAssoc | null>(store.get("SoulAssoc", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get aEnd(): string {
+    let value = this.get("aEnd");
+    return value!.toString();
+  }
+
+  set aEnd(value: string) {
+    this.set("aEnd", Value.fromString(value));
+  }
+
+  get bEnd(): string {
+    let value = this.get("bEnd");
+    return value!.toString();
+  }
+
+  set bEnd(value: string) {
+    this.set("bEnd", Value.fromString(value));
+  }
+
+  get role(): BigInt {
+    let value = this.get("role");
+    return value!.toBigInt();
+  }
+
+  set role(value: BigInt) {
+    this.set("role", Value.fromBigInt(value));
+  }
+
+  get qty(): BigInt {
+    let value = this.get("qty");
+    return value!.toBigInt();
+  }
+
+  set qty(value: BigInt) {
+    this.set("qty", Value.fromBigInt(value));
+  }
+}
+
+export class SoulParts extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("aEnd", Value.fromString(""));
+    this.set("bEnd", Value.fromString(""));
+    this.set("role", Value.fromBigInt(BigInt.zero()));
+    this.set("qty", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SoulParts entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulParts entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulParts", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulParts | null {
+    return changetype<SoulParts | null>(store.get("SoulParts", id));
   }
 
   get id(): string {
