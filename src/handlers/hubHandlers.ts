@@ -22,7 +22,9 @@ export function handleContractCreated(event: ContractCreated): void {
     game.save();
   }
   // If created task or claim contract
-  if (event.params.name == HUB_CONTRACT_TYPE_TASK || event.params.name == HUB_CONTRACT_TYPE_CLAIM) {
+  if (event.params.name == 'process' 
+    || event.params.name == HUB_CONTRACT_TYPE_TASK 
+    || event.params.name == HUB_CONTRACT_TYPE_CLAIM) {
     // Save contract using subgraph template
     ClaimTemplate.create(event.params.contractAddress);
     // Get claim
