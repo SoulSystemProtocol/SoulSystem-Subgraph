@@ -45,13 +45,12 @@ import { loadOrCreateClaim, loadOrCreateGame, getSoulId } from "../utils";
  const attrAdd = (originAddr: string, key: string, value: string): void => {
   //Relate by SBT
   let sbtOrigin = getSoulId(originAddr);  //Origin SBT
-  let sbtDest = getSoulId(value); //Destination SBT
-  if(sbtOrigin && sbtDest){
-  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
-    const relId = `ATTR_${sbtOrigin}_${key}_${sbtDest}`;
+  if(sbtOrigin){
+  // if(!!sbtOrigin){   //Probably shouls use this instead
+    const relId = `ATTR_${sbtOrigin}_${key}_${value}`;
     let attr = new SoulAttr(relId);
     attr.aEnd = sbtOrigin;
-    attr.bEnd = sbtDest;
+    attr.bEnd = value;
     attr.role = key;
     attr.save();
   }
@@ -64,7 +63,6 @@ export function handleStringSet(event: StringSet): void {
   const originAddr = event.params.originAddress.toHexString();
   const key = event.params.key;
   const value = event.params.value;
-  const relId = `${originAddr}_${key}_${value}`;
 
   //** Generic Attributes
   attrAdd(originAddr, key, value);
