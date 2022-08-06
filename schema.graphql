@@ -1,4 +1,4 @@
-#Interfaces
+# Interfaces
 
 interface CTX {
   id: ID!
@@ -6,16 +6,25 @@ interface CTX {
   type: String!
 }
 
-# [DEV] UNUSED
-type CTXPost @entity {
-  id: ID! # combination of ctx address and event transaction address
-  entity: CTX!
+interface Post {
+  id: ID!
   createdDate: BigInt
   author: Soul!
   entityRole: String!
   uri: String
   metadata: Bytes
 }
+
+# [DEV] UNUSED
+# type CTXPost @entity {
+#   id: ID! # combination of ctx address and event transaction address
+#   entity: CTX!
+#   createdDate: BigInt
+#   author: Soul!
+#   entityRole: String!
+#   uri: String
+#   metadata: Bytes
+# }
 
 
 #Entity: Account
@@ -178,12 +187,12 @@ type GameNomination @entity {
   nominated: Soul!
 }
 
-type GamePost @entity {
+type GamePost implements Post @entity {
   id: ID! # combination of game address and event transaction address
   entity: Game!
   createdDate: BigInt
   author: Soul!
-  entityRole: String!
+  entityRole: String! # Role in CTX
   uri: String
   metadata: Bytes
 }
@@ -249,12 +258,12 @@ type ClaimNomination @entity {
   nominated: Soul!
 }
 
-type ClaimPost @entity {
+type ClaimPost implements Post @entity {
   id: ID! # combination of claim address and event transaction address
   entity: Claim!
   createdDate: BigInt
   author: Soul!
-  entityRole: String
+  entityRole: String!
   uri: String
   metadata: Bytes
 }
