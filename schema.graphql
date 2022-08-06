@@ -94,8 +94,10 @@ type Soul @entity {
   #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
   opinion: [SoulSoulOpinion!]! @derivedFrom(field: "subject")
   opinionOn: [SoulSoulOpinion!]! @derivedFrom(field: "object")
+  # Semantic Relations
   assoc: [SoulAssoc!]! @derivedFrom(field: "aEnd")
-  parts: [SoulParts!]! @derivedFrom(field: "aEnd")
+  parts: [SoulPart!]! @derivedFrom(field: "aEnd")
+  attrs: [SoulAttr!]! @derivedFrom(field: "aEnd")
 
 }
 
@@ -125,8 +127,8 @@ type Game implements CTX @entity {
   #Relations to Souls (Parts / Members)
   roles: [GameRole!]! @derivedFrom(field: "game")
   rulse: [GameRule!]! @derivedFrom(field: "game")
-  parts: [GameParticipant!]! @derivedFrom(field: "entity")
-  assoc: [GameAssoc!]! @derivedFrom(field: "bEnt")
+  parts: [GameParticipant!]! @derivedFrom(field: "entity") # DEPRECATE?
+  assoc: [GameAssoc!]! @derivedFrom(field: "bEnt") # DEPRECATE?
 }
 
 type GameRole @entity {
@@ -218,7 +220,7 @@ type Claim implements CTX @entity {
   # Relations to Souls (Parts / Members)
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
-  # Semantic Relations
+  # Relations
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
@@ -288,7 +290,7 @@ type ProcAssoc @entity {
 
 # Semantic Relations
 
-type SoulAssoc @entity {
+type SoulAssoc @entity { #S2H0
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
@@ -296,10 +298,17 @@ type SoulAssoc @entity {
   qty: BigInt # Power/Influence
 }
 
-type SoulParts @entity {
+type SoulPart @entity { #S3H1
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
   role: String!
   qty: BigInt # Quantity?
+}
+
+type SoulAttr @entity { # S4H0
+  id: ID! # combination of A,B,R
+  aEnd: Soul!
+  bEnd: String!
+  role: String!
 }

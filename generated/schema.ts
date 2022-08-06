@@ -803,6 +803,15 @@ export class Soul extends Entity {
   set parts(value: Array<string>) {
     this.set("parts", Value.fromStringArray(value));
   }
+
+  get attrs(): Array<string> {
+    let value = this.get("attrs");
+    return value!.toStringArray();
+  }
+
+  set attrs(value: Array<string>) {
+    this.set("attrs", Value.fromStringArray(value));
+  }
 }
 
 export class SoulSoulOpinion extends Entity {
@@ -2788,7 +2797,7 @@ export class SoulAssoc extends Entity {
   }
 }
 
-export class SoulParts extends Entity {
+export class SoulPart extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -2800,19 +2809,19 @@ export class SoulParts extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SoulParts entity without an ID");
+    assert(id != null, "Cannot save SoulPart entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save SoulParts entity with non-string ID. " +
+        "Cannot save SoulPart entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("SoulParts", id.toString(), this);
+      store.set("SoulPart", id.toString(), this);
     }
   }
 
-  static load(id: string): SoulParts | null {
-    return changetype<SoulParts | null>(store.get("SoulParts", id));
+  static load(id: string): SoulPart | null {
+    return changetype<SoulPart | null>(store.get("SoulPart", id));
   }
 
   get id(): string {
@@ -2866,5 +2875,69 @@ export class SoulParts extends Entity {
     } else {
       this.set("qty", Value.fromBigInt(<BigInt>value));
     }
+  }
+}
+
+export class SoulAttr extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("aEnd", Value.fromString(""));
+    this.set("bEnd", Value.fromString(""));
+    this.set("role", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SoulAttr entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulAttr entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulAttr", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulAttr | null {
+    return changetype<SoulAttr | null>(store.get("SoulAttr", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get aEnd(): string {
+    let value = this.get("aEnd");
+    return value!.toString();
+  }
+
+  set aEnd(value: string) {
+    this.set("aEnd", Value.fromString(value));
+  }
+
+  get bEnd(): string {
+    let value = this.get("bEnd");
+    return value!.toString();
+  }
+
+  set bEnd(value: string) {
+    this.set("bEnd", Value.fromString(value));
+  }
+
+  get role(): string {
+    let value = this.get("role");
+    return value!.toString();
+  }
+
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 }

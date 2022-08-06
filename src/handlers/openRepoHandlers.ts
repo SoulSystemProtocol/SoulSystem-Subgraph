@@ -1,16 +1,76 @@
 import { StringSet, AddressAdd } from "../../generated/OpenRepo/OpenRepo";
-import { Game, Claim, Account, AccountRelAddress, GameRelAddress, ClaimRelAddress, SoulAssoc } from "../../generated/schema";
+import { Game, 
+  Claim, 
+  Account, 
+  AccountRelAddress, 
+  GameRelAddress, 
+  ClaimRelAddress, 
+  SoulAssoc, 
+  SoulAttr 
+} from "../../generated/schema";
 import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
 import { loadOrCreateClaim, loadOrCreateGame, getSoulId } from "../utils";
 
+/**
+ * Add Asociation Between Souls
+ * @param originAddr Origin Address
+ * @param key Association's Role
+ * @param value Destenation Address
+ */
+ const assocAdd = (originAddr: string, key: string, value: string): void => {
+  //Relate by SBT
+  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
+  let sbtDest = getSoulId(value); //Destination SBT
+  if(sbtOrigin && sbtDest){
+  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
+    const relId = `ASSOC_${sbtOrigin}_${key}_${sbtDest}`;
+    let assoc = new SoulAssoc(relId);
+    assoc.aEnd = sbtOrigin;
+    assoc.bEnd = sbtDest;
+    assoc.role = key;
+    // assoc.qty = ;
+    assoc.save();
+  }
+}
+
+/**
+ * Add Attributes to a Souls
+ * @param originAddr Origin Address
+ * @param key Association's Role
+ * @param value Destenation Address
+ */
+ const attrAdd = (originAddr: string, key: string, value: string): void => {
+  //Relate by SBT
+  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
+  let sbtDest = getSoulId(value); //Destination SBT
+  if(sbtOrigin && sbtDest){
+  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
+    const relId = `ATTR_${sbtOrigin}_${key}_${sbtDest}`;
+    let attr = new SoulAttr(relId);
+    attr.aEnd = sbtOrigin;
+    attr.bEnd = sbtDest;
+    attr.role = key;
+    attr.save();
+  }
+}
 
 /**
  * Handle a string set event to update a game type.
  */
 export function handleStringSet(event: StringSet): void {
+  const originAddr = event.params.originAddress.toHexString();
+  const key = event.params.key;
+  const value = event.params.value;
+  const relId = `${originAddr}_${key}_${value}`;
+
+  //** Generic Attributes
+  attrAdd(originAddr, key, value);
+
+
+
   // If type value is set
   if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
     const id = event.params.originAddress.toHexString();
@@ -34,28 +94,6 @@ export function handleStringSet(event: StringSet): void {
 }
 
 /**
- * Add Asociation Between Souls
- * @param originAddr Origin Address
- * @param key Association's Role
- * @param value Destenation Address
- */
-const assocAdd = (originAddr: string, key: string, value: string): void => {
-  //Relate by SBT
-  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
-  let sbtDest = getSoulId(value); //Destination SBT
-  if(sbtOrigin && sbtDest){
-  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
-    const assocId = `ASSOC_${sbtOrigin}_${sbtDest}`;
-    let assoc = new SoulAssoc(assocId);
-    assoc.aEnd = sbtOrigin;
-    assoc.bEnd = sbtDest;
-    assoc.role = key;
-    // assoc.qty = ;
-    assoc.save();
-  }
-}
-
-/**
  * Handle a address add event to update a game of claim.
  */
 export function handleAddressAdd(event: AddressAdd): void {
@@ -64,7 +102,7 @@ export function handleAddressAdd(event: AddressAdd): void {
   const value = event.params.destinationAddress.toHexString();
   const relId = `${originAddr}_${key}_${value}`;
 
-  //** By SBT [TEST] Should work on next contract deployment
+  //** Generic Associations   //[TEST] Should work on next contract deployment
   assocAdd(originAddr, key, value);
 
 
