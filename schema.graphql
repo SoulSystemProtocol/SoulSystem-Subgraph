@@ -15,17 +15,6 @@ interface Post {
   metadata: Bytes
 }
 
-# [DEV] UNUSED
-# type CTXPost @entity {
-#   id: ID! # combination of ctx address and event transaction address
-#   entity: CTX!
-#   createdDate: BigInt
-#   author: Soul!
-#   entityRole: String!
-#   uri: String
-#   metadata: Bytes
-# }
-
 
 #Entity: Account
 type Account @entity {
