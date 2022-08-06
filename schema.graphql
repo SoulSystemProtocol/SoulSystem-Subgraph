@@ -292,14 +292,14 @@ type SoulAssoc @entity {
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
-  role: BigInt!
-  qty: BigInt! # Power/Influence
+  role: String!
+  qty: BigInt # Power/Influence
 }
 
 type SoulParts @entity {
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
-  role: BigInt!
-  qty: BigInt! # Quantity?
+  role: String!
+  qty: BigInt # Quantity?
 }

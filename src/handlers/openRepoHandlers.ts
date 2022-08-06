@@ -34,6 +34,28 @@ export function handleStringSet(event: StringSet): void {
 }
 
 /**
+ * Add Asociation Between Souls
+ * @param originAddr Origin Address
+ * @param key Association's Role
+ * @param value Destenation Address
+ */
+const assocAdd = (originAddr: string, key: string, value: string): void => {
+  //Relate by SBT
+  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
+  let sbtDest = getSoulId(value); //Destination SBT
+  if(sbtOrigin && sbtDest){
+  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
+    const assocId = `ASSOC_${sbtOrigin}_${sbtDest}`;
+    let assoc = new SoulAssoc(assocId);
+    assoc.aEnd = sbtOrigin;
+    assoc.bEnd = sbtDest;
+    assoc.role = key;
+    // assoc.qty = ;
+    assoc.save();
+  }
+}
+
+/**
  * Handle a address add event to update a game of claim.
  */
 export function handleAddressAdd(event: AddressAdd): void {
@@ -42,22 +64,11 @@ export function handleAddressAdd(event: AddressAdd): void {
   const value = event.params.destinationAddress.toHexString();
   const relId = `${originAddr}_${key}_${value}`;
 
-
-  //** By SBT [WIP]
-  //Origin SBT
-  let sbtOrigin = getSoulId(originAddr);
-  //Destination SBT
-  let sbtDest = getSoulId(value);
-  if(sbtOrigin && sbtDest){
-    const assocId = `ASSOC_${sbtOrigin}_${sbtDest}`;
-    let assoc = new SoulAssoc(assocId);
-    assoc.aEnd = sbtOrigin;
-    assoc.bEnd = sbtDest;
-    assoc.save();
-  }
+  //** By SBT [TEST] Should work on next contract deployment
+  assocAdd(originAddr, key, value);
 
 
-
+  /* DEPRECATE - These should be between the souls */
   // For Game
   let entity = Game.load(originAddr);
   if (entity) {
@@ -89,6 +100,9 @@ export function handleAddressAdd(event: AddressAdd): void {
       }
     }
   }
+  /* */
+
+  
 
   // If claim value is set
   if (event.params.key == OPEN_REPO_ADDRESS_KEY_CLAIM) {
@@ -96,9 +110,7 @@ export function handleAddressAdd(event: AddressAdd): void {
     let game = Game.load(originAddr);
     if (game) {
       // Get claim
-      let claim = loadOrCreateClaim(
-        event.params.destinationAddress.toHexString()
-      );
+      let claim = loadOrCreateClaim(value);
       // Update claim
       claim.game = game.id;
       claim.save();

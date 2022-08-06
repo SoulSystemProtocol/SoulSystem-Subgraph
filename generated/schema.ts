@@ -2714,8 +2714,7 @@ export class SoulAssoc extends Entity {
 
     this.set("aEnd", Value.fromString(""));
     this.set("bEnd", Value.fromString(""));
-    this.set("role", Value.fromBigInt(BigInt.zero()));
-    this.set("qty", Value.fromBigInt(BigInt.zero()));
+    this.set("role", Value.fromString(""));
   }
 
   save(): void {
@@ -2762,22 +2761,30 @@ export class SoulAssoc extends Entity {
     this.set("bEnd", Value.fromString(value));
   }
 
-  get role(): BigInt {
+  get role(): string {
     let value = this.get("role");
-    return value!.toBigInt();
+    return value!.toString();
   }
 
-  set role(value: BigInt) {
-    this.set("role", Value.fromBigInt(value));
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
-  get qty(): BigInt {
+  get qty(): BigInt | null {
     let value = this.get("qty");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set qty(value: BigInt) {
-    this.set("qty", Value.fromBigInt(value));
+  set qty(value: BigInt | null) {
+    if (!value) {
+      this.unset("qty");
+    } else {
+      this.set("qty", Value.fromBigInt(<BigInt>value));
+    }
   }
 }
 
@@ -2788,8 +2795,7 @@ export class SoulParts extends Entity {
 
     this.set("aEnd", Value.fromString(""));
     this.set("bEnd", Value.fromString(""));
-    this.set("role", Value.fromBigInt(BigInt.zero()));
-    this.set("qty", Value.fromBigInt(BigInt.zero()));
+    this.set("role", Value.fromString(""));
   }
 
   save(): void {
@@ -2836,21 +2842,29 @@ export class SoulParts extends Entity {
     this.set("bEnd", Value.fromString(value));
   }
 
-  get role(): BigInt {
+  get role(): string {
     let value = this.get("role");
-    return value!.toBigInt();
+    return value!.toString();
   }
 
-  set role(value: BigInt) {
-    this.set("role", Value.fromBigInt(value));
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
-  get qty(): BigInt {
+  get qty(): BigInt | null {
     let value = this.get("qty");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set qty(value: BigInt) {
-    this.set("qty", Value.fromBigInt(value));
+  set qty(value: BigInt | null) {
+    if (!value) {
+      this.unset("qty");
+    } else {
+      this.set("qty", Value.fromBigInt(<BigInt>value));
+    }
   }
 }
