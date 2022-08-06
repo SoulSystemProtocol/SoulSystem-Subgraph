@@ -17,12 +17,10 @@ function getContractName(address: Address): string{
 /**
  * Get Soul ID by Owner
  */
- function getSoulId(hubAddress: Address, address: Address): BigInt {
-  let hub = HubContract.bind(hubAddress);
-  let sbtContractAddr = hub.assocGet("SBT");
-  // Load name from contract
-  let sbtContract = SoulContract.bind(sbtContractAddr);
-  return sbtContract.tokenByAddress(address);
+export function getSoulId(address: string): string {
+  let account = Account.load(address);
+  if(!account) return '';
+  return account.sbt;
 }
 
 /**

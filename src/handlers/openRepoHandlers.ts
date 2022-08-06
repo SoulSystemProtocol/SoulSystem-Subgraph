@@ -1,10 +1,10 @@
 import { StringSet, AddressAdd } from "../../generated/OpenRepo/OpenRepo";
-import { Game, Claim, Account, AccountRelAddress, GameRelAddress, ClaimRelAddress } from "../../generated/schema";
+import { Game, Claim, Account, AccountRelAddress, GameRelAddress, ClaimRelAddress, SoulAssoc } from "../../generated/schema";
 import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
-import { loadOrCreateClaim, loadOrCreateGame } from "../utils";
+import { loadOrCreateClaim, loadOrCreateGame, getSoulId } from "../utils";
 
 
 /**
@@ -41,6 +41,22 @@ export function handleAddressAdd(event: AddressAdd): void {
   const key = event.params.key;
   const value = event.params.destinationAddress.toHexString();
   const relId = `${originAddr}_${key}_${value}`;
+
+
+  //** By SBT [WIP]
+  //Origin SBT
+  let sbtOrigin = getSoulId(originAddr);
+  //Destination SBT
+  let sbtDest = getSoulId(value);
+  if(sbtOrigin && sbtDest){
+    const assocId = `ASSOC_${sbtOrigin}_${sbtDest}`;
+    let assoc = new SoulAssoc(assocId);
+    assoc.aEnd = sbtOrigin;
+    assoc.bEnd = sbtDest;
+    assoc.save();
+  }
+
+
 
   // For Game
   let entity = Game.load(originAddr);
