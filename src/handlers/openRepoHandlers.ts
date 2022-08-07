@@ -10,9 +10,11 @@ import { Game,
 } from "../../generated/schema";
 import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
+  OPEN_REPO_STRING_KEY_ROLE,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
 import { loadOrCreateClaim, loadOrCreateGame, getSoulByAddr } from "../utils";
+import { log } from '@graphprotocol/graph-ts'
 
 /**
  * Add Asociation Between Souls
@@ -67,26 +69,45 @@ export function handleStringSet(event: StringSet): void {
   //** Generic Attributes
   attrAdd(originAddr, key, value);
 
-
-
-  // If type value is set
-  if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
+  //Entity's 'role'
+  if (event.params.key == OPEN_REPO_STRING_KEY_ROLE){
     const id = event.params.originAddress.toHexString();
     // Get Entity
-    let game = loadOrCreateGame(event.params.originAddress.toHexString());
-    // let game = Game.load(id);  //This actually runs before the entity created event
+    // let game = loadOrCreateGame(event.params.originAddress.toHexString());
+    let game = Game.load(id);  //This actually runs before the entity created event
+    if (game) {
+      // Update game role
+      game.role = event.params.value;
+      game.save();
+    } else {
+      // let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
+      let claim = Claim.load(id);  //This actually runs before the entity created event
+      if (claim) {
+        // Update claim role
+        claim.role = event.params.value;
+        claim.save();
+      }
+    }
+  }
+  //Entity's 'type'
+  else if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
+    const id = event.params.originAddress.toHexString();
+    // Get Entity
+    // let game = loadOrCreateGame(event.params.originAddress.toHexString());
+    let game = Game.load(id);  //This actually runs before the entity created event
     if (game) {
       // Update game type
       game.type = event.params.value;
       game.save();
     } else {
-      let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
-      // let claim = Claim.load(id);  //This actually runs before the entity created event
+      // let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
+      let claim = Claim.load(id);  //This actually runs before the entity created event
       if (claim) {
         // Update claim type
         claim.type = event.params.value;
         claim.save();
       }
+      else log.warning('No Game nor Claim for Address: {} key: {} value: {}', [id, key, value]);
     }
   }
 }

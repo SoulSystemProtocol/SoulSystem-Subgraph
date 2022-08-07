@@ -801,6 +801,7 @@ export class Game extends Entity {
     this.set("hub", Value.fromString(""));
     this.set("name", Value.fromString(""));
     this.set("type", Value.fromString(""));
+    this.set("role", Value.fromString(""));
     this.set("createdDate", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -855,6 +856,15 @@ export class Game extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get role(): string {
+    let value = this.get("role");
+    return value!.toString();
+  }
+
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
   get uri(): string | null {
@@ -1751,6 +1761,7 @@ export class Claim extends Entity {
 
     this.set("name", Value.fromString(""));
     this.set("type", Value.fromString(""));
+    this.set("role", Value.fromString(""));
     this.set("stage", Value.fromI32(0));
     this.set("createdDate", Value.fromBigInt(BigInt.zero()));
   }
@@ -1831,6 +1842,15 @@ export class Claim extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get role(): string {
+    let value = this.get("role");
+    return value!.toString();
+  }
+
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
   get uri(): string | null {

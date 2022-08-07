@@ -73,7 +73,7 @@ type AccountRelAddress @entity {
 type Soul @entity {
   id: ID! # Token ID 
   owner: String! # account address
-  type: String! # human or contract type
+  type: String! # human or contract type (classified by contract)
   role: String! # Entity's function designation
   # role: String # ?
   uri: String # metadata uri
@@ -116,6 +116,7 @@ type Game implements CTX @entity {
   hub: String! # hub address
   name: String!
   type: String!
+  role: String! # Entity's function designation
   uri: String # metadata uri
   uriData: Bytes
   metadata: Bytes
@@ -207,6 +208,7 @@ type Claim implements CTX @entity {
   name: String!
   game: Game
   type: String!
+  role: String! # Entity's function designation
   uri: String # metadata uri
   uriData: Bytes
   metadata: Bytes
