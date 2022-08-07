@@ -10,4 +10,4 @@
 
 ## Subgraph
 
-- Deployment [dev] - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
+- Deployment [mumbai] - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
