@@ -12,18 +12,18 @@ import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
-import { loadOrCreateClaim, loadOrCreateGame, getSoulId } from "../utils";
+import { loadOrCreateClaim, loadOrCreateGame, getSoulByAddr } from "../utils";
 
 /**
  * Add Asociation Between Souls
- * @param originAddr Origin Address
+ * @param address Origin Address
  * @param key Association's Role
  * @param value Destenation Address
  */
- const assocAdd = (originAddr: string, key: string, value: string): void => {
+ const assocAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
-  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
-  let sbtDest = getSoulId(value); //Destination SBT
+  let sbtOrigin = getSoulByAddr(address);  //Origin SBT
+  let sbtDest = getSoulByAddr(value); //Destination SBT
   if(sbtOrigin && sbtDest){
   // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
     const relId = `ASSOC_${sbtOrigin}_${key}_${sbtDest}`;
@@ -38,18 +38,18 @@ import { loadOrCreateClaim, loadOrCreateGame, getSoulId } from "../utils";
 
 /**
  * Add Attributes to a Souls
- * @param originAddr Origin Address
+ * @param address Origin Address
  * @param key Association's Role
  * @param value Destenation Address
  */
- const attrAdd = (originAddr: string, key: string, value: string): void => {
+ const attrAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
-  let sbtOrigin = getSoulId(originAddr);  //Origin SBT
-  if(sbtOrigin){
-  // if(!!sbtOrigin){   //Probably shouls use this instead
-    const relId = `ATTR_${sbtOrigin}_${key}_${value}`;
+  let sbt = getSoulByAddr(address);  //Origin SBT
+  if(sbt){
+  // if(!!sbt){   //Probably shouls use this instead
+    const relId = `ATTR_${sbt}_${key}_${value}`;
     let attr = new SoulAttr(relId);
-    attr.aEnd = sbtOrigin;
+    attr.aEnd = sbt;
     attr.bEnd = value;
     attr.role = key;
     attr.save();

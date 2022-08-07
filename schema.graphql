@@ -73,7 +73,8 @@ type AccountRelAddress @entity {
 type Soul @entity {
   id: ID! # Token ID 
   owner: String! # account address
-  type: String! # type to determine that the entity is created by an account or contract
+  type: String! # human or contract type
+  role: String! # Entity's function designation
   # role: String # ?
   uri: String # metadata uri
   uriData: Bytes

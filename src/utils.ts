@@ -17,7 +17,7 @@ function getContractName(address: Address): string{
 /**
  * Get Soul ID by Owner
  */
-export function getSoulId(address: string): string {
+export function getSoulByAddr(address: string): string {
   let account = Account.load(address);
   if(!account) return '';
   return account.sbt;
@@ -34,6 +34,28 @@ export function addSoulToAccount(accountAddress: Address, soul: Soul): void {
   account.sbt = soul.id;
   account.save();
 }
+
+/**
+ * Remove soul to account mapping
+ */
+ export function removeSoulFromAccount(accountAddress: Address): void {
+  let account = Account.load(accountAddress.toHexString());
+  if (account) {
+    account.sbt = '';
+    account.save();
+  }
+}
+
+
+/**
+ * Load soul or create new.
+ */
+ export function loadOrCreateSoul(id: string): Soul {
+  let ent = Soul.load(id);
+  if (!ent) ent = new Soul(id);
+  return ent;
+}
+
 
 /**
  * Load game or create new.

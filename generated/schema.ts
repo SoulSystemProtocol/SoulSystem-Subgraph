@@ -464,6 +464,7 @@ export class Soul extends Entity {
 
     this.set("owner", Value.fromString(""));
     this.set("type", Value.fromString(""));
+    this.set("role", Value.fromString(""));
     this.set("uriImage", Value.fromString(""));
     this.set("uriFirstName", Value.fromString(""));
     this.set("uriLastName", Value.fromString(""));
@@ -512,6 +513,15 @@ export class Soul extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get role(): string {
+    let value = this.get("role");
+    return value!.toString();
+  }
+
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
   get uri(): string | null {
@@ -2210,6 +2220,7 @@ export class ClaimPost extends Entity {
 
     this.set("entity", Value.fromString(""));
     this.set("author", Value.fromString(""));
+    this.set("entityRole", Value.fromString(""));
   }
 
   save(): void {
@@ -2273,21 +2284,13 @@ export class ClaimPost extends Entity {
     this.set("author", Value.fromString(value));
   }
 
-  get entityRole(): string | null {
+  get entityRole(): string {
     let value = this.get("entityRole");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set entityRole(value: string | null) {
-    if (!value) {
-      this.unset("entityRole");
-    } else {
-      this.set("entityRole", Value.fromString(<string>value));
-    }
+  set entityRole(value: string) {
+    this.set("entityRole", Value.fromString(value));
   }
 
   get uri(): string | null {

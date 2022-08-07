@@ -1,25 +1,34 @@
 import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul } from "../../generated/schema";
 import { SoulType, Transfer, URI } from "../../generated/Soul/Soul";
-import { addSoulToAccount, makeSearchField } from "../utils";
+import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 import { Soul as SoulContract } from "../../generated/Soul/Soul";
 
 
 /**
  * Handle a tranfer event to create or update a soul.
+ * (address from,address to, uint256 tokenId)
  */
 export function handleTransfer(event: Transfer): void {
   // Find or create soul
-  let soul = Soul.load(event.params.tokenId.toString());
-  if (!soul) {
-    soul = new Soul(event.params.tokenId.toString());
-    soul.type = "";
+  let soul = loadOrCreateSoul(event.params.tokenId.toString());
+  //Reset Type & Role
+  soul.type = "";
+  soul.role = "";
+  
+  if(event.params.from != Address.zero()){
+    //Remove Soul From Previous Account
+    removeSoulFromAccount(event.params.from);  
   }
+
+  if(event.params.to != Address.zero()){
+    // Add soul to account
+    addSoulToAccount(event.params.to, soul);
+  }
+  
   // Update soul params
   soul.owner = event.params.to.toHexString();
   soul.save();
-  // Add soul to account
-  addSoulToAccount(event.params.to, soul);
 }
 
 /**
@@ -95,6 +104,7 @@ export function handleURI(event: URI): void {
 
 /**
  * Handle a soul type event to update a soul.
+ * @dev after the transfer of a Soul the contract will calssify the owner and emit this event
  */
 export function handleSoulType(event: SoulType): void {
   // Find entity and return if not found
@@ -103,17 +113,6 @@ export function handleSoulType(event: SoulType): void {
   if (!soul) return;
   // Update soul
   soul.type = event.params.soulType;
-  if(soul.type!==''){ 
-    /*
-    let contract = SoulContract.bind(Address.fromString(soul.owner));
-    let name = contract.name();
-    // let name = getContractName(Address.fromString(soul.owner));
-    //Contract - Fetch Name
-    soul.uriFirstName = name;
-    // soul.name = name;
-    */
-    soul.name = 'Owner:' + soul.owner
-  }
   soul.save();
 }
 

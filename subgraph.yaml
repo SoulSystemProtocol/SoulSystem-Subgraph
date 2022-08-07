@@ -82,7 +82,7 @@ dataSources:
         - event: ActionURI(indexed bytes32,string)
           handler: handleActionURI
       file: ./src/handlers/actionRepoHandler.ts
-  # Open repo contract
+  # OpenRepo contract
   - kind: ethereum
     name: OpenRepo
     network: optimism-kovan
