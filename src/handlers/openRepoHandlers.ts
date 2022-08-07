@@ -26,8 +26,8 @@ import { log } from '@graphprotocol/graph-ts'
   //Relate by SBT
   let sbtOrigin = getSoulByAddr(address);  //Origin SBT
   let sbtDest = getSoulByAddr(value); //Destination SBT
-  if(sbtOrigin && sbtDest){
-  // if(!!sbtOrigin && !!sbtDest){   //Probably shouls use this instead
+  // if(sbtOrigin && sbtDest){
+  if(!!sbtOrigin && !!sbtDest){
     const relId = `ASSOC_${sbtOrigin}_${key}_${sbtDest}`;
     let assoc = new SoulAssoc(relId);
     assoc.aEnd = sbtOrigin;
@@ -47,8 +47,8 @@ import { log } from '@graphprotocol/graph-ts'
  const attrAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
   let sbt = getSoulByAddr(address);  //Origin SBT
-  if(sbt){
-  // if(!!sbt){   //Probably shouls use this instead
+  // if(sbt){
+  if(!!sbt){
     const relId = `ATTR_${sbt}_${key}_${value}`;
     let attr = new SoulAttr(relId);
     attr.aEnd = sbt;
