@@ -10,4 +10,4 @@
 
 ## Subgraph
 
-- Development - https://thegraph.com/hosted-service/subgraph/kiv1n/mentordao-dev
+- Deployment [dev] - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
