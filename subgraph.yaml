@@ -7,11 +7,11 @@ dataSources:
   # Soul contract
   - kind: ethereum
     name: Soul
-    network: optimism-kovan
+    network: mumbai
     source:
-      address: "0x5d15e4713fA815D0E9c1B5186C80c689a9a6cA21"
+      address: "0x74413DEE1E5D01e4E2176e2Ebb94EA6711bf78A9"
       abi: Soul
-      startBlock: 5075112
+      startBlock: 27506961
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -33,11 +33,11 @@ dataSources:
   # Hub contract
   - kind: ethereum
     name: Hub
-    network: optimism-kovan
+    network: mumbai
     source:
-      address: "0x274e54BFFDbb94442FC8Df155d47b42BEF90c76B"
+      address: "0xC78DFebB059b40B22C130Ce0cbA3d661AEfcDa8b"
       abi: Hub
-      startBlock: 5074998
+      startBlock: 27506961
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -62,11 +62,11 @@ dataSources:
       # Action repository (history) contract
   - kind: ethereum
     name: ActionRepo
-    network: optimism-kovan
+    network: mumbai
     source:
-      address: "0x954b877d371F88238DD7A749BF01758e5f20C3C2"
+      address: "0x95BD98a656C907fC037aF87Ea740fD94188Cd65f"
       abi: ActionRepo
-      startBlock: 5074998
+      startBlock: 27506961
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -85,11 +85,11 @@ dataSources:
   # OpenRepo contract
   - kind: ethereum
     name: OpenRepo
-    network: optimism-kovan
+    network: mumbai
     source:
-      address: "0xFF20BA5dcD0485e2587F1a75117c0fc80941B61C"
+      address: "0x4fB72b6Eb2812D1aA333C168552E5B1444E02a23"
       abi: OpenRepo
-      startBlock: 4915276
+      startBlock: 27506961
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -117,7 +117,7 @@ templates:
   # Game contract template
   - kind: ethereum
     name: Game
-    network: optimism-kovan
+    network: mumbai
     source:
       abi: Game
     mapping:
@@ -150,7 +150,7 @@ templates:
   # Claim contract template
   - kind: ethereum
     name: Claim
-    network: optimism-kovan
+    network: mumbai
     source:
       abi: Claim
     mapping:
