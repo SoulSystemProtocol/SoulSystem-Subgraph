@@ -9,7 +9,7 @@ dataSources:
     name: Soul
     network: mumbai
     source:
-      address: "0x74413DEE1E5D01e4E2176e2Ebb94EA6711bf78A9"
+      address: "0xc4F3156DA055e802347dfEf8d8f15d728053Bf78"
       abi: Soul
       startBlock: 27506961
     mapping:
@@ -35,7 +35,7 @@ dataSources:
     name: Hub
     network: mumbai
     source:
-      address: "0xC78DFebB059b40B22C130Ce0cbA3d661AEfcDa8b"
+      address: "0xf87AF5bC790CFB472603b66aC0A9EA366fbf1367"
       abi: Hub
       startBlock: 27506961
     mapping:
@@ -87,7 +87,7 @@ dataSources:
     name: OpenRepo
     network: mumbai
     source:
-      address: "0x4fB72b6Eb2812D1aA333C168552E5B1444E02a23"
+      address: "0x647DBF306fE835E231dB1f9d711364806467E20a"
       abi: OpenRepo
       startBlock: 27506961
     mapping:
