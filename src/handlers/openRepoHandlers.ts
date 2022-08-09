@@ -1,12 +1,13 @@
 import { StringSet, AddressAdd } from "../../generated/OpenRepo/OpenRepo";
-import { Game, 
-  Claim, 
-  Account, 
-  AccountRelAddress, 
-  GameRelAddress, 
-  ClaimRelAddress, 
-  SoulAssoc, 
-  SoulAttr 
+import {
+  Game,
+  Claim,
+  Account,
+  AccountRelAddress,
+  GameRelAddress,
+  ClaimRelAddress,
+  SoulAssoc,
+  SoulAttr
 } from "../../generated/schema";
 import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
@@ -22,12 +23,12 @@ import { log } from '@graphprotocol/graph-ts'
  * @param key Association's Role
  * @param value Destenation Address
  */
- const assocAdd = (address: string, key: string, value: string): void => {
+const assocAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
   let sbtOrigin = getSoulByAddr(address);  //Origin SBT
   let sbtDest = getSoulByAddr(value); //Destination SBT
   // if(sbtOrigin && sbtDest){
-  if(!!sbtOrigin && !!sbtDest){
+  if (!!sbtOrigin && !!sbtDest) {
     const relId = `ASSOC_${sbtOrigin}_${key}_${sbtDest}`;
     let assoc = new SoulAssoc(relId);
     assoc.aEnd = sbtOrigin;
@@ -44,17 +45,22 @@ import { log } from '@graphprotocol/graph-ts'
  * @param key Association's Role
  * @param value Destenation Address
  */
- const attrAdd = (address: string, key: string, value: string): void => {
+const attrAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
   let sbt = getSoulByAddr(address);  //Origin SBT
   // if(sbt){
-  if(!!sbt){
+  if (!!sbt) {
     const relId = `ATTR_${sbt}_${key}_${value}`;
     let attr = new SoulAttr(relId);
     attr.aEnd = sbt;
     attr.bEnd = value;
     attr.role = key;
     attr.save();
+
+    //Cache Special Attributes
+    if (key == 'type') {
+
+    }
   }
 }
 
@@ -70,7 +76,7 @@ export function handleStringSet(event: StringSet): void {
   attrAdd(originAddr, key, value);
 
   //Entity's 'role'
-  if (event.params.key == OPEN_REPO_STRING_KEY_ROLE){
+  if (event.params.key == OPEN_REPO_STRING_KEY_ROLE) {
     const id = event.params.originAddress.toHexString();
     // Get Entity
     // let game = loadOrCreateGame(event.params.originAddress.toHexString());
@@ -159,7 +165,7 @@ export function handleAddressAdd(event: AddressAdd): void {
   }
   /* */
 
-  
+
 
   // If claim value is set
   if (event.params.key == OPEN_REPO_ADDRESS_KEY_CLAIM) {
