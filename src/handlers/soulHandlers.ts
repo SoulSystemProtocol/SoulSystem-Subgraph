@@ -98,7 +98,7 @@ export function handleURI(event: URI): void {
   soul.uriFirstName = uriFirstNameString;
   soul.uriLastName = uriLastNameString;
   let name = uriFirstNameString;
-  if (!!uriLastNameString) name = + ' ' + uriLastNameString;
+  if (!!uriLastNameString) name += ' ' + uriLastNameString;
   soul.name = name;
   soul.searchField = makeSearchField(soul);
   soul.save();
