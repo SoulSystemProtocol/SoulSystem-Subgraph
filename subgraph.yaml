@@ -9,7 +9,7 @@ dataSources:
     name: Soul
     network: mumbai
     source:
-      address: "0xc4F3156DA055e802347dfEf8d8f15d728053Bf78"
+      address: "0x5726eB1ba64F3FA0aAD002F273B625adA6e788ff"
       abi: Soul
       startBlock: 27506961
     mapping:
@@ -35,7 +35,7 @@ dataSources:
     name: Hub
     network: mumbai
     source:
-      address: "0xf87AF5bC790CFB472603b66aC0A9EA366fbf1367"
+      address: "0x9956b603Eb5A081d23721e5e0c8839257A92c499"
       abi: Hub
       startBlock: 27506961
     mapping:
