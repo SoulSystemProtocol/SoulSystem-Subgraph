@@ -15,17 +15,17 @@ export function handleTransfer(event: Transfer): void {
   //Reset Type & Role
   soul.type = "";
   soul.role = "";
-  
-  if(event.params.from != Address.zero()){
+
+  if (event.params.from != Address.zero()) {
     //Remove Soul From Previous Account
-    removeSoulFromAccount(event.params.from);  
+    removeSoulFromAccount(event.params.from);
   }
 
-  if(event.params.to != Address.zero()){
+  if (event.params.to != Address.zero()) {
     // Add soul to account
     addSoulToAccount(event.params.to, soul);
   }
-  
+
   // Update soul params
   soul.owner = event.params.to.toHexString();
   soul.save();
@@ -38,16 +38,16 @@ export function handleURI(event: URI): void {
   // Find soul and return if not found
   let soul = Soul.load(event.params.id.toString());
   if (!soul) return;
-  
+
   //TODO: Extract 'tags' and save that as 'post.tags'
-  
+
   // Load uri data
   let uriIpfsHash = event.params.value.split("/").at(-1);
-  let uriData = ipfs.cat(uriIpfsHash); 
+  let uriData = ipfs.cat(uriIpfsHash);
   // Parse uri json
   let uriJson = uriData ? json.fromBytes(uriData) : null;
   let uriJsonObject = uriJson ? uriJson.toObject() : null;
-  
+
   // Get image from uri data
   let uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
   let uriJsonImageString = uriJsonImage ? uriJsonImage.toString() : "";
@@ -97,7 +97,9 @@ export function handleURI(event: URI): void {
   soul.uriImage = uriJsonImageString;
   soul.uriFirstName = uriFirstNameString;
   soul.uriLastName = uriLastNameString;
-  soul.name = uriFirstNameString + ' ' + uriFirstNameString;
+  let name = uriFirstNameString;
+  if (!!uriLastNameString) name = + ' ' + uriLastNameString;
+  soul.name = name;
   soul.searchField = makeSearchField(soul);
   soul.save();
 }
