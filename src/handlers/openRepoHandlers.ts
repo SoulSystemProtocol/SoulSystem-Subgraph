@@ -16,6 +16,7 @@ import {
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
 import { loadOrCreateClaim, loadOrCreateGame, getSoulByAddr } from "../utils";
+import { store } from '@graphprotocol/graph-ts'
 import { log } from '@graphprotocol/graph-ts'
 
 /**
@@ -75,8 +76,21 @@ export function handleStringSet(event: StringSet): void {
   const key = event.params.key;
   const value = event.params.value;
 
-  //** Generic Attributes
-  attrAdd(originAddr, key, value);
+  let sbt = getSoulByAddr(originAddr);  //Origin SBT
+  if (!!sbt) {
+    /* ERROR
+    let soul = Soul.load(sbt);
+    if (soul) {
+      //Remove Existing Entities under that key
+      for (let i = 0; i < soul.attrs.length; i++) {
+        //Remove Entity
+        store.remove('SoulAttr', soul.attrs[i]);
+      }
+    }
+    */
+    //Add Generic Attributes
+    attrAdd(originAddr, key, value);
+  }
 
   //Entity's 'role'
   if (event.params.key == OPEN_REPO_STRING_KEY_ROLE) {
