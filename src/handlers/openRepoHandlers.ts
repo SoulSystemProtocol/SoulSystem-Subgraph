@@ -7,7 +7,8 @@ import {
   GameRelAddress,
   ClaimRelAddress,
   SoulAssoc,
-  SoulAttr
+  SoulAttr,
+  Soul,
 } from "../../generated/schema";
 import {
   OPEN_REPO_ADDRESS_KEY_CLAIM,
@@ -58,8 +59,21 @@ const attrAdd = (address: string, key: string, value: string): void => {
     attr.save();
 
     //Cache Special Attributes
+    /* Temporarily disabled until new protocol version
     if (key == 'type') {
-
+      let soul = Soul.load(sbt);
+      if (soul) {
+        soul.type = value;
+        soul.save();
+      }
+    } else 
+    */
+    if (key == 'role') {
+      let soul = Soul.load(sbt);
+      if (soul) {
+        soul.role = value;
+        soul.save();
+      }
     }
   }
 }
