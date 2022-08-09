@@ -1,4 +1,4 @@
-import { StringSet, AddressAdd } from "../../generated/OpenRepo/OpenRepo";
+import { StringSet, AddressAdd, AddressSet } from "../../generated/OpenRepo/OpenRepo";
 import {
   Game,
   Claim,
@@ -19,7 +19,7 @@ import { loadOrCreateClaim, loadOrCreateGame, getSoulByAddr } from "../utils";
 import { log } from '@graphprotocol/graph-ts'
 
 /**
- * Add Asociation Between Souls
+ * Add Asociation Between two Souls
  * @param address Origin Address
  * @param key Association's Role
  * @param value Destenation Address
@@ -122,6 +122,20 @@ export function handleStringSet(event: StringSet): void {
 }
 
 /**
+ * Set Associations
+ */
+export function handleAddressSet(event: AddressSet): void {
+  const originAddr = event.params.originAddress.toHexString();
+  const key = event.params.key;
+  const value = event.params.destinationAddress.toHexString();
+
+  //TODO: Remove Existing Associations
+
+  //Add Assoc
+  assocAdd(originAddr, key, value);
+}
+
+/**
  * Handle a address add event to update a game of claim.
  */
 export function handleAddressAdd(event: AddressAdd): void {
@@ -130,7 +144,7 @@ export function handleAddressAdd(event: AddressAdd): void {
   const value = event.params.destinationAddress.toHexString();
   const relId = `${originAddr}_${key}_${value}`;
 
-  //** Generic Associations   //[TEST] Should work on next contract deployment
+  //** Generic Associations
   assocAdd(originAddr, key, value);
 
 

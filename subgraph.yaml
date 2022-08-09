@@ -112,6 +112,8 @@ dataSources:
           handler: handleStringSet
         - event: AddressAdd(address,string,address)
           handler: handleAddressAdd
+        - event: AddressSet(address,string,address)
+          handler: handleAddressSet
       file: ./src/handlers/openRepoHandlers.ts
 templates:
   # Game contract template
