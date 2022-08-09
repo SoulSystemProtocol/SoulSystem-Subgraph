@@ -17,7 +17,7 @@ import {
   RoleCreated,
   Post,
 } from "../../generated/templates/Claim/Claim";
-import { loadOrCreateClaim } from "../utils";
+import { getSoulByAddr, loadOrCreateClaim } from "../utils";
 
 /**
  * Handle a stage event to update claim stage.
@@ -25,11 +25,23 @@ import { loadOrCreateClaim } from "../utils";
 export function handleStage(event: Stage): void {
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
+  let stage = event.params.stage;
   // Update claim stage
-  claim.stage = event.params.stage;
+  claim.stage = stage;
   //Update Timestamp on stage changes
   claim.updatedDate = event.block.timestamp;
   claim.save();
+  //Update SBT
+  let sbt = getSoulByAddr(claim.id);
+  if (!!sbt) {
+    //Cache Special Attributes
+    let soul = Soul.load(sbt);
+    if (soul) {
+      soul.stage = stage;
+      soul.save();
+    }
+  }
+
 }
 
 /** DEPRECATE

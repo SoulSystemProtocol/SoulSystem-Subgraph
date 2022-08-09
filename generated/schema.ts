@@ -465,6 +465,7 @@ export class Soul extends Entity {
     this.set("owner", Value.fromString(""));
     this.set("type", Value.fromString(""));
     this.set("role", Value.fromString(""));
+    this.set("stage", Value.fromI32(0));
     this.set("uriImage", Value.fromString(""));
     this.set("uriFirstName", Value.fromString(""));
     this.set("uriLastName", Value.fromString(""));
@@ -522,6 +523,15 @@ export class Soul extends Entity {
 
   set role(value: string) {
     this.set("role", Value.fromString(value));
+  }
+
+  get stage(): i32 {
+    let value = this.get("stage");
+    return value!.toI32();
+  }
+
+  set stage(value: i32) {
+    this.set("stage", Value.fromI32(value));
   }
 
   get uri(): string | null {

@@ -28,7 +28,6 @@ const assocAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
   let sbtOrigin = getSoulByAddr(address);  //Origin SBT
   let sbtDest = getSoulByAddr(value); //Destination SBT
-  // if(sbtOrigin && sbtDest){
   if (!!sbtOrigin && !!sbtDest) {
     const relId = `ASSOC_${sbtOrigin}_${key}_${sbtDest}`;
     let assoc = new SoulAssoc(relId);
@@ -49,7 +48,6 @@ const assocAdd = (address: string, key: string, value: string): void => {
 const attrAdd = (address: string, key: string, value: string): void => {
   //Relate by SBT
   let sbt = getSoulByAddr(address);  //Origin SBT
-  // if(sbt){
   if (!!sbt) {
     const relId = `ATTR_${sbt}_${key}_${value}`;
     let attr = new SoulAttr(relId);
@@ -59,15 +57,6 @@ const attrAdd = (address: string, key: string, value: string): void => {
     attr.save();
 
     //Cache Special Attributes
-    /* Temporarily disabled until new protocol version
-    if (key == 'type') {
-      let soul = Soul.load(sbt);
-      if (soul) {
-        soul.type = value;
-        soul.save();
-      }
-    } else 
-    */
     if (key == 'role') {
       let soul = Soul.load(sbt);
       if (soul) {

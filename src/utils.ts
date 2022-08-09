@@ -1,8 +1,8 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { Game as GameContract } from "../generated/Hub/Game";
 // import { Claim as ClaimContract } from "../generated/Hub/Claim";
-import { Hub as HubContract } from "../generated/Hub/Hub";
-import { Soul as SoulContract } from "../generated/Hub/Soul";
+// import { Hub as HubContract } from "../generated/Hub/Hub";
+// import { Soul as SoulContract } from "../generated/Hub/Soul";
 import { Account, Game, Soul, Claim } from "../generated/schema";
 
 /**

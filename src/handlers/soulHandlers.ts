@@ -2,7 +2,7 @@ import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul } from "../../generated/schema";
 import { SoulType, Transfer, URI } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
-import { Soul as SoulContract } from "../../generated/Soul/Soul";
+// import { Soul as SoulContract } from "../../generated/Soul/Soul";
 
 
 /**
@@ -15,6 +15,7 @@ export function handleTransfer(event: Transfer): void {
   //Reset Type & Role
   soul.type = "";
   soul.role = "";
+  soul.stage = 0;
 
   if (event.params.from != Address.zero()) {
     //Remove Soul From Previous Account

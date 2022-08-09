@@ -59,7 +59,7 @@ dataSources:
         - event: ContractCreated(string,indexed address)
           handler: handleContractCreated
       file: ./src/handlers/hubHandlers.ts
-      # Action repository (history) contract
+  # Action repository (history) contract
   - kind: ethereum
     name: ActionRepo
     network: mumbai
@@ -158,6 +158,7 @@ templates:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
+        - Soul
         - Claim
         - ClaimRole
         - ClaimNomination
@@ -165,6 +166,8 @@ templates:
       abis:
         - name: Claim
           file: ./abis/Claim.json
+        - name: Soul
+          file: ./abis/Soul.json
       eventHandlers:
         - event: Stage(uint8)
           handler: handleStage
