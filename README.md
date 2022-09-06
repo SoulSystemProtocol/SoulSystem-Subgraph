@@ -1,4 +1,4 @@
-# Bounty Protocol Subgraph
+# Solidify Protocol Subgraph
 
 ## Commands
 
