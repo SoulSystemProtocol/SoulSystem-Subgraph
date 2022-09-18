@@ -212,7 +212,8 @@ export function handlePost(event: Post): void {
     return;
   }
   // Create post entity
-  const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  // const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
   let post = new GamePost(postId);
   // let post = new CTXPost(postId);
   post.entity = game.id;

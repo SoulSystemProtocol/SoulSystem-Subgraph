@@ -235,7 +235,8 @@ export function handlePost(event: Post): void {
     return;
   }
   // Create post entity
-  let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  // let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
   let post = new ClaimPost(postId);
   // let post = new CTXPost(postId);
   post.entity = claim.id;
