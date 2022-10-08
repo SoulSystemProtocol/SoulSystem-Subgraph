@@ -15,6 +15,12 @@ interface Post {
   metadata: Bytes
 }
 
+interface Part {
+  id: ID! 
+  sbt: Soul!
+  roles: [String!]!
+}
+
 
 #Entity: Account
 type Account @entity {
@@ -262,13 +268,13 @@ type ClaimPost implements Post @entity {
 }
 
 #[WIP]
-type GameParticipant @entity {
+type GameParticipant implements Part @entity {
   id: ID! 
   entity: Game!
   sbt: Soul!
   roles: [String!]!
 }
-type ProcParticipant @entity {
+type ProcParticipant implements Part @entity {
   id: ID! 
   entity: Claim!
   sbt: Soul!
