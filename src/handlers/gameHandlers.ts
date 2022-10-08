@@ -70,9 +70,9 @@ export function handleTransferByToken(event: TransferByToken): void {
   let tokenId = event.params.id;
   let amount = event.params.value;
   
+  if (!event.params.toOwnerToken.equals(BigInt.zero())) { //Not Burn
 
-  //Relation Test 1
-  if (!event.params.toOwnerToken.equals(BigInt.zero())) {
+    //** Relation Test 1 - Parts
     //Add to Recepient
     let sbt = event.params.toOwnerToken.toString();
     let participanId = `${event.address.toHexString()}_${sbt}`;
@@ -90,7 +90,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     participant.save();
 
     
-    //Relation Test 2
+    //** Relation Test 2 - Association
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = GameAssoc.load(participanRoleId);
     if (!assoc) {
@@ -109,7 +109,7 @@ export function handleTransferByToken(event: TransferByToken): void {
 
   }
 
-  if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
+  if (!event.params.fromOwnerToken.equals(BigInt.zero())) { //Not Mint
     //Remove From Origin
     let sbt = event.params.fromOwnerToken.toString();
     let participanId = `${event.address.toHexString()}_${sbt}`;
@@ -124,7 +124,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       }
     }
 
-    //Relation Test 2
+    //Relation Test 2 - Association
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = GameAssoc.load(participanRoleId);
     if (assoc) {
