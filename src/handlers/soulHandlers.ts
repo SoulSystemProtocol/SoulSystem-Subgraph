@@ -1,6 +1,6 @@
 import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
-import { Soul } from "../../generated/schema";
-import { SoulType, Transfer, URI } from "../../generated/Soul/Soul";
+import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
+import { SoulType, Transfer, URI, Post } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
 
@@ -119,3 +119,33 @@ export function handleSoulType(event: SoulType): void {
   soul.save();
 }
 
+
+/**
+ * Handle a soul post event
+ * # event Post(address indexed account, uint256 tokenId, string uri, string context);
+ */
+ 
+ export function handlePost(event: Post): void {
+  // Skip if author soul is not exists
+  let authorSoul = Soul.load(event.params.tokenId.toString());
+  if (!authorSoul) return;
+
+  // Create Soul Post Entity
+  const postId = `${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
+  let post = new SoulPost(postId);
+  post.createdDate = event.block.timestamp;
+  post.author = authorSoul.id;
+  post.uri = event.params.uri;
+  // post.context = event.params.context;
+
+  // Load uri data
+  const ipfsHash = event.params.uri.split("/").at(-1);
+  const metadata = ipfs.cat(ipfsHash);
+  post.metadata = metadata;
+  
+  // post.entityRole = event.params.entRole.toString();
+  // post.entityRole = metadata?.entRole; //Maybe get from metadata ?
+
+  //Save
+  post.save();
+}

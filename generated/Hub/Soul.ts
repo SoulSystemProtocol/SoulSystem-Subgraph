@@ -102,24 +102,6 @@ export class BeaconUpgraded__Params {
   }
 }
 
-export class ContractURI extends ethereum.Event {
-  get params(): ContractURI__Params {
-    return new ContractURI__Params(this);
-  }
-}
-
-export class ContractURI__Params {
-  _event: ContractURI;
-
-  constructor(event: ContractURI) {
-    this._event = event;
-  }
-
-  get param0(): string {
-    return this._event.parameters[0].value.toString();
-  }
-}
-
 export class Initialized extends ethereum.Event {
   get params(): Initialized__Params {
     return new Initialized__Params(this);
@@ -221,6 +203,88 @@ export class Post__Params {
 
   get uri(): string {
     return this._event.parameters[2].value.toString();
+  }
+
+  get context(): string {
+    return this._event.parameters[3].value.toString();
+  }
+}
+
+export class RelAdd extends ethereum.Event {
+  get params(): RelAdd__Params {
+    return new RelAdd__Params(this);
+  }
+}
+
+export class RelAdd__Params {
+  _event: RelAdd;
+
+  constructor(event: RelAdd) {
+    this._event = event;
+  }
+
+  get fromSBT(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class RelRemoved extends ethereum.Event {
+  get params(): RelRemoved__Params {
+    return new RelRemoved__Params(this);
+  }
+}
+
+export class RelRemoved__Params {
+  _event: RelRemoved;
+
+  constructor(event: RelRemoved) {
+    this._event = event;
+  }
+
+  get fromSBT(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class RelSet extends ethereum.Event {
+  get params(): RelSet__Params {
+    return new RelSet__Params(this);
+  }
+}
+
+export class RelSet__Params {
+  _event: RelSet;
+
+  constructor(event: RelSet) {
+    this._event = event;
+  }
+
+  get fromSBT(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -347,6 +411,25 @@ export class Soul extends ethereum.SmartContract {
     return new Soul("Soul", address);
   }
 
+  accountURI(account: Address): string {
+    let result = super.call("accountURI", "accountURI(address):(string)", [
+      ethereum.Value.fromAddress(account)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_accountURI(account: Address): ethereum.CallResult<string> {
+    let result = super.tryCall("accountURI", "accountURI(address):(string)", [
+      ethereum.Value.fromAddress(account)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
   balanceOf(owner: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
       ethereum.Value.fromAddress(owner)
@@ -400,6 +483,25 @@ export class Soul extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getCurrentSBT(): BigInt {
+    let result = super.call("getCurrentSBT", "getCurrentSBT():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_getCurrentSBT(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getCurrentSBT",
+      "getCurrentSBT():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getHub(): Address {
@@ -746,6 +848,159 @@ export class Soul extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
+  relGet(key: string): BigInt {
+    let result = super.call("relGet", "relGet(string):(uint256)", [
+      ethereum.Value.fromString(key)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_relGet(key: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("relGet", "relGet(string):(uint256)", [
+      ethereum.Value.fromString(key)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  relGetAll(key: string): Array<BigInt> {
+    let result = super.call("relGetAll", "relGetAll(string):(uint256[])", [
+      ethereum.Value.fromString(key)
+    ]);
+
+    return result[0].toBigIntArray();
+  }
+
+  try_relGetAll(key: string): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall("relGetAll", "relGetAll(string):(uint256[])", [
+      ethereum.Value.fromString(key)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
+  }
+
+  relGetAllOf(fromSBT: BigInt, key: string): Array<BigInt> {
+    let result = super.call(
+      "relGetAllOf",
+      "relGetAllOf(uint256,string):(uint256[])",
+      [
+        ethereum.Value.fromUnsignedBigInt(fromSBT),
+        ethereum.Value.fromString(key)
+      ]
+    );
+
+    return result[0].toBigIntArray();
+  }
+
+  try_relGetAllOf(
+    fromSBT: BigInt,
+    key: string
+  ): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall(
+      "relGetAllOf",
+      "relGetAllOf(uint256,string):(uint256[])",
+      [
+        ethereum.Value.fromUnsignedBigInt(fromSBT),
+        ethereum.Value.fromString(key)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
+  }
+
+  relGetIndex(key: string, index: BigInt): BigInt {
+    let result = super.call(
+      "relGetIndex",
+      "relGetIndex(string,uint256):(uint256)",
+      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_relGetIndex(key: string, index: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "relGetIndex",
+      "relGetIndex(string,uint256):(uint256)",
+      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  relGetIndexOf(fromSBT: BigInt, key: string, index: BigInt): BigInt {
+    let result = super.call(
+      "relGetIndexOf",
+      "relGetIndexOf(uint256,string,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(fromSBT),
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_relGetIndexOf(
+    fromSBT: BigInt,
+    key: string,
+    index: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "relGetIndexOf",
+      "relGetIndexOf(uint256,string,uint256):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(fromSBT),
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  relGetOf(fromSBT: BigInt, key: string): BigInt {
+    let result = super.call("relGetOf", "relGetOf(uint256,string):(uint256)", [
+      ethereum.Value.fromUnsignedBigInt(fromSBT),
+      ethereum.Value.fromString(key)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_relGetOf(fromSBT: BigInt, key: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "relGetOf",
+      "relGetOf(uint256,string):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(fromSBT),
+        ethereum.Value.fromString(key)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   supportsInterface(interfaceId: Bytes): boolean {
     let result = super.call(
       "supportsInterface",
@@ -1057,12 +1312,118 @@ export class PostCall__Inputs {
   get uri_(): string {
     return this._call.inputValues[1].value.toString();
   }
+
+  get context(): string {
+    return this._call.inputValues[2].value.toString();
+  }
 }
 
 export class PostCall__Outputs {
   _call: PostCall;
 
   constructor(call: PostCall) {
+    this._call = call;
+  }
+}
+
+export class RelAddCall extends ethereum.Call {
+  get inputs(): RelAddCall__Inputs {
+    return new RelAddCall__Inputs(this);
+  }
+
+  get outputs(): RelAddCall__Outputs {
+    return new RelAddCall__Outputs(this);
+  }
+}
+
+export class RelAddCall__Inputs {
+  _call: RelAddCall;
+
+  constructor(call: RelAddCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class RelAddCall__Outputs {
+  _call: RelAddCall;
+
+  constructor(call: RelAddCall) {
+    this._call = call;
+  }
+}
+
+export class RelRemoveCall extends ethereum.Call {
+  get inputs(): RelRemoveCall__Inputs {
+    return new RelRemoveCall__Inputs(this);
+  }
+
+  get outputs(): RelRemoveCall__Outputs {
+    return new RelRemoveCall__Outputs(this);
+  }
+}
+
+export class RelRemoveCall__Inputs {
+  _call: RelRemoveCall;
+
+  constructor(call: RelRemoveCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class RelRemoveCall__Outputs {
+  _call: RelRemoveCall;
+
+  constructor(call: RelRemoveCall) {
+    this._call = call;
+  }
+}
+
+export class RelSetCall extends ethereum.Call {
+  get inputs(): RelSetCall__Inputs {
+    return new RelSetCall__Inputs(this);
+  }
+
+  get outputs(): RelSetCall__Outputs {
+    return new RelSetCall__Outputs(this);
+  }
+}
+
+export class RelSetCall__Inputs {
+  _call: RelSetCall;
+
+  constructor(call: RelSetCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get toSBT(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class RelSetCall__Outputs {
+  _call: RelSetCall;
+
+  constructor(call: RelSetCall) {
     this._call = call;
   }
 }
@@ -1131,6 +1492,32 @@ export class RepAddCall__Outputs {
   _call: RepAddCall;
 
   constructor(call: RepAddCall) {
+    this._call = call;
+  }
+}
+
+export class RunActionCall extends ethereum.Call {
+  get inputs(): RunActionCall__Inputs {
+    return new RunActionCall__Inputs(this);
+  }
+
+  get outputs(): RunActionCall__Outputs {
+    return new RunActionCall__Outputs(this);
+  }
+}
+
+export class RunActionCall__Inputs {
+  _call: RunActionCall;
+
+  constructor(call: RunActionCall) {
+    this._call = call;
+  }
+}
+
+export class RunActionCall__Outputs {
+  _call: RunActionCall;
+
+  constructor(call: RunActionCall) {
     this._call = call;
   }
 }

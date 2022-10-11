@@ -10,8 +10,7 @@ interface Post {
   id: ID!
   createdDate: BigInt
   author: Soul!
-  entityRole: String!
-  uri: String
+  uri: String!
   metadata: Bytes
 }
 
@@ -99,6 +98,7 @@ type Soul @entity {
   #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
   opinion: [SoulSoulOpinion!]! @derivedFrom(field: "subject")
   opinionOn: [SoulSoulOpinion!]! @derivedFrom(field: "object")
+  posts: [SoulPost!]! @derivedFrom(field: "author")
   # Semantic Relations
   assoc: [SoulAssoc!]! @derivedFrom(field: "aEnd")
   parts: [SoulPart!]! @derivedFrom(field: "aEnd")
@@ -202,7 +202,7 @@ type GamePost implements Post @entity {
   createdDate: BigInt
   author: Soul!
   entityRole: String! # Role in CTX
-  uri: String
+  uri: String!
   metadata: Bytes
 }
 
@@ -274,7 +274,7 @@ type ClaimPost implements Post @entity {
   createdDate: BigInt
   author: Soul!
   entityRole: String!
-  uri: String
+  uri: String!
   metadata: Bytes
 }
 
@@ -330,4 +330,13 @@ type SoulAttr @entity { # S4H0
   aEnd: Soul!
   bEnd: String!
   role: String!
+}
+
+type SoulPost implements Post @entity {
+  id: ID!
+  createdDate: BigInt
+  author: Soul!
+  uri: String!
+  context: String!
+  metadata: Bytes
 }

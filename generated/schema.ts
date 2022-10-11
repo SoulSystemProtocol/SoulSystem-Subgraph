@@ -691,6 +691,15 @@ export class Soul extends Entity {
     this.set("opinionOn", Value.fromStringArray(value));
   }
 
+  get posts(): Array<string> {
+    let value = this.get("posts");
+    return value!.toStringArray();
+  }
+
+  set posts(value: Array<string>) {
+    this.set("posts", Value.fromStringArray(value));
+  }
+
   get assoc(): Array<string> {
     let value = this.get("assoc");
     return value!.toStringArray();
@@ -716,6 +725,95 @@ export class Soul extends Entity {
 
   set attrs(value: Array<string>) {
     this.set("attrs", Value.fromStringArray(value));
+  }
+}
+
+export class SoulSoulOpinionChange extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("subject", Value.fromString(""));
+    this.set("object", Value.fromString(""));
+    this.set("domain", Value.fromString(""));
+    this.set("rating", Value.fromBoolean(false));
+    this.set("value", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save SoulSoulOpinionChange entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulSoulOpinionChange entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulSoulOpinionChange", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulSoulOpinionChange | null {
+    return changetype<SoulSoulOpinionChange | null>(
+      store.get("SoulSoulOpinionChange", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get subject(): string {
+    let value = this.get("subject");
+    return value!.toString();
+  }
+
+  set subject(value: string) {
+    this.set("subject", Value.fromString(value));
+  }
+
+  get object(): string {
+    let value = this.get("object");
+    return value!.toString();
+  }
+
+  set object(value: string) {
+    this.set("object", Value.fromString(value));
+  }
+
+  get domain(): string {
+    let value = this.get("domain");
+    return value!.toString();
+  }
+
+  set domain(value: string) {
+    this.set("domain", Value.fromString(value));
+  }
+
+  get rating(): boolean {
+    let value = this.get("rating");
+    return value!.toBoolean();
+  }
+
+  set rating(value: boolean) {
+    this.set("rating", Value.fromBoolean(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value!.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
   }
 }
 
@@ -801,95 +899,6 @@ export class SoulSoulOpinion extends Entity {
 
   set positiveRating(value: BigInt) {
     this.set("positiveRating", Value.fromBigInt(value));
-  }
-
-  get value(): BigInt {
-    let value = this.get("value");
-    return value!.toBigInt();
-  }
-
-  set value(value: BigInt) {
-    this.set("value", Value.fromBigInt(value));
-  }
-}
-
-export class SoulSoulOpinionChange extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("subject", Value.fromString(""));
-    this.set("object", Value.fromString(""));
-    this.set("domain", Value.fromString(""));
-    this.set("rating", Value.fromBoolean(false));
-    this.set("value", Value.fromBigInt(BigInt.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save SoulSoulOpinionChange entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save SoulSoulOpinionChange entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("SoulSoulOpinionChange", id.toString(), this);
-    }
-  }
-
-  static load(id: string): SoulSoulOpinionChange | null {
-    return changetype<SoulSoulOpinionChange | null>(
-      store.get("SoulSoulOpinionChange", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get subject(): string {
-    let value = this.get("subject");
-    return value!.toString();
-  }
-
-  set subject(value: string) {
-    this.set("subject", Value.fromString(value));
-  }
-
-  get object(): string {
-    let value = this.get("object");
-    return value!.toString();
-  }
-
-  set object(value: string) {
-    this.set("object", Value.fromString(value));
-  }
-
-  get domain(): string {
-    let value = this.get("domain");
-    return value!.toString();
-  }
-
-  set domain(value: string) {
-    this.set("domain", Value.fromString(value));
-  }
-
-  get rating(): boolean {
-    let value = this.get("rating");
-    return value!.toBoolean();
-  }
-
-  set rating(value: boolean) {
-    this.set("rating", Value.fromBoolean(value));
   }
 
   get value(): BigInt {
@@ -1595,6 +1604,7 @@ export class GamePost extends Entity {
     this.set("entity", Value.fromString(""));
     this.set("author", Value.fromString(""));
     this.set("entityRole", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
   }
 
   save(): void {
@@ -1667,21 +1677,13 @@ export class GamePost extends Entity {
     this.set("entityRole", Value.fromString(value));
   }
 
-  get uri(): string | null {
+  get uri(): string {
     let value = this.get("uri");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set uri(value: string | null) {
-    if (!value) {
-      this.unset("uri");
-    } else {
-      this.set("uri", Value.fromString(<string>value));
-    }
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
   }
 
   get metadata(): Bytes | null {
@@ -2350,6 +2352,7 @@ export class ClaimPost extends Entity {
     this.set("entity", Value.fromString(""));
     this.set("author", Value.fromString(""));
     this.set("entityRole", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
   }
 
   save(): void {
@@ -2422,21 +2425,13 @@ export class ClaimPost extends Entity {
     this.set("entityRole", Value.fromString(value));
   }
 
-  get uri(): string | null {
+  get uri(): string {
     let value = this.get("uri");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set uri(value: string | null) {
-    if (!value) {
-      this.unset("uri");
-    } else {
-      this.set("uri", Value.fromString(<string>value));
-    }
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
   }
 
   get metadata(): Bytes | null {
@@ -2956,5 +2951,103 @@ export class SoulAttr extends Entity {
 
   set role(value: string) {
     this.set("role", Value.fromString(value));
+  }
+}
+
+export class SoulPost extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("author", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
+    this.set("context", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SoulPost entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulPost entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulPost", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulPost | null {
+    return changetype<SoulPost | null>(store.get("SoulPost", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get createdDate(): BigInt | null {
+    let value = this.get("createdDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set createdDate(value: BigInt | null) {
+    if (!value) {
+      this.unset("createdDate");
+    } else {
+      this.set("createdDate", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get author(): string {
+    let value = this.get("author");
+    return value!.toString();
+  }
+
+  set author(value: string) {
+    this.set("author", Value.fromString(value));
+  }
+
+  get uri(): string {
+    let value = this.get("uri");
+    return value!.toString();
+  }
+
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
+  }
+
+  get context(): string {
+    let value = this.get("context");
+    return value!.toString();
+  }
+
+  set context(value: string) {
+    this.set("context", Value.fromString(value));
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
   }
 }
