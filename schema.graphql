@@ -21,7 +21,6 @@ interface Part {
   roles: [String!]!
 }
 
-
 #Entity: Account
 type Account @entity {
   id: ID! # account address
@@ -107,14 +106,26 @@ type Soul @entity {
 
 }
 
-#Reputation (SBT Opinions on SBT) [DEV]
+## Reputation (SBT Opinions on SBT) [DEV]
+#Opinion Change Events
+type SoulSoulOpinionChange @entity {
+  id: ID! # combination of subject, object, and domain name
+  subject: Soul!
+  object: Soul!
+  domain: String!
+  rating: Boolean!
+  value: BigInt!
+}
+
+#Accumelated Opinion
 type SoulSoulOpinion @entity {
   id: ID! # combination of subject, object, and domain name
   subject: Soul!
   object: Soul!
   domain: String!
-  negativeRating: BigInt!
-  positiveRating: BigInt!
+  negativeRating: BigInt! #DEPRECATE
+  positiveRating: BigInt! #DEPRECATE
+  value: BigInt!
 }
 
 #Entity: Game

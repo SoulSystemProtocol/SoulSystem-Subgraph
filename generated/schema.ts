@@ -729,6 +729,7 @@ export class SoulSoulOpinion extends Entity {
     this.set("domain", Value.fromString(""));
     this.set("negativeRating", Value.fromBigInt(BigInt.zero()));
     this.set("positiveRating", Value.fromBigInt(BigInt.zero()));
+    this.set("value", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -800,6 +801,104 @@ export class SoulSoulOpinion extends Entity {
 
   set positiveRating(value: BigInt) {
     this.set("positiveRating", Value.fromBigInt(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value!.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
+  }
+}
+
+export class SoulSoulOpinionChange extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("subject", Value.fromString(""));
+    this.set("object", Value.fromString(""));
+    this.set("domain", Value.fromString(""));
+    this.set("rating", Value.fromBoolean(false));
+    this.set("value", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save SoulSoulOpinionChange entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save SoulSoulOpinionChange entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("SoulSoulOpinionChange", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulSoulOpinionChange | null {
+    return changetype<SoulSoulOpinionChange | null>(
+      store.get("SoulSoulOpinionChange", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get subject(): string {
+    let value = this.get("subject");
+    return value!.toString();
+  }
+
+  set subject(value: string) {
+    this.set("subject", Value.fromString(value));
+  }
+
+  get object(): string {
+    let value = this.get("object");
+    return value!.toString();
+  }
+
+  set object(value: string) {
+    this.set("object", Value.fromString(value));
+  }
+
+  get domain(): string {
+    let value = this.get("domain");
+    return value!.toString();
+  }
+
+  set domain(value: string) {
+    this.set("domain", Value.fromString(value));
+  }
+
+  get rating(): boolean {
+    let value = this.get("rating");
+    return value!.toBoolean();
+  }
+
+  set rating(value: boolean) {
+    this.set("rating", Value.fromBoolean(value));
+  }
+
+  get value(): BigInt {
+    let value = this.get("value");
+    return value!.toBigInt();
+  }
+
+  set value(value: BigInt) {
+    this.set("value", Value.fromBigInt(value));
   }
 }
 

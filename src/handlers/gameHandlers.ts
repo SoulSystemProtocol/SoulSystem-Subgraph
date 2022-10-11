@@ -10,6 +10,7 @@ import {
   // CTXPost,
   GameParticipant,
   SoulSoulOpinion,
+  SoulSoulOpinionChange,
   GameAssoc,
 } from "../../generated/schema";
 import {
@@ -252,6 +253,18 @@ export function handleOpinionChange(event: OpinionChange): void {
     const aboutId = event.params.tokenId.toString();
     const aboutEnt = Soul.load(aboutId);
     if (!aboutEnt) return;
+
+    //** Opinion Change Events  //TODO: Move this to new Rep Events
+    const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
+    let opinionChange = new SoulSoulOpinionChange(opChangeId);
+    opinionChange.subject = gameSBT;
+    opinionChange.object = aboutEnt.id;
+    opinionChange.domain = event.params.domain;
+    opinionChange.rating = event.params.rating;
+    opinionChange.value = event.params.score;
+    opinionChange.save();
+
+    //** Opinion Accumelation
     // Load/Make Opinion
     const opId = `${gameSBT}_${aboutEnt.id}_${event.params.domain.toString()}`;
     // Find or create Opinion
@@ -274,6 +287,7 @@ export function handleOpinionChange(event: OpinionChange): void {
       opinion.positiveRating = opinion.positiveRating.plus(
         event.params.score
       );
+      opinion.value.plus(event.params.score);
     }
     // Update negative rating (rating=false)
     else {
@@ -283,6 +297,7 @@ export function handleOpinionChange(event: OpinionChange): void {
       opinion.negativeRating = opinion.negativeRating.plus(
         event.params.score
       );
+      opinion.value.minus(event.params.score);
     }
     // Save entities
     // aboutEnt.save();
