@@ -15,11 +15,13 @@ import {
   OPEN_REPO_STRING_KEY_ROLE,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
-import { loadOrCreateClaim, loadOrCreateGame, getSoulByAddr } from "../utils";
-import { store } from '@graphprotocol/graph-ts'
+import { loadOrCreateClaim, getSoulByAddr } from "../utils";
+// import { store } from '@graphprotocol/graph-ts'
 import { log } from '@graphprotocol/graph-ts'
 
-/**
+
+
+/** !! This isn't true Account could change SBTs without updating the Repo.   Assocs should be mapped directly to UINT SBT_ID 
  * Add Asociation Between two Souls
  * @param address Origin Address
  * @param key Association's Role
@@ -39,6 +41,8 @@ const assocAdd = (address: string, key: string, value: string): void => {
     assoc.save();
   }
 }
+
+
 
 /**
  * Add Attributes to a Souls
