@@ -339,4 +339,5 @@ type SoulPost implements Post @entity {
   uri: String!
   context: String!
   metadata: Bytes
+  #entityRole: String # Role in CTX
 }
