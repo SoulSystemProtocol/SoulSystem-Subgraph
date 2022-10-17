@@ -118,39 +118,49 @@ export function handleSoulType(event: SoulType): void {
   soul.type = event.params.soulType;
   soul.save();
 }
+
+/**
+ * Handle a soul handle change event
+ */
 export function handleHandleSet(event: SoulHandle): void {
+  let soul = Soul.load(event.params.tokenId.toString());
+  if (!soul) return;
+  //Set
+  soul.handle = event.params.handle;
+  //Save
+  soul.save();
+}
 
-]
-  /**
-   * Handle a soul post event
-   * # event Post(address indexed account, uint256 tokenId, string uri, string context);
-   */
-  export function handlePost(event: Post): void {
-    // Skip if author soul is not exists
-    let authorSoul = Soul.load(event.params.tokenId.toString());
-    if (!authorSoul) return;
+/**
+ * Handle a soul post event
+ * # event Post(address indexed account, uint256 tokenId, string uri, string context);
+ */
+export function handlePost(event: Post): void {
+  // Skip if author soul is not exists
+  let authorSoul = Soul.load(event.params.tokenId.toString());
+  if (!authorSoul) return;
 
-    // Create Soul Post Entity
-    const postId = `${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
-    let post = new SoulPost(postId);
-    post.createdDate = event.block.timestamp;
-    post.author = authorSoul.id;
-    post.uri = event.params.uri;
-    post.context = event.params.context;
+  // Create Soul Post Entity
+  const postId = `${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
+  let post = new SoulPost(postId);
+  post.createdDate = event.block.timestamp;
+  post.author = authorSoul.id;
+  post.uri = event.params.uri;
+  post.context = event.params.context;
 
-    // Load uri data
-    const ipfsHash = event.params.uri.split("/").at(-1);
-    const metadata = ipfs.cat(ipfsHash);
-    post.metadata = metadata;
-    /*
-    if(!!metadata){
-      // Parse metadata json
-      let uriJson = json.fromBytes(metadata);
-      let uriJsonObject: any = uriJson.toObject();
-      // post.entityRole = event.params.entRole.toString();
-      post.entityRole = uriJsonObject?.entRole; //Maybe get from metadata ?
-    }
-    */
-    //Save
-    post.save();
+  // Load uri data
+  const ipfsHash = event.params.uri.split("/").at(-1);
+  const metadata = ipfs.cat(ipfsHash);
+  post.metadata = metadata;
+  /*
+  if(!!metadata){
+    // Parse metadata json
+    let uriJson = json.fromBytes(metadata);
+    let uriJsonObject: any = uriJson.toObject();
+    // post.entityRole = event.params.entRole.toString();
+    post.entityRole = uriJsonObject?.entRole; //Maybe get from metadata ?
   }
+  */
+  //Save
+  post.save();
+}

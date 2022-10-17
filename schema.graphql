@@ -84,6 +84,7 @@ type Soul @entity {
   uri: String # metadata uri
   uriData: Bytes
   metadata: Bytes
+  handle: String
 
   #DEPRECATE THESE
   uriImage: String!

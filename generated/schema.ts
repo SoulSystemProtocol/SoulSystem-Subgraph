@@ -585,6 +585,23 @@ export class Soul extends Entity {
     }
   }
 
+  get handle(): string | null {
+    let value = this.get("handle");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set handle(value: string | null) {
+    if (!value) {
+      this.unset("handle");
+    } else {
+      this.set("handle", Value.fromString(<string>value));
+    }
+  }
+
   get uriImage(): string {
     let value = this.get("uriImage");
     return value!.toString();

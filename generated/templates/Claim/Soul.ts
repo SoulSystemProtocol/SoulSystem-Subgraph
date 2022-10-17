@@ -133,7 +133,7 @@ export class OpinionChange__Params {
     this._event = event;
   }
 
-  get chainId(): BigInt {
+  get sbt(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
@@ -149,11 +149,11 @@ export class OpinionChange__Params {
     return this._event.parameters[3].value.toString();
   }
 
-  get rating(): boolean {
-    return this._event.parameters[4].value.toBoolean();
+  get oldValue(): BigInt {
+    return this._event.parameters[4].value.toBigInt();
   }
 
-  get score(): BigInt {
+  get newValue(): BigInt {
     return this._event.parameters[5].value.toBigInt();
   }
 }
@@ -315,6 +315,28 @@ export class ReputationChange__Params {
 
   get score(): BigInt {
     return this._event.parameters[3].value.toBigInt();
+  }
+}
+
+export class SoulHandle extends ethereum.Event {
+  get params(): SoulHandle__Params {
+    return new SoulHandle__Params(this);
+  }
+}
+
+export class SoulHandle__Params {
+  _event: SoulHandle;
+
+  constructor(event: SoulHandle) {
+    this._event = event;
+  }
+
+  get tokenId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get handle(): string {
+    return this._event.parameters[1].value.toString();
   }
 }
 
@@ -519,20 +541,60 @@ export class Soul extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getRepForDomain(
+  getPastRepForDomain(
+    sbt: BigInt,
     contractAddr: Address,
     tokenId: BigInt,
     domain: string,
-    rating: boolean
+    blockNumber: BigInt
   ): BigInt {
     let result = super.call(
-      "getRepForDomain",
-      "getRepForDomain(address,uint256,string,bool):(uint256)",
+      "getPastRepForDomain",
+      "getPastRepForDomain(uint256,address,uint256,string,uint256):(int256)",
       [
+        ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromUnsignedBigInt(blockNumber)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getPastRepForDomain(
+    sbt: BigInt,
+    contractAddr: Address,
+    tokenId: BigInt,
+    domain: string,
+    blockNumber: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getPastRepForDomain",
+      "getPastRepForDomain(uint256,address,uint256,string,uint256):(int256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(sbt),
+        ethereum.Value.fromAddress(contractAddr),
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromString(domain),
+        ethereum.Value.fromUnsignedBigInt(blockNumber)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getRepForDomain(tokenId: BigInt, domain: string): BigInt {
+    let result = super.call(
+      "getRepForDomain",
+      "getRepForDomain(uint256,string):(int256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(tokenId),
+        ethereum.Value.fromString(domain)
       ]
     );
 
@@ -540,19 +602,15 @@ export class Soul extends ethereum.SmartContract {
   }
 
   try_getRepForDomain(
-    contractAddr: Address,
     tokenId: BigInt,
-    domain: string,
-    rating: boolean
+    domain: string
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getRepForDomain",
-      "getRepForDomain(address,uint256,string,bool):(uint256)",
+      "getRepForDomain(uint256,string):(int256)",
       [
-        ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromString(domain)
       ]
     );
     if (result.reverted) {
@@ -563,21 +621,19 @@ export class Soul extends ethereum.SmartContract {
   }
 
   getRepForDomain1(
-    chainId: BigInt,
+    sbt: BigInt,
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string,
-    rating: boolean
+    domain: string
   ): BigInt {
     let result = super.call(
       "getRepForDomain",
-      "getRepForDomain(uint256,address,uint256,string,bool):(uint256)",
+      "getRepForDomain(uint256,address,uint256,string):(int256)",
       [
-        ethereum.Value.fromUnsignedBigInt(chainId),
+        ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromString(domain)
       ]
     );
 
@@ -585,21 +641,19 @@ export class Soul extends ethereum.SmartContract {
   }
 
   try_getRepForDomain1(
-    chainId: BigInt,
+    sbt: BigInt,
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string,
-    rating: boolean
+    domain: string
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getRepForDomain",
-      "getRepForDomain(uint256,address,uint256,string,bool):(uint256)",
+      "getRepForDomain(uint256,address,uint256,string):(int256)",
       [
-        ethereum.Value.fromUnsignedBigInt(chainId),
+        ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromString(domain)
       ]
     );
     if (result.reverted) {
@@ -609,14 +663,18 @@ export class Soul extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getRepForDomain2(tokenId: BigInt, domain: string, rating: boolean): BigInt {
+  getRepForDomain2(
+    contractAddr: Address,
+    tokenId: BigInt,
+    domain: string
+  ): BigInt {
     let result = super.call(
       "getRepForDomain",
-      "getRepForDomain(uint256,string,bool):(uint256)",
+      "getRepForDomain(address,uint256,string):(int256)",
       [
+        ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromString(domain)
       ]
     );
 
@@ -624,17 +682,17 @@ export class Soul extends ethereum.SmartContract {
   }
 
   try_getRepForDomain2(
+    contractAddr: Address,
     tokenId: BigInt,
-    domain: string,
-    rating: boolean
+    domain: string
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getRepForDomain",
-      "getRepForDomain(uint256,string,bool):(uint256)",
+      "getRepForDomain(address,uint256,string):(int256)",
       [
+        ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain),
-        ethereum.Value.fromBoolean(rating)
+        ethereum.Value.fromString(domain)
       ]
     );
     if (result.reverted) {
@@ -657,6 +715,44 @@ export class Soul extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  handleFind(handle: string): BigInt {
+    let result = super.call("handleFind", "handleFind(string):(uint256)", [
+      ethereum.Value.fromString(handle)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_handleFind(handle: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("handleFind", "handleFind(string):(uint256)", [
+      ethereum.Value.fromString(handle)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  handleGet(tokenId: BigInt): string {
+    let result = super.call("handleGet", "handleGet(uint256):(string)", [
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_handleGet(tokenId: BigInt): ethereum.CallResult<string> {
+    let result = super.tryCall("handleGet", "handleGet(uint256):(string)", [
+      ethereum.Value.fromUnsignedBigInt(tokenId)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   hasTokenControl(tokenId: BigInt): boolean {
@@ -1186,6 +1282,40 @@ export class BurnCall__Outputs {
   }
 }
 
+export class HandleSetCall extends ethereum.Call {
+  get inputs(): HandleSetCall__Inputs {
+    return new HandleSetCall__Inputs(this);
+  }
+
+  get outputs(): HandleSetCall__Outputs {
+    return new HandleSetCall__Outputs(this);
+  }
+}
+
+export class HandleSetCall__Inputs {
+  _call: HandleSetCall;
+
+  constructor(call: HandleSetCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get handle(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+}
+
+export class HandleSetCall__Outputs {
+  _call: HandleSetCall;
+
+  constructor(call: HandleSetCall) {
+    this._call = call;
+  }
+}
+
 export class InitializeCall extends ethereum.Call {
   get inputs(): InitializeCall__Inputs {
     return new InitializeCall__Inputs(this);
@@ -1285,6 +1415,86 @@ export class MintForCall__Outputs {
 
   get value0(): BigInt {
     return this._call.outputValues[0].value.toBigInt();
+  }
+}
+
+export class OpinionAboutSoulCall extends ethereum.Call {
+  get inputs(): OpinionAboutSoulCall__Inputs {
+    return new OpinionAboutSoulCall__Inputs(this);
+  }
+
+  get outputs(): OpinionAboutSoulCall__Outputs {
+    return new OpinionAboutSoulCall__Outputs(this);
+  }
+}
+
+export class OpinionAboutSoulCall__Inputs {
+  _call: OpinionAboutSoulCall;
+
+  constructor(call: OpinionAboutSoulCall) {
+    this._call = call;
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get domain(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get score(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class OpinionAboutSoulCall__Outputs {
+  _call: OpinionAboutSoulCall;
+
+  constructor(call: OpinionAboutSoulCall) {
+    this._call = call;
+  }
+}
+
+export class OpinionAboutTokenCall extends ethereum.Call {
+  get inputs(): OpinionAboutTokenCall__Inputs {
+    return new OpinionAboutTokenCall__Inputs(this);
+  }
+
+  get outputs(): OpinionAboutTokenCall__Outputs {
+    return new OpinionAboutTokenCall__Outputs(this);
+  }
+}
+
+export class OpinionAboutTokenCall__Inputs {
+  _call: OpinionAboutTokenCall;
+
+  constructor(call: OpinionAboutTokenCall) {
+    this._call = call;
+  }
+
+  get contractAddr(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get tokenId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get domain(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
+  get score(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+}
+
+export class OpinionAboutTokenCall__Outputs {
+  _call: OpinionAboutTokenCall;
+
+  constructor(call: OpinionAboutTokenCall) {
+    this._call = call;
   }
 }
 
@@ -1450,74 +1660,6 @@ export class RenounceOwnershipCall__Outputs {
   _call: RenounceOwnershipCall;
 
   constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class RepAddCall extends ethereum.Call {
-  get inputs(): RepAddCall__Inputs {
-    return new RepAddCall__Inputs(this);
-  }
-
-  get outputs(): RepAddCall__Outputs {
-    return new RepAddCall__Outputs(this);
-  }
-}
-
-export class RepAddCall__Inputs {
-  _call: RepAddCall;
-
-  constructor(call: RepAddCall) {
-    this._call = call;
-  }
-
-  get tokenId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get domain(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get rating(): boolean {
-    return this._call.inputValues[2].value.toBoolean();
-  }
-
-  get amount(): i32 {
-    return this._call.inputValues[3].value.toI32();
-  }
-}
-
-export class RepAddCall__Outputs {
-  _call: RepAddCall;
-
-  constructor(call: RepAddCall) {
-    this._call = call;
-  }
-}
-
-export class RunActionCall extends ethereum.Call {
-  get inputs(): RunActionCall__Inputs {
-    return new RunActionCall__Inputs(this);
-  }
-
-  get outputs(): RunActionCall__Outputs {
-    return new RunActionCall__Outputs(this);
-  }
-}
-
-export class RunActionCall__Inputs {
-  _call: RunActionCall;
-
-  constructor(call: RunActionCall) {
-    this._call = call;
-  }
-}
-
-export class RunActionCall__Outputs {
-  _call: RunActionCall;
-
-  constructor(call: RunActionCall) {
     this._call = call;
   }
 }
