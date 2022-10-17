@@ -32,6 +32,8 @@ dataSources:
           handler: handleSoulType
         - event: Post(indexed address,uint256,string,string)
           handler: handlePost
+        - event: SoulHandle(uint256 indexed, string)
+          handler: handleHandleSet
       file: ./src/handlers/soulHandlers.ts
   # Hub contract
   - kind: ethereum
