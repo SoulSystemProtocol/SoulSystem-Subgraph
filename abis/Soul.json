@@ -100,7 +100,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "chainId",
+        "name": "sbt",
         "type": "uint256"
       },
       {
@@ -123,15 +123,15 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
+        "internalType": "int256",
+        "name": "oldValue",
+        "type": "int256"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "score",
-        "type": "uint256"
+        "internalType": "int256",
+        "name": "newValue",
+        "type": "int256"
       }
     ],
     "name": "OpinionChange",
@@ -291,6 +291,25 @@
       }
     ],
     "name": "ReputationChange",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "handle",
+        "type": "string"
+      }
+    ],
+    "name": "SoulHandle",
     "type": "event"
   },
   {
@@ -499,42 +518,8 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "contractAddr",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "domain",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
-      }
-    ],
-    "name": "getRepForDomain",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "chainId",
+        "name": "sbt",
         "type": "uint256"
       },
       {
@@ -553,17 +538,17 @@
         "type": "string"
       },
       {
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
       }
     ],
-    "name": "getRepForDomain",
+    "name": "getPastRepForDomain",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "int256",
         "name": "",
-        "type": "uint256"
+        "type": "int256"
       }
     ],
     "stateMutability": "view",
@@ -580,19 +565,77 @@
         "internalType": "string",
         "name": "domain",
         "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
       }
     ],
     "name": "getRepForDomain",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "int256",
         "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "sbt",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "contractAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      }
+    ],
+    "name": "getRepForDomain",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "contractAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      }
+    ],
+    "name": "getRepForDomain",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
       }
     ],
     "stateMutability": "view",
@@ -609,6 +652,62 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "handle",
+        "type": "string"
+      }
+    ],
+    "name": "handleFind",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "handleGet",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "handle",
+        "type": "string"
+      }
+    ],
+    "name": "handleSet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -745,6 +844,57 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      },
+      {
+        "internalType": "int256",
+        "name": "score",
+        "type": "int256"
+      }
+    ],
+    "name": "opinionAboutSoul",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "contractAddr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "domain",
+        "type": "string"
+      },
+      {
+        "internalType": "int256",
+        "name": "score",
+        "type": "int256"
+      }
+    ],
+    "name": "opinionAboutToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1011,41 +1161,6 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "domain",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "amount",
-        "type": "uint8"
-      }
-    ],
-    "name": "repAdd",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "runAction",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
