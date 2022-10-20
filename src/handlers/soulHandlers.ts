@@ -1,6 +1,6 @@
 import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
-import { SoulType, SoulHandle, Transfer, URI, Post } from "../../generated/Soul/Soul";
+import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Post } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
 
@@ -163,4 +163,18 @@ export function handlePost(event: Post): void {
   */
   //Save
   post.save();
+}
+
+/**
+ * Handle 
+ */
+export function handleApproval(event: Approval): void {
+
+}
+
+/**
+ * Handle 
+ */
+export function handleApprovalForAll(event: ApprovalForAll): void {
+
 }
