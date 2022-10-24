@@ -1,6 +1,6 @@
 import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
 import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
-import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Post } from "../../generated/Soul/Soul";
+import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
 
@@ -135,12 +135,12 @@ export function handleHandleSet(event: SoulHandle): void {
  * Handle a soul post event
  * # event Post(address indexed account, uint256 tokenId, string uri, string context);
  */
-export function handlePost(event: Post): void {
+export function handleAnnouncement(event: Announcement): void {
   // Skip if author soul is not exists
   let authorSoul = Soul.load(event.params.tokenId.toString());
   if (!authorSoul) return;
 
-  // Create Soul Post Entity
+  // Create Soul Announcement Entity
   const postId = `${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
   let post = new SoulPost(postId);
   post.createdDate = event.block.timestamp;
