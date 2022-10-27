@@ -154,7 +154,7 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-      # - event: RoleURIChange(string,string)
+        # - event: RoleURIChange(string,string)
         - event: OpinionChange(uint256,indexed address,indexed uint256,string,bool,uint256)
           handler: handleOpinionChange
       file: ./src/handlers/gameHandlers.ts
@@ -173,7 +173,7 @@ templates:
         - Claim
         - ClaimRole
         - ClaimNomination
-        - ClaimPost
+        - ProcPost
       abis:
         - name: Claim
           file: ./abis/Claim.json

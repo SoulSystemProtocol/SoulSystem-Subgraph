@@ -6,7 +6,7 @@ import {
   ClaimRole,
   ProcParticipant,
   ProcAssoc,
-  ClaimPost,
+  ProcPost,
   // CTXPost,
 } from "../../generated/schema";
 import {
@@ -41,12 +41,12 @@ export function handleStage(event: Stage): void {
       soul.save();
     }
   }
-
 }
 
 /** DEPRECATE
  * Handle a contract uri event to update claim uri.
- */ 
+ */
+
 export function handleContractUri(event: ContractURI): void {
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
@@ -59,7 +59,6 @@ export function handleContractUri(event: ContractURI): void {
   claim.metadata = uriData;
   claim.save();
 }
-
 
 /**
  * Handle Role creation Event
@@ -121,12 +120,11 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.role = tokenId;
       //Set Amount
       assoc.qty = amount;
-    } else{
+    } else {
       //Add Amount
       assoc.qty = assoc.qty.plus(amount);
     }
     assoc.save();
-
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
@@ -152,16 +150,13 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.qty = assoc.qty.minus(amount);
       assoc.save();
     }
-    
   }
-
 
   // ** DEPRECATE
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
-
     // Find or create role
     let roleId = `${event.address.toHexString()}_${tokenId}`;
     let role = ClaimRole.load(roleId);
@@ -179,8 +174,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     if (isTokenMinted) {
       souls.push(event.params.toOwnerToken.toString());
       soulsCount = soulsCount + 1;
-    }
-    else if (isTokenBurned) {
+    } else if (isTokenBurned) {
       const accountIndex = souls.indexOf(
         event.params.fromOwnerToken.toString()
       );
@@ -193,7 +187,6 @@ export function handleTransferByToken(event: TransferByToken): void {
     role.souls = souls;
     role.soulsCount = soulsCount;
     role.save();
-
   }
 }
 
@@ -237,7 +230,7 @@ export function handlePost(event: Post): void {
   // Create post entity
   // let postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
-  let post = new ClaimPost(postId);
+  let post = new ProcPost(postId);
   // let post = new CTXPost(postId);
   post.entity = claim.id;
   post.createdDate = event.block.timestamp;

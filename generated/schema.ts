@@ -8,7 +8,7 @@ import {
   store,
   Bytes,
   BigInt,
-  BigDecimal
+  BigDecimal,
 } from "@graphprotocol/graph-ts";
 
 export class Account extends Entity {
@@ -2361,7 +2361,7 @@ export class ClaimNomination extends Entity {
   }
 }
 
-export class ClaimPost extends Entity {
+export class ProcPost extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -2374,19 +2374,19 @@ export class ClaimPost extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ClaimPost entity without an ID");
+    assert(id != null, "Cannot save ProcPost entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save ClaimPost entity with non-string ID. " +
+        "Cannot save ProcPost entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("ClaimPost", id.toString(), this);
+      store.set("ProcPost", id.toString(), this);
     }
   }
 
-  static load(id: string): ClaimPost | null {
-    return changetype<ClaimPost | null>(store.get("ClaimPost", id));
+  static load(id: string): ProcPost | null {
+    return changetype<ProcPost | null>(store.get("ProcPost", id));
   }
 
   get id(): string {

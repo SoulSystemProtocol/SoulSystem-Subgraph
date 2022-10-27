@@ -15,7 +15,7 @@ interface Post {
 }
 
 interface Part {
-  id: ID! 
+  id: ID!
   sbt: Soul!
   roles: [String!]!
 }
@@ -39,8 +39,6 @@ type RelAddress @entity {
   value: [String!]! # Addresses
 }
 
-
-
 #Entity: Hub [WIP]
 type Hub @entity {
   id: ID! # Address
@@ -48,34 +46,32 @@ type Hub @entity {
   conf: [HubConf!]
 }
 type HubConf @entity {
-  id: ID! # 
+  id: ID! #
 }
-
 
 #Separate Relations [DEV]
 type GameRelAddress @entity {
   id: ID! # Unique Combo
-  origin: Game! 
+  origin: Game!
   key: String!
   value: [String!]! # Addresses
 }
 type ClaimRelAddress @entity {
   id: ID! # Unique Combo
-  origin: Claim! 
+  origin: Claim!
   key: String!
   value: [String!]! # Addresses
 }
 type AccountRelAddress @entity {
   id: ID! # Unique Combo
-  origin: Account! 
+  origin: Account!
   key: String!
   value: [String!]! # Addresses
 }
 
-
 #Entity: Soul
 type Soul @entity {
-  id: ID! # Token ID 
+  id: ID! # Token ID
   owner: String! # account address
   type: String! # human or contract type (classified by contract)
   role: String! # Entity's function designation
@@ -104,7 +100,6 @@ type Soul @entity {
   assoc: [SoulAssoc!]! @derivedFrom(field: "aEnd")
   parts: [SoulPart!]! @derivedFrom(field: "aEnd")
   attrs: [SoulAttr!]! @derivedFrom(field: "aEnd")
-
 }
 
 ## Reputation (SBT Opinions on SBT) [DEV]
@@ -235,7 +230,7 @@ type Claim implements CTX @entity {
   createdDate: BigInt!
   updatedDate: BigInt
   nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
-  posts: [ClaimPost!]! @derivedFrom(field: "entity")
+  posts: [ProcPost!]! @derivedFrom(field: "entity")
   stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
   # Relations to Souls (Parts / Members)
   roles: [ClaimRole!]! @derivedFrom(field: "claim")
@@ -244,7 +239,8 @@ type Claim implements CTX @entity {
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ClaimStageURI @entity { # [DEV]
+type ClaimStageURI
+  @entity { # [DEV]
   id: ID! # combination of claim address and stage name
   entity: Claim!
   stage: Int!
@@ -252,7 +248,8 @@ type ClaimStageURI @entity { # [DEV]
   Author: String # SBT
 }
 
-type ClaimRole @entity { # DEPRECATE
+type ClaimRole
+  @entity { # DEPRECATE
   id: ID! # combination of claim address and role id
   claim: Claim!
   name: String!
@@ -269,7 +266,7 @@ type ClaimNomination @entity {
   nominated: Soul!
 }
 
-type ClaimPost implements Post @entity {
+type ProcPost implements Post @entity {
   id: ID! # combination of claim address and event transaction address
   entity: Claim!
   createdDate: BigInt
@@ -281,13 +278,13 @@ type ClaimPost implements Post @entity {
 
 #[WIP]
 type GameParticipant implements Part @entity {
-  id: ID! 
+  id: ID!
   entity: Game!
   sbt: Soul!
   roles: [String!]!
 }
 type ProcParticipant implements Part @entity {
-  id: ID! 
+  id: ID!
   entity: Claim!
   sbt: Soul!
   roles: [String!]!
@@ -310,7 +307,8 @@ type ProcAssoc @entity {
 
 # Semantic Relations
 
-type SoulAssoc @entity { #S2H0
+type SoulAssoc
+  @entity { #S2H0
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
@@ -318,7 +316,8 @@ type SoulAssoc @entity { #S2H0
   qty: BigInt # Power/Influence
 }
 
-type SoulPart @entity { #S3H1
+type SoulPart
+  @entity { #S3H1
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
@@ -326,7 +325,8 @@ type SoulPart @entity { #S3H1
   qty: BigInt # Quantity?
 }
 
-type SoulAttr @entity { # S4H0
+type SoulAttr
+  @entity { # S4H0
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: String!
