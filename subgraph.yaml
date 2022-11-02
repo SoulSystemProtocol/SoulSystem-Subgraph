@@ -44,7 +44,7 @@ dataSources:
     name: Hub
     network: mumbai
     source:
-      address: "0x9956b603Eb5A081d23721e5e0c8839257A92c499"
+      address: "0xc0d1D74547356B2be0709cE841F5F2Fa5D8c63D7"
       abi: Hub
       startBlock: 27506961
     mapping:
