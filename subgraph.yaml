@@ -9,7 +9,7 @@ dataSources:
     name: Soul
     network: mumbai
     source:
-      address: "0x5726eB1ba64F3FA0aAD002F273B625adA6e788ff"
+      address: "0x232902B2460D82d61f04f76F49b888AF67f73ef2"
       abi: Soul
       startBlock: 27506961
     mapping:
