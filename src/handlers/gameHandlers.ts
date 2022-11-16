@@ -1,5 +1,6 @@
 import { Address } from "@graphprotocol/graph-ts";
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
+import { store } from '@graphprotocol/graph-ts'
 import {
   Account,
   Game,
@@ -7,6 +8,7 @@ import {
   GameRole,
   Soul,
   GamePost,
+  SoulPart,
   GameParticipant,
   SoulSoulOpinion,
   SoulSoulOpinionChange,
@@ -73,13 +75,26 @@ export function handleTransferByToken(event: TransferByToken): void {
   if (!event.params.toOwnerToken.equals(BigInt.zero())) { //Not Burn 
 
     //** Relation Test 1 - Parts
+
     //Add to Recepient
     const sbt = event.params.toOwnerToken.toString();
-    // const sbtFrom = event.params.fromOwnerToken.toString();
+    
+    //** Soul Part (Supports Amounts)
     const entSBT = getSoulByAddr(event.address.toHexString());
     const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!soulPart) {
+      soulPart = new SoulPart(sbtPartId);
+      soulPart.aEnd = entSBT;
+      soulPart.bEnd = sbt;
+      soulPart.role = tokenId.toString();
+      soulPart.qty = amount;
+    }else{
+      soulPart.qty = soulPart.qty.plus(amount);
+    }
+    soulPart.save();
 
-
+    //** Game Participants (Easy Roles, !no amounts)
     const participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = GameParticipant.load(participanId);
     if (!participant) {
@@ -95,7 +110,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     participant.save();
 
     
-    //** Relation Test 2 - Association
+    //** Relation Test 2 - as Association (Older, !Inaccurate)
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = GameAssoc.load(participanRoleId);
     if (!assoc) {
@@ -115,8 +130,24 @@ export function handleTransferByToken(event: TransferByToken): void {
   }//Add
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) { //Not Mint (Remove)
-    //Remove From Origin
     const sbt = event.params.fromOwnerToken.toString();
+
+    //** Soul Part
+    const entSBT = getSoulByAddr(event.address.toHexString());
+    const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!!soulPart) {
+      if(soulPart.qty.equals(amount)){
+        //Delete
+        store.remove('SoulPart', sbtPartId);
+      }else{
+        //Remove
+        soulPart.qty = soulPart.qty.minus(amount);
+        soulPart.save();
+      }
+    }
+
+    //** Game Participants - Remove From Origin
     let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = GameParticipant.load(participanId);
     if (participant) {

@@ -322,7 +322,7 @@ type SoulPart
   aEnd: Soul!
   bEnd: Soul!
   role: String!
-  qty: BigInt # Quantity?
+  qty: BigInt! # Quantity?
 }
 
 type SoulAttr
