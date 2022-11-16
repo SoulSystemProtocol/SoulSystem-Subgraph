@@ -1,4 +1,5 @@
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
+import { store } from '@graphprotocol/graph-ts'
 import {
   Account,
   Soul,
@@ -7,6 +8,7 @@ import {
   ProcParticipant,
   ProcAssoc,
   ProcPost,
+  SoulPart,
   // CTXPost,
 } from "../../generated/schema";
 import {
@@ -94,8 +96,26 @@ export function handleTransferByToken(event: TransferByToken): void {
 
   //Relation Test 1
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
-    //Add to Recepient
     let sbt = event.params.toOwnerToken.toString();
+    
+    
+    //** Soul Part (Supports Amounts)
+    const entSBT = getSoulByAddr(event.address.toHexString());
+    const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!soulPart) {
+      soulPart = new SoulPart(sbtPartId);
+      soulPart.aEnd = entSBT;
+      soulPart.bEnd = sbt;
+      soulPart.role = tokenId.toString();
+      soulPart.qty = amount;
+    }else{
+      soulPart.qty = soulPart.qty.plus(amount);
+    }
+    soulPart.save();
+
+
+    //Add to Recepient
     let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (!participant) {
@@ -129,8 +149,25 @@ export function handleTransferByToken(event: TransferByToken): void {
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
-    //Remove From Origin
     let sbt = event.params.fromOwnerToken.toString();
+    
+    //** Soul Part
+    const entSBT = getSoulByAddr(event.address.toHexString());
+    const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!!soulPart) {
+      if(soulPart.qty.equals(amount)){
+        //Delete
+        store.remove('SoulPart', sbtPartId);
+      }else{
+        //Remove
+        soulPart.qty = soulPart.qty.minus(amount);
+        soulPart.save();
+      }
+    }
+
+
+    //Remove From Origin
     let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (participant) {
