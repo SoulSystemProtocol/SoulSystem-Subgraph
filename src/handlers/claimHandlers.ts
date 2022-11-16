@@ -43,9 +43,9 @@ export function handleStage(event: Stage): void {
   }
 }
 
-/** DEPRECATE
+/** DEPRECATED
  * Handle a contract uri event to update claim uri.
- */
+ 
 
 export function handleContractUri(event: ContractURI): void {
   // Get claim
@@ -59,6 +59,7 @@ export function handleContractUri(event: ContractURI): void {
   claim.metadata = uriData;
   claim.save();
 }
+*/
 
 /**
  * Handle Role creation Event
