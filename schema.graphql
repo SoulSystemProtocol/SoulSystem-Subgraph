@@ -239,8 +239,7 @@ type Claim implements CTX @entity {
   # assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ClaimStageURI
-  @entity { # [DEV]
+type ClaimStageURI @entity { # [DEV]
   id: ID! # combination of claim address and stage name
   entity: Claim!
   stage: Int!

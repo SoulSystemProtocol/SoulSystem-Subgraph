@@ -24,23 +24,6 @@ import {
 import { Hub as HubContract } from "../../generated/Hub/Hub";
 import { getSoulByAddr, loadOrCreateGame } from "../utils";
 
-/** DEPRECATED - using souls to capture URIs
- * Handle a contract uri event to update game uri.
- 
-export function handleContractUri(event: ContractURI): void {
-  // Get game
-  let game = loadOrCreateGame(event.address.toHexString());
-  // Load uri data
-  let uriIpfsHash = event.params.param0.split("/").at(-1);
-  let uriData = ipfs.cat(uriIpfsHash);
-  // Update game
-  game.uri = event.params.param0;
-  game.uriData = uriData; //DEPRECATE
-  game.metadata = uriData;
-  game.save();
-}
-*/
-
 /**
  * Handle Role creation Event
  */

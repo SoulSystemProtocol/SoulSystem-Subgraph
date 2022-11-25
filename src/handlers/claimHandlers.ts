@@ -6,13 +6,10 @@ import {
   ClaimNomination,
   ProcRole,
   ProcParticipant,
-  ProcAssoc,
   ProcPost,
   SoulPart,
-  // CTXPost,
 } from "../../generated/schema";
 import {
-  ContractURI,
   Nominate,
   TransferByToken,
   Stage,
@@ -44,24 +41,6 @@ export function handleStage(event: Stage): void {
     }
   }
 }
-
-/** DEPRECATED
- * Handle a contract uri event to update claim uri.
- 
-
-export function handleContractUri(event: ContractURI): void {
-  // Get claim
-  let claim = loadOrCreateClaim(event.address.toHexString());
-  // Load uri data
-  let uriIpfsHash = event.params.param0.split("/").at(-1);
-  let uriData = ipfs.cat(uriIpfsHash);
-  // Update claim
-  claim.uri = event.params.param0;
-  claim.uriData = uriData; //DEPRECATE
-  claim.metadata = uriData;
-  claim.save();
-}
-*/
 
 /**
  * Handle Role creation Event
