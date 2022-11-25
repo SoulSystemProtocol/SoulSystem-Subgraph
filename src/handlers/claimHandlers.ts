@@ -4,7 +4,7 @@ import {
   Account,
   Soul,
   ClaimNomination,
-  ClaimRole,
+  ProcRole,
   ProcParticipant,
   ProcAssoc,
   ProcPost,
@@ -69,13 +69,13 @@ export function handleContractUri(event: ContractURI): void {
 export function handleRoleCreated(event: RoleCreated): void {
   // Find role
   let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
-  let role = ClaimRole.load(roleId);
+  let role = ProcRole.load(roleId);
   if (!role) {
     // Create Role
-    role = new ClaimRole(roleId);
+    role = new ProcRole(roleId);
     // Set claim
-    let claim = loadOrCreateClaim(event.address.toHexString());
-    role.claim = claim.id;
+    let ctx = loadOrCreateClaim(event.address.toHexString());
+    role.ctx = ctx.id;
     role.roleId = event.params.id;
     role.souls = [];
     role.soulsCount = 0;
@@ -197,10 +197,10 @@ export function handleTransferByToken(event: TransferByToken): void {
   if (isTokenMinted || isTokenBurned) {
     // Find or create role
     let roleId = `${event.address.toHexString()}_${tokenId}`;
-    let role = ClaimRole.load(roleId);
+    let role = ProcRole.load(roleId);
     if (!role) {
-      role = new ClaimRole(roleId);
-      role.claim = entity.id;
+      role = new ProcRole(roleId);
+      role.ctx = entity.id;
       role.roleId = tokenId;
       role.souls = [];
       role.soulsCount = 0;

@@ -139,7 +139,7 @@ type Game implements CTX @entity {
   posts: [GamePost!]! @derivedFrom(field: "entity")
 
   #Relations to Souls (Parts / Members)
-  roles: [GameRole!]! @derivedFrom(field: "game")
+  roles: [GameRole!]! @derivedFrom(field: "ctx")
   rulse: [GameRule!]! @derivedFrom(field: "game")
   parts: [GameParticipant!]! @derivedFrom(field: "entity") # DEPRECATE?
   assoc: [GameAssoc!]! @derivedFrom(field: "bEnt") # DEPRECATE?
@@ -147,7 +147,7 @@ type Game implements CTX @entity {
 
 type GameRole @entity {
   id: ID! # combination of game address and role id
-  game: Game!
+  ctx: Game!
   roleId: BigInt!
   name: String!
   souls: [String!]!
@@ -233,7 +233,7 @@ type Claim implements CTX @entity {
   posts: [ProcPost!]! @derivedFrom(field: "entity")
   stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
   # Relations to Souls (Parts / Members)
-  roles: [ClaimRole!]! @derivedFrom(field: "claim")
+  roles: [ProcRole!]! @derivedFrom(field: "ctx")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
   # Relations
   assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
@@ -248,10 +248,9 @@ type ClaimStageURI
   Author: String # SBT
 }
 
-type ClaimRole
-  @entity { # DEPRECATE
+type ProcRole @entity {
   id: ID! # combination of claim address and role id
-  claim: Claim!
+  ctx: Claim!
   name: String!
   roleId: BigInt!
   souls: [String!]!

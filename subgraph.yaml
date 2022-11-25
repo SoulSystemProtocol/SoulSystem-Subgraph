@@ -169,7 +169,7 @@ templates:
       entities:
         - Soul
         - Claim
-        - ClaimRole
+        - ProcRole
         - ClaimNomination
         - ProcPost
       abis:

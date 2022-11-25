@@ -52,8 +52,8 @@ export function handleRoleCreated(event: RoleCreated): void {
     // Create Role
     role = new GameRole(roleId);
     // Set claim
-    let claim = loadOrCreateGame(event.address.toHexString());
-    role.game = claim.id;
+    let ctx = loadOrCreateGame(event.address.toHexString());
+    role.ctx = ctx.id;
     role.roleId = event.params.id;
     role.souls = [];
     role.soulsCount = 0;
@@ -181,7 +181,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     let role = GameRole.load(roleId);
     if (!role) {
       role = new GameRole(roleId);
-      role.game = entity.id;
+      role.ctx = entity.id;
       role.roleId = event.params.id;
       role.souls = [];
       role.soulsCount = 0;
