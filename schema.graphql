@@ -215,7 +215,7 @@ type Action @entity {
   rules: [GameRule!]! @derivedFrom(field: "about")
 }
 
-#Entity: Claim/Task/Process
+#Entity: Process (Claim/Task/etc')
 type Claim implements CTX @entity {
   id: ID! # contract address
   hub: String # hub address
@@ -236,7 +236,7 @@ type Claim implements CTX @entity {
   roles: [ProcRole!]! @derivedFrom(field: "ctx")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
   # Relations
-  assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
+  # assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
 type ClaimStageURI
@@ -296,7 +296,10 @@ type GameAssoc @entity {
   role: BigInt!
   qty: BigInt!
 }
-type ProcAssoc @entity {
+
+
+type ProcAssoc 
+  @entity { # DEPRECATED & UNUSED
   id: ID! # combination of claim address and SBT & roleId address
   bEnt: Claim! # Group
   sbt: Soul! # Entity

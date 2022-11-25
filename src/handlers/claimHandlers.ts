@@ -130,6 +130,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     participant.roles = procRoles;
     participant.save();
 
+    /** DEPRECATED - These relations are to be 'SoulParts'
     //Relation Test 2
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = ProcAssoc.load(participanRoleId);
@@ -146,6 +147,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.qty = assoc.qty.plus(amount);
     }
     assoc.save();
+    */
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
@@ -180,6 +182,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       }
     }
 
+    /** DEPRECATED - These relations are to be 'SoulParts'
     //Relation Test 2
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = ProcAssoc.load(participanRoleId);
@@ -188,6 +191,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.qty = assoc.qty.minus(amount);
       assoc.save();
     }
+    */
   }
 
   // ** DEPRECATE
