@@ -192,7 +192,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     else{
       if(role.name == "member"){
         //Remove Pending Nominations
-        let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+        // let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
       }
     }
     
@@ -238,13 +238,14 @@ export function handleNominate(event: Nominate): void {
   } 
 
   // Create nomination
-  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
-  // let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
+  // let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`; //Won't Allow Multiple Nominations of the same Soul...
   let nomination = new ClaimNomination(nominationId);
   nomination.claim = claim.id;
   nomination.createdDate = event.block.timestamp;
   nomination.nominator = nominatorAccount.sbt;
   nomination.nominated = nominatedSoul.id;
+  nomination.status = 'pending';
   nomination.save();
 }
 
@@ -257,6 +258,7 @@ export function handlePost(event: Post): void {
   // Skip if author soul is not exists
   let authorSoul = Soul.load(event.params.tokenId.toString());
   if (!authorSoul) {
+    log.warning('handlePost() Failed to fetch poster Soul id:{}', [event.params.tokenId.toString()]);
     return;
   }
   // Create post entity

@@ -226,7 +226,7 @@ type Claim implements CTX @entity {
   game: Game
   type: String!
   role: String! # Entity's function designation
-  
+
   # DEPRECTED FIELDS
   #uri: String # metadata uri
   #uriData: Bytes
@@ -268,6 +268,7 @@ type ClaimNomination @entity {
   createdDate: BigInt!
   nominator: Soul!
   nominated: Soul!
+  status: String
 }
 
 type ProcPost implements Post @entity {
