@@ -60,7 +60,7 @@ export function handleURI(event: URI): void {
   soul.metadata = metadata;
   soul.uriImage = uriJsonImageString;
   //Name
-  if(uriJsonNameString){
+  if(!!uriJsonNameString){
     soul.name = uriJsonNameString;
   } else {
     //** Extract Name From JSON
@@ -78,9 +78,7 @@ export function handleURI(event: URI): void {
     let uriLastNameString: string = "";
     for (let i = 0; i < uriJsonAttributesArray.length; i++) {
       // Get trait type and value
-      let uriAttributeTraitType = uriJsonAttributesArray[i]
-        .toObject()
-        .get("trait_type");
+      let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
       let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
       // Check trait type for getting first name
       if (
