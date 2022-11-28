@@ -154,7 +154,7 @@ export function handleTransferByToken(event: TransferByToken): void {
 
   }//Remove
 
-  // ** DEPRECATE
+  // ** Currently Used for fetching Game's Roles .. & members
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
@@ -169,22 +169,25 @@ export function handleTransferByToken(event: TransferByToken): void {
       role.souls = [];
       role.soulsCount = 0;
       role.name = "";
-    }
+    } 
+    
     // Define role souls and souls count
     let souls = role.souls;
     let soulsCount = role.soulsCount;
-    if (isTokenMinted) {
+    //Add 'to'
+    if (!isTokenBurned && !souls.includes(event.params.toOwnerToken.toString())) {
       souls.push(event.params.toOwnerToken.toString());
       soulsCount = soulsCount + 1;
     }
-    if (isTokenBurned) {
+    //Remove 'from'
+    if (!isTokenMinted) {
       const accountIndex = souls.indexOf(
         event.params.fromOwnerToken.toString()
       );
       if (accountIndex > -1) {
         souls.splice(accountIndex, 1);
+        soulsCount = soulsCount - 1;
       }
-      soulsCount = soulsCount - 1;
     }
     // Update role
     role.souls = souls;
