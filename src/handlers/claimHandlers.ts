@@ -1,3 +1,4 @@
+import { log } from '@graphprotocol/graph-ts'
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
 import { store } from '@graphprotocol/graph-ts'
 import {
@@ -188,6 +189,13 @@ export function handleTransferByToken(event: TransferByToken): void {
       role.soulsCount = 0;
       role.name = "";
     }
+    else{
+      if(role.name == "member"){
+        //Remove Pending Nominations
+        let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+      }
+    }
+    
     // Define role souls and souls count
     let souls = role.souls;
     let soulsCount = role.soulsCount;
@@ -219,15 +227,19 @@ export function handleNominate(event: Nominate): void {
   // Skip if nominator account not exists
   let nominatorAccount = Account.load(event.params.account.toHexString());
   if (!nominatorAccount) {
+    log.warning('handleNominate() Unknown Nominator Account:{}', [event.params.account.toHexString()]);
     return;
   }
   // Skip if nominated soul not exists
   let nominatedSoul = Soul.load(event.params.id.toString());
-  if (!nominatedSoul) {
+  if (!nominatedSoul){
+    log.warning('handleNominate() Inexisting Nominated Soul id:{}', [event.params.id.toString()]);
     return;
-  }
+  } 
+
   // Create nomination
   let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+  // let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`;
   let nomination = new ClaimNomination(nominationId);
   nomination.claim = claim.id;
   nomination.createdDate = event.block.timestamp;
