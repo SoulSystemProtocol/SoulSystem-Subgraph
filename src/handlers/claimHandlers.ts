@@ -68,7 +68,6 @@ export function handleRoleCreated(event: RoleCreated): void {
  * Handle a tranfer by token event to create or update claim roles.
  */
 export function handleTransferByToken(event: TransferByToken): void {
-  // Get claim
   let entity = loadOrCreateClaim(event.address.toHexString());
   let tokenId = event.params.id;
   let amount = event.params.value;

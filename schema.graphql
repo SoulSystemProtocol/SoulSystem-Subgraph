@@ -131,9 +131,12 @@ type Game implements CTX @entity {
   name: String!
   type: String!
   role: String! # Entity's function designation
-  uri: String # metadata uri
-  uriData: Bytes
-  metadata: Bytes
+  
+  # DEPRECTED FIELDS
+  #uri: String # metadata uri
+  #uriData: Bytes
+  #metadata: Bytes
+
   createdDate: BigInt!
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
@@ -223,9 +226,12 @@ type Claim implements CTX @entity {
   game: Game
   type: String!
   role: String! # Entity's function designation
-  uri: String # metadata uri
-  uriData: Bytes
-  metadata: Bytes
+  
+  # DEPRECTED FIELDS
+  #uri: String # metadata uri
+  #uriData: Bytes
+  #metadata: Bytes
+
   stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
