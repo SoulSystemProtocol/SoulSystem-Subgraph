@@ -187,6 +187,7 @@ type GameRuleEffect @entity {
   value: Int!
 }
 
+#TODO: Update Like ProcNominations
 type GameNomination @entity {
   id: ID! # combination of game address and event transaction address
   game: Game!
@@ -235,7 +236,7 @@ type Claim implements CTX @entity {
   stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
-  nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
+  nominations: [ProcNomination!]! @derivedFrom(field: "claim")
   posts: [ProcPost!]! @derivedFrom(field: "entity")
   stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
   # Relations to Souls (Parts / Members)
@@ -262,12 +263,13 @@ type ProcRole @entity {
   soulsCount: Int!
 }
 
-type ClaimNomination @entity {
+type ProcNomination @entity {
   id: ID! # combination of claim address and event transaction address
   claim: Claim!
   createdDate: BigInt!
-  nominator: Soul!
   nominated: Soul!
+  nominator: [Soul!]!
+  uri: [String!]!
   status: String
 }
 

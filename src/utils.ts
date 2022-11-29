@@ -123,3 +123,11 @@ export function setRelation(entity: any, params: Params): void {
   entity.value.push(params.destinationAddress.toHexString());
   entity.save();
 }
+
+/**
+ * Add to Array if Doesn't Alreay Exist
+ */
+export function addToArray(array: string[], value: string): string[] {
+  if (!array.includes(value)) array.push(value);
+  return array;
+}

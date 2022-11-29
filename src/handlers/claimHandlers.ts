@@ -4,7 +4,7 @@ import { store } from '@graphprotocol/graph-ts'
 import {
   Account,
   Soul,
-  ClaimNomination,
+  ProcNomination,
   ProcRole,
   ProcParticipant,
   ProcPost,
@@ -173,7 +173,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     */
   }
 
-  // ** DEPRECATE
+  // ** DEPRECATE? - Maybe use SoulParts instead...
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
@@ -191,18 +191,27 @@ export function handleTransferByToken(event: TransferByToken): void {
     }
     else{
       if(role.name == "member"){
-        //Remove Pending Nominations
-        // let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
+        //Update Pending Nominations
+        let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+        let nomination = ProcNomination.load(nominationId);
+        if(nomination){
+          nomination.status = "accepted";
+          nomination.save();
+        }
       }
     }
     
     // Define role souls and souls count
     let souls = role.souls;
     let soulsCount = role.soulsCount;
-    if (isTokenMinted) {
+    //Add 'to'
+    if (!isTokenBurned && !souls.includes(event.params.toOwnerToken.toString())) {
       souls.push(event.params.toOwnerToken.toString());
       soulsCount = soulsCount + 1;
-    } else if (isTokenBurned) {
+    } 
+    
+    //Remove 'from'
+    if (!isTokenMinted) {
       const accountIndex = souls.indexOf(
         event.params.fromOwnerToken.toString()
       );
@@ -222,6 +231,7 @@ export function handleTransferByToken(event: TransferByToken): void {
  * Handle a nominate event to create or update claim nomination.
  */
 export function handleNominate(event: Nominate): void {
+  const sbt = event.params.id.toString();
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
   // Skip if nominator account not exists
@@ -231,21 +241,28 @@ export function handleNominate(event: Nominate): void {
     return;
   }
   // Skip if nominated soul not exists
-  let nominatedSoul = Soul.load(event.params.id.toString());
+  let nominatedSoul = Soul.load(sbt);
   if (!nominatedSoul){
-    log.warning('handleNominate() Inexisting Nominated Soul id:{}', [event.params.id.toString()]);
+    log.warning('handleNominate() Inexisting Nominated Soul id:{}', [sbt]);
     return;
   } 
 
   // Create nomination
-  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
-  // let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`; //Won't Allow Multiple Nominations of the same Soul...
-  let nomination = new ClaimNomination(nominationId);
-  nomination.claim = claim.id;
-  nomination.createdDate = event.block.timestamp;
-  nomination.nominator = nominatorAccount.sbt;
-  nomination.nominated = nominatedSoul.id;
-  nomination.status = 'pending';
+  // let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
+  let nominationId = `${event.address.toHexString()}_${sbt}`;
+  let nomination = ProcNomination.load(nominationId);
+  if (!nomination) {
+    nomination = new ProcNomination(nominationId);
+    nomination.claim = claim.id;
+    nomination.createdDate = event.block.timestamp;
+    nomination.nominated = nominatedSoul.id;
+    nomination.nominator = [nominatorAccount.sbt];
+    nomination.uri = [event.params.uri];
+    nomination.status = 'pending';
+  }else{ 
+    nomination.nominator.push(nominatorAccount.sbt);
+    nomination.uri.push(event.params.uri);
+  }
   nomination.save();
 }
 
