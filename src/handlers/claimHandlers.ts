@@ -1,4 +1,4 @@
-import { log } from '@graphprotocol/graph-ts'
+import { Address, log } from '@graphprotocol/graph-ts'
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
 import { store } from '@graphprotocol/graph-ts'
 import {
@@ -18,6 +18,20 @@ import {
   Post,
 } from "../../generated/templates/Claim/Claim";
 import { getSoulByAddr, loadOrCreateClaim } from "../utils";
+
+/**
+ * 
+ * @param address 
+ * @param id 
+ * @returns 
+ */
+ const getRoleName = (address: Address, id: BigInt): string | null => {
+  let roleId = `${address.toHexString()}_${id.toString()}`;
+  let role = ProcRole.load(roleId);
+  if(!role) return null;
+  return role.name;
+}
+
 
 /**
  * Handle a stage event to update claim stage.
@@ -59,6 +73,7 @@ export function handleRoleCreated(event: RoleCreated): void {
     role.roleId = event.params.id;
     role.souls = [];
     role.soulsCount = 0;
+    role.name = "";
   }
   // Add Name
   role.name = event.params.role;
@@ -77,16 +92,17 @@ export function handleTransferByToken(event: TransferByToken): void {
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
     let sbt = event.params.toOwnerToken.toString();
     
-    
     //** Soul Part (Supports Amounts)
     const entSBT = getSoulByAddr(event.address.toHexString());
     const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
     let soulPart = SoulPart.load(sbtPartId);
     if (!soulPart) {
+      let role = getRoleName(event.address, tokenId);
       soulPart = new SoulPart(sbtPartId);
       soulPart.aEnd = entSBT;
       soulPart.bEnd = sbt;
-      soulPart.role = tokenId.toString();
+      soulPart.role = role!==null ? role : tokenId.toString();
+      soulPart.roleId = tokenId.toString();
       soulPart.qty = amount;
     }else{
       soulPart.qty = soulPart.qty.plus(amount);

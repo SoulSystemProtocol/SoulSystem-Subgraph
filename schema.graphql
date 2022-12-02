@@ -258,6 +258,7 @@ type ProcRole @entity {
   id: ID! # combination of claim address and role id
   ctx: Claim!
   name: String!
+  role: String!
   roleId: BigInt!
   souls: [String!]!
   soulsCount: Int!
@@ -331,7 +332,8 @@ type SoulPart
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
-  role: String!
+  role: String! #can I get the role name here? (e.g. "admin")
+  roleId: String!
   qty: BigInt! # Quantity?
 }
 

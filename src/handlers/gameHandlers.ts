@@ -25,6 +25,19 @@ import { Hub as HubContract } from "../../generated/Hub/Hub";
 import { getSoulByAddr, loadOrCreateGame } from "../utils";
 
 /**
+ * 
+ * @param address 
+ * @param id 
+ * @returns 
+ */
+const getRoleName = (address: Address, id: BigInt): string | null => {
+  let roleId = `${address.toHexString()}_${id.toString()}`;
+  let role = GameRole.load(roleId);
+  if(!role) return null;
+  return role.name;
+}
+
+/**
  * Handle Role creation Event
  */
 export function handleRoleCreated(event: RoleCreated): void {
@@ -67,10 +80,12 @@ export function handleTransferByToken(event: TransferByToken): void {
     const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
     let soulPart = SoulPart.load(sbtPartId);
     if (!soulPart) {
+      let role = getRoleName(event.address, tokenId);
       soulPart = new SoulPart(sbtPartId);
       soulPart.aEnd = entSBT;
       soulPart.bEnd = sbt;
-      soulPart.role = tokenId.toString();
+      soulPart.role = role!==null ? role : tokenId.toString();
+      soulPart.roleId = tokenId.toString();
       soulPart.qty = amount;
     }else{
       soulPart.qty = soulPart.qty.plus(amount);
