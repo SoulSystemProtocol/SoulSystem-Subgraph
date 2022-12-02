@@ -104,6 +104,7 @@ export function makeSearchField(entity: Soul): string {
   let fields: string[] = [];
   if (entity.uriFirstName) fields.push(entity.uriFirstName);
   if (entity.uriLastName) fields.push(entity.uriLastName);
+  if (entity.owner) fields.push(entity.owner);
   return fields.join('').toLowerCase();
 }
 
