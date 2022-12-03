@@ -56,7 +56,7 @@ type GameRelAddress @entity {
   key: String!
   value: [String!]! # Addresses
 }
-type ClaimRelAddress @entity {
+type ProcRelAddress @entity {
   id: ID! # Unique Combo
   origin: Claim!
   key: String!
@@ -194,6 +194,7 @@ type GameNomination @entity {
   createdDate: BigInt!
   nominator: Soul!
   nominated: Soul!
+  #uri: [String!]! #TBD
 }
 
 type GamePost implements Post @entity {
@@ -238,7 +239,7 @@ type Claim implements CTX @entity {
   updatedDate: BigInt
   nominations: [ProcNomination!]! @derivedFrom(field: "claim")
   posts: [ProcPost!]! @derivedFrom(field: "entity")
-  stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
+  stageURI: [ProcStageURI!]! @derivedFrom(field: "entity")
   # Relations to Souls (Parts / Members)
   roles: [ProcRole!]! @derivedFrom(field: "ctx")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
@@ -246,7 +247,7 @@ type Claim implements CTX @entity {
   # assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ClaimStageURI @entity { # [DEV]
+type ProcStageURI @entity { # [DEV]
   id: ID! # combination of claim address and stage name
   entity: Claim!
   stage: Int!

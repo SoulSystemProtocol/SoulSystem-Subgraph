@@ -5,7 +5,7 @@ import {
   Account,
   AccountRelAddress,
   GameRelAddress,
-  ClaimRelAddress,
+  ProcRelAddress,
   SoulAssoc,
   SoulAttr,
   Soul,
@@ -94,7 +94,7 @@ export function handleStringSet(event: StringSet): void {
       // }
     }
     */
-   
+
     //Add Generic Attributes
     attrAdd(originAddr, key, value);
   }
@@ -180,7 +180,7 @@ export function handleAddressAdd(event: AddressAdd): void {
     // For Claim
     let entity = Claim.load(originAddr);
     if (entity) {
-      let relAddress = new ClaimRelAddress(relId);
+      let relAddress = new ProcRelAddress(relId);
       relAddress.origin = originAddr;
       relAddress.key = key;
       relAddress.value.push(value);
