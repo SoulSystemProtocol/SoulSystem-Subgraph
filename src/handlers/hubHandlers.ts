@@ -28,12 +28,11 @@ export function handleContractCreated(event: ContractCreated): void {
   }
 
   // If created task or claim contract
-  if([HUB_CONTRACT_TYPE_PROCESS,
-    event.params.name == HUB_CONTRACT_TYPE_TASK,
-    event.params.name == HUB_CONTRACT_TYPE_CLAIM].includes(event.params.name)){
-  // if (event.params.name == HUB_CONTRACT_TYPE_PROCESS 
-  //   || event.params.name == HUB_CONTRACT_TYPE_TASK 
-  //   || event.params.name == HUB_CONTRACT_TYPE_CLAIM) {
+  if([
+    HUB_CONTRACT_TYPE_PROCESS,
+    HUB_CONTRACT_TYPE_TASK,
+    HUB_CONTRACT_TYPE_CLAIM
+  ].includes(event.params.name)){
     // Save contract using subgraph template
     ClaimTemplate.create(event.params.contractAddress);
     // Get claim
