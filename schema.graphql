@@ -26,6 +26,15 @@ type Account @entity {
   sbt: Soul!
 }
 
+#Log: Payment
+type Payment @entity {
+  id: ID!
+  to: String!
+  from: String!
+  amount: BigInt!
+  token: String
+}
+
 #Entity: OpenRepo [WIP]
 type OpenRepo @entity {
   id: ID! # contract address

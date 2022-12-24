@@ -188,5 +188,11 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-      # - event: RoleURIChange(string,string)
+#        - event: FundsSent(address, uint256, address)
+#          handler: handleFundsSent
+        - event: PaymentReleased(address,uint256)
+          handler: handlePaymentReleased
+        - event: ERC20PaymentReleased(indexed address,address,uint256)
+          handler: handlePaymentReleasedERC20
+        # - event: RoleURIChange(string,string)
       file: ./src/handlers/claimHandlers.ts

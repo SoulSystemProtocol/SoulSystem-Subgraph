@@ -9,13 +9,17 @@ import {
   ProcParticipant,
   ProcPost,
   SoulPart,
+  Payment,
 } from "../../generated/schema";
 import {
   Nominate,
   TransferByToken,
+  FundsSent,
   Stage,
   RoleCreated,
   Post,
+  PaymentReleased,
+  ERC20PaymentReleased,
 } from "../../generated/templates/Claim/Claim";
 import { getSoulByAddr, loadOrCreateClaim } from "../utils";
 
@@ -79,6 +83,43 @@ export function handleRoleCreated(event: RoleCreated): void {
   role.name = event.params.role;
   role.save();
 }
+
+/**
+ * Register Native Payment
+ */
+export function handlePaymentReleased(event: PaymentReleased): void {
+  const from = event.address.toHexString();
+  const to = event.params.to.toHexString();
+  const amount = event.params.amount;
+  const id = `${event.transaction.hash.toHex()}_0`;
+  const payment = new Payment(id);
+  payment.from = from;
+  payment.to = to;
+  payment.amount = amount;
+  payment.save();
+}
+
+/**
+ * Register ERC20 Token Payment
+ */
+export function handlePaymentReleasedERC20(event: ERC20PaymentReleased): void {
+  const from = event.address.toHexString();
+  const to = event.params.to.toHexString();
+  const amount = event.params.amount;
+  const token = event.params.token.toHexString();
+  const id = `${event.transaction.hash.toHex()}_${token}`;
+  const payment = new Payment(id);
+  payment.from = from;
+  payment.to = to;
+  payment.token = token;
+  payment.amount = amount;
+  payment.save();
+}
+
+/** [TBD] Replace both the PaymentReleased Functions
+ * 
+ */
+// export function handleFundsSent(event: FundsSent): void {}
 
 /**
  * Handle a tranfer by token event to create or update claim roles.
