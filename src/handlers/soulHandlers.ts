@@ -45,6 +45,22 @@ export function handleURI(event: URI): void {
   // Parse metadata json
   let uriJson = metadata ? json.fromBytes(metadata) : null;
   let uriJsonObject = uriJson ? uriJson.toObject() : null;
+  //Extract Tags
+  if(uriJsonObject){
+    const metadataTags = uriJsonObject
+      ? uriJsonObject.get("tags")
+      : null;
+    if(metadataTags && Array.isArray(metadataTags)){
+      let metadataTagsArray = metadataTags.toArray();
+      let tagsArray = new Array<string>(0);
+      for(let i=0; i<metadataTagsArray.length; i++){
+        if(typeof metadataTagsArray[i].toString() == 'string'){
+          tagsArray.push(metadataTagsArray[i].toString());
+        }
+      }
+      soul.tags = tagsArray;
+    }
+  }
 
   // Get image from uri data
   const uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
@@ -53,7 +69,7 @@ export function handleURI(event: URI): void {
   // Get name from uri data
   const uriJsonName = uriJsonObject ? uriJsonObject.get("name") : null;
   const uriJsonNameString: string = uriJsonName ? uriJsonName.toString() : "";
-  
+
   // Update soul params
   soul.uri = event.params.value;
   // soul.uriData = metadata;     //DEPRECATED

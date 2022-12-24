@@ -42,8 +42,6 @@ const assocAdd = (address: string, key: string, value: string): void => {
   }
 }
 
-
-
 /**
  * Add Attributes to a Souls
  * @param address Origin Address
@@ -71,6 +69,8 @@ const attrAdd = (address: string, key: string, value: string): void => {
     }
   }
 }
+
+
 
 /**
  * Handle a string set event to update a game type.
