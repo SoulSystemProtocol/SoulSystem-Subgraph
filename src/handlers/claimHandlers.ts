@@ -9,12 +9,11 @@ import {
   ProcParticipant,
   ProcPost,
   SoulPart,
-  Payment,
+  EvtPayment,
 } from "../../generated/schema";
 import {
   Nominate,
   TransferByToken,
-  FundsSent,
   Stage,
   RoleCreated,
   Post,
@@ -92,7 +91,7 @@ export function handlePaymentReleased(event: PaymentReleased): void {
   const to = event.params.to.toHexString();
   const amount = event.params.amount;
   const id = `${event.transaction.hash.toHex()}_0`;
-  const payment = new Payment(id);
+  const payment = new EvtPayment(id);
   payment.from = from;
   payment.to = to;
   payment.amount = amount;
@@ -108,7 +107,7 @@ export function handlePaymentReleasedERC20(event: ERC20PaymentReleased): void {
   const amount = event.params.amount;
   const token = event.params.token.toHexString();
   const id = `${event.transaction.hash.toHex()}_${token}`;
-  const payment = new Payment(id);
+  const payment = new EvtPayment(id);
   payment.from = from;
   payment.to = to;
   payment.token = token;

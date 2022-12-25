@@ -27,7 +27,7 @@ type Account @entity {
 }
 
 #Log: Payment
-type Payment @entity {
+type EvtPayment @entity {
   id: ID!
   to: String!
   from: String!
