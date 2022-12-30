@@ -101,11 +101,19 @@ export function loadOrCreateClaim(id: string): Claim {
  * Searchable Fields as a single string.
  */
 export function makeSearchField(entity: Soul): string {
+  const sep = '';
   let fields: string[] = [];
-  if (entity.uriFirstName) fields.push(entity.uriFirstName);
-  if (entity.uriLastName) fields.push(entity.uriLastName);
+  if (entity.name) fields.push(entity.name);
   if (entity.owner) fields.push(entity.owner);
-  return fields.join('').toLowerCase();
+  /* Type Fails no matter what I do :( 
+  if(entity.tags!==null){
+    // const tags: string[] = entity.tags ? entity.tags : [];
+    // if (!!entity.tags && Array.isArray(entity.tags)) fields.push(entity.tags.join(sep));
+    // fields.push(entity.tags.join(sep));
+    fields = fields.concat(entity.tags);
+  }
+  */
+  return fields.join(sep).toLowerCase();
 }
 
 
