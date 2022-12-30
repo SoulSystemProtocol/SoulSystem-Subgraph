@@ -1,9 +1,8 @@
-import { Address, ipfs, json, JSONValue } from "@graphprotocol/graph-ts";
+import { Address, ipfs, json, JSONValue, JSONValueKind  } from "@graphprotocol/graph-ts";
 import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
-
 
 /**
  * Handle a tranfer event to create or update a soul.
@@ -84,42 +83,43 @@ export function handleURI(event: URI): void {
     const uriJsonAttributes = uriJsonObject
     ? uriJsonObject.get("attributes")
     : null;
-
-    const uriJsonAttributesArray = uriJsonAttributes
-    ? uriJsonAttributes.toArray()
-    : new Array<JSONValue>(0);
-
-    // Get uri first name and last name
-    let uriFirstNameString: string = "";
-    let uriLastNameString: string = "";
-    for (let i = 0; i < uriJsonAttributesArray.length; i++) {
-      // Get trait type and value
-      let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
-      let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
-      // Check trait type for getting first name
-      if (
-        uriAttributeTraitType &&
-        uriAttributeTraitType.toString() == "First Name"
-      ) {
-        uriFirstNameString = uriAttributeValue
-          ? uriAttributeValue.toString()
-          : "";
+    if(uriJsonAttributes){
+      const uriJsonAttributesArray = uriJsonAttributes.toArray();
+      // Get uri first name and last name
+      let uriFirstNameString: string = "";
+      let uriLastNameString: string = "";
+      for (let i = 0; i < uriJsonAttributesArray.length; i++) {
+        //Validate
+        if(uriJsonAttributesArray[i].kind == JSONValueKind.OBJECT){
+          // Get trait type and value
+          let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
+          let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
+          // Check trait type for getting first name
+          if (
+            uriAttributeTraitType &&
+            uriAttributeTraitType.toString() == "First Name"
+          ) {
+            uriFirstNameString = uriAttributeValue
+              ? uriAttributeValue.toString()
+              : "";
+          }
+          // Check trait type for getting last name
+          if (
+            uriAttributeTraitType &&
+            uriAttributeTraitType.toString() == "Last Name"
+          ) {
+            uriLastNameString = uriAttributeValue
+              ? uriAttributeValue.toString()
+              : "";
+          }
+        }
       }
-      // Check trait type for getting last name
-      if (
-        uriAttributeTraitType &&
-        uriAttributeTraitType.toString() == "Last Name"
-      ) {
-        uriLastNameString = uriAttributeValue
-          ? uriAttributeValue.toString()
-          : "";
-      }
+      soul.uriFirstName = uriFirstNameString;
+      soul.uriLastName = uriLastNameString;
+      let name = uriFirstNameString;
+      if (!!uriLastNameString) name += ' ' + uriLastNameString;
+      soul.name = name
     }
-    soul.uriFirstName = uriFirstNameString;
-    soul.uriLastName = uriLastNameString;
-    let name = uriFirstNameString;
-    if (!!uriLastNameString) name += ' ' + uriLastNameString;
-    soul.name = name
   }
   soul.searchField = makeSearchField(soul);
   soul.save();
