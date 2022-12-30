@@ -2,30 +2,38 @@ import { Address, ipfs, json, JSONValue, JSONValueKind  } from "@graphprotocol/g
 import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
+import { store } from '@graphprotocol/graph-ts'
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
+import { log } from '@graphprotocol/graph-ts'
 
 /**
  * Handle a tranfer event to create or update a soul.
  * (address from,address to, uint256 tokenId)
  */
 export function handleTransfer(event: Transfer): void {
-  // Find or create soul
-  let soul = loadOrCreateSoul(event.params.tokenId.toString());
-  //Reset Type & Role
-  soul.type = "";
-  soul.role = "";
-  soul.stage = 0;
-  if (event.params.from != Address.zero()) {
-    //Remove Soul From Previous Account
-    removeSoulFromAccount(event.params.from);
+  const soulId = event.params.tokenId.toString();
+  if (event.params.to == Address.zero()) {
+    //Delete Soul
+    store.remove('Soul', soulId);
+  }else{
+    // Find or create soul
+    let soul = loadOrCreateSoul(soulId);
+    //Reset Type & Role
+    soul.type = "";
+    soul.role = "";
+    soul.stage = 0;
+    if (event.params.from != Address.zero()) {
+      //Remove Soul From Previous Account
+      removeSoulFromAccount(event.params.from);
+    }
+    if (event.params.to != Address.zero()) {
+      // Add soul to account
+      addSoulToAccount(event.params.to, soul);
+    }
+    // Update soul params
+    soul.owner = event.params.to.toHexString();
+    soul.save();
   }
-  if (event.params.to != Address.zero()) {
-    // Add soul to account
-    addSoulToAccount(event.params.to, soul);
-  }
-  // Update soul params
-  soul.owner = event.params.to.toHexString();
-  soul.save();
 }
 
 /**
@@ -61,64 +69,79 @@ export function handleURI(event: URI): void {
     }
   }
 
-  // Get image from uri data
+  // Cached Soul Data
+  soul.uri = event.params.value;
+  soul.metadata = metadata;
+
+  // Get image from metadata
   const uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
   const uriJsonImageString: string = uriJsonImage ? uriJsonImage.toString() : "";
+  soul.uriImage = uriJsonImageString;
 
-  // Get name from uri data
+  // Get name from metadata
   const uriJsonName = uriJsonObject ? uriJsonObject.get("name") : null;
   const uriJsonNameString: string = uriJsonName ? uriJsonName.toString() : "";
-
-  // Update soul params
-  soul.uri = event.params.value;
-  // soul.uriData = metadata;     //DEPRECATED
-  soul.metadata = metadata;
-  soul.uriImage = uriJsonImageString;
-  //Name
   if(!!uriJsonNameString){
     soul.name = uriJsonNameString;
   } else {
-    //** Extract Name From JSON
+    /**
+     * Extract Name From JSON
+     * *** This is a rather silly backward compatibility thing we should get rid of!
+     */
     // Get attributes from uri data
     const uriJsonAttributes = uriJsonObject
     ? uriJsonObject.get("attributes")
     : null;
     if(uriJsonAttributes){
-      const uriJsonAttributesArray = uriJsonAttributes.toArray();
+      const uriJsonAttributesArray: JSONValue[] = uriJsonAttributes.toArray();
       // Get uri first name and last name
       let uriFirstNameString: string = "";
       let uriLastNameString: string = "";
+      let fullName: string = "";
       for (let i = 0; i < uriJsonAttributesArray.length; i++) {
-        //Validate
+        //Validate Type
         if(uriJsonAttributesArray[i].kind == JSONValueKind.OBJECT){
           // Get trait type and value
           let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
           let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
-          // Check trait type for getting first name
+          // first name
           if (
             uriAttributeTraitType &&
-            uriAttributeTraitType.toString() == "First Name"
+            uriAttributeTraitType.toString().toLowerCase() == "first name"
           ) {
             uriFirstNameString = uriAttributeValue
               ? uriAttributeValue.toString()
               : "";
           }
-          // Check trait type for getting last name
+          // last name
           if (
             uriAttributeTraitType &&
-            uriAttributeTraitType.toString() == "Last Name"
+            uriAttributeTraitType.toString().toLowerCase() == "last name"
           ) {
             uriLastNameString = uriAttributeValue
               ? uriAttributeValue.toString()
               : "";
           }
+          // name
+          if (
+            uriAttributeTraitType &&
+            uriAttributeTraitType.toString().toLowerCase() == "name"
+          ) {
+            fullName = uriAttributeValue
+              ? uriAttributeValue.toString()
+              : "";
+          }
         }
       }
-      soul.uriFirstName = uriFirstNameString;
-      soul.uriLastName = uriLastNameString;
-      let name = uriFirstNameString;
-      if (!!uriLastNameString) name += ' ' + uriLastNameString;
-      soul.name = name
+      if(fullName) soul.name = fullName;
+      else{
+        //Backward Compatibility
+        soul.uriFirstName = uriFirstNameString;
+        soul.uriLastName = uriLastNameString;
+        let name = uriFirstNameString;
+        if (!!uriLastNameString) name += ' ' + uriLastNameString;
+        soul.name = name
+      }
     }
   }
   soul.searchField = makeSearchField(soul);
