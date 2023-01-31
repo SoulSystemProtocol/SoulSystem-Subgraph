@@ -76,7 +76,8 @@ export function handleURI(event: URI): void {
   // Get image from metadata
   const uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
   const uriJsonImageString: string = uriJsonImage ? uriJsonImage.toString() : "";
-  soul.uriImage = uriJsonImageString;
+  soul.uriImage = uriJsonImageString; //DEPRECATE
+  soul.image = uriJsonImageString;
 
   // Get name from metadata
   const uriJsonName = uriJsonObject ? uriJsonObject.get("name") : null;
