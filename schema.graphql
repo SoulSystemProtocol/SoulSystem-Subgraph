@@ -87,6 +87,7 @@ type Soul @entity {
   uriFirstName: String!
   uriLastName: String!
 
+  image: String!
   name: String!
   tags: [String!]
   searchField: String

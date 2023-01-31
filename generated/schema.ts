@@ -469,6 +469,7 @@ export class Soul extends Entity {
     this.set("uriImage", Value.fromString(""));
     this.set("uriFirstName", Value.fromString(""));
     this.set("uriLastName", Value.fromString(""));
+    this.set("image", Value.fromString(""));
     this.set("name", Value.fromString(""));
   }
 
@@ -627,6 +628,15 @@ export class Soul extends Entity {
 
   set uriLastName(value: string) {
     this.set("uriLastName", Value.fromString(value));
+  }
+
+  get image(): string {
+    let value = this.get("image");
+    return value!.toString();
+  }
+
+  set image(value: string) {
+    this.set("image", Value.fromString(value));
   }
 
   get name(): string {
