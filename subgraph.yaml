@@ -9,9 +9,9 @@ dataSources:
     name: Soul
     network: mumbai
     source:
-      address: "0x5726eB1ba64F3FA0aAD002F273B625adA6e788ff"
+      address: "0x232902B2460D82d61f04f76F49b888AF67f73ef2"
       abi: Soul
-      startBlock: 27506961
+      startBlock: 29068400
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -44,9 +44,9 @@ dataSources:
     name: Hub
     network: mumbai
     source:
-      address: "0x9956b603Eb5A081d23721e5e0c8839257A92c499"
+      address: "0xc0d1D74547356B2be0709cE841F5F2Fa5D8c63D7"
       abi: Hub
-      startBlock: 27506961
+      startBlock: 28946112
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -98,7 +98,7 @@ dataSources:
     source:
       address: "0x647DBF306fE835E231dB1f9d711364806467E20a"
       abi: OpenRepo
-      startBlock: 27506961
+      startBlock: 27523512
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -144,8 +144,6 @@ templates:
         - name: Game
           file: ./abis/Game.json
       eventHandlers:
-        - event: ContractURI(string)
-          handler: handleContractUri
         - event: TransferByToken(indexed address,indexed uint256,indexed uint256,uint256,uint256)
           handler: handleTransferByToken
         - event: Nominate(address,indexed uint256,string)
@@ -171,8 +169,8 @@ templates:
       entities:
         - Soul
         - Claim
-        - ClaimRole
-        - ClaimNomination
+        - ProcRole
+        - ProcNomination
         - ProcPost
       abis:
         - name: Claim
@@ -182,8 +180,6 @@ templates:
       eventHandlers:
         - event: Stage(uint8)
           handler: handleStage
-        - event: ContractURI(string)
-          handler: handleContractUri
         - event: TransferByToken(indexed address,indexed uint256,indexed uint256,uint256,uint256)
           handler: handleTransferByToken
         - event: Nominate(address,indexed uint256,string)
@@ -192,5 +188,11 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-      # - event: RoleURIChange(string,string)
+#        - event: FundsSent(address, uint256, address)
+#          handler: handleFundsSent
+        - event: PaymentReleased(address,uint256)
+          handler: handlePaymentReleased
+        - event: ERC20PaymentReleased(indexed address,address,uint256)
+          handler: handlePaymentReleasedERC20
+        # - event: RoleURIChange(string,string)
       file: ./src/handlers/claimHandlers.ts

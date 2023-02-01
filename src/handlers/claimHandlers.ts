@@ -1,23 +1,40 @@
+import { Address, log } from '@graphprotocol/graph-ts'
 import { BigInt, ipfs } from "@graphprotocol/graph-ts";
+import { store } from '@graphprotocol/graph-ts'
 import {
   Account,
   Soul,
-  ClaimNomination,
-  ClaimRole,
+  ProcNomination,
+  ProcRole,
   ProcParticipant,
-  ProcAssoc,
   ProcPost,
-  // CTXPost,
+  SoulPart,
+  EvtPayment, PaymentTotal,
 } from "../../generated/schema";
 import {
-  ContractURI,
   Nominate,
   TransferByToken,
   Stage,
   RoleCreated,
   Post,
+  PaymentReleased,
+  ERC20PaymentReleased,
 } from "../../generated/templates/Claim/Claim";
 import { getSoulByAddr, loadOrCreateClaim } from "../utils";
+
+/**
+ * 
+ * @param address 
+ * @param id 
+ * @returns 
+ */
+ const getRoleName = (address: Address, id: BigInt): string | null => {
+  let roleId = `${address.toHexString()}_${id.toString()}`;
+  let role = ProcRole.load(roleId);
+  if(!role) return null;
+  return role.name;
+}
+
 
 /**
  * Handle a stage event to update claim stage.
@@ -43,39 +60,23 @@ export function handleStage(event: Stage): void {
   }
 }
 
-/** DEPRECATE
- * Handle a contract uri event to update claim uri.
- */
-
-export function handleContractUri(event: ContractURI): void {
-  // Get claim
-  let claim = loadOrCreateClaim(event.address.toHexString());
-  // Load uri data
-  let uriIpfsHash = event.params.param0.split("/").at(-1);
-  let uriData = ipfs.cat(uriIpfsHash);
-  // Update claim
-  claim.uri = event.params.param0;
-  claim.uriData = uriData; //DEPRECATE
-  claim.metadata = uriData;
-  claim.save();
-}
-
 /**
  * Handle Role creation Event
  */
 export function handleRoleCreated(event: RoleCreated): void {
   // Find role
   let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
-  let role = ClaimRole.load(roleId);
+  let role = ProcRole.load(roleId);
   if (!role) {
     // Create Role
-    role = new ClaimRole(roleId);
+    role = new ProcRole(roleId);
     // Set claim
-    let claim = loadOrCreateClaim(event.address.toHexString());
-    role.claim = claim.id;
+    let ctx = loadOrCreateClaim(event.address.toHexString());
+    role.ctx = ctx.id;
     role.roleId = event.params.id;
     role.souls = [];
     role.soulsCount = 0;
+    role.name = "";
   }
   // Add Name
   role.name = event.params.role;
@@ -83,18 +84,87 @@ export function handleRoleCreated(event: RoleCreated): void {
 }
 
 /**
+ * Register Native Payment
+ */
+export function handlePaymentReleased(event: PaymentReleased): void {
+  //Payment Events
+  const from = event.address.toHexString();
+  const to = event.params.to.toHexString();
+  const amount = event.params.amount;
+  const id = `${event.transaction.hash.toHex()}_0`;
+  const payment = new EvtPayment(id);
+  payment.from = from;
+  payment.to = to;
+  payment.amount = amount;
+  payment.save();
+
+  //Payment Totals
+  const totalId = `${from}_${to}_0`;
+  let paymentTotal = PaymentTotal.load(totalId);
+  if (paymentTotal) {
+    paymentTotal.amount = paymentTotal.amount.plus(amount);
+  }else{
+    paymentTotal = new PaymentTotal(totalId);
+    paymentTotal.from = from;
+    paymentTotal.to = to;
+    paymentTotal.amount = amount;
+  }
+  paymentTotal.save();
+}
+
+/**
+ * Register ERC20 Token Payment
+ */
+export function handlePaymentReleasedERC20(event: ERC20PaymentReleased): void {
+  const from = event.address.toHexString();
+  const to = event.params.to.toHexString();
+  const amount = event.params.amount;
+  const token = event.params.token.toHexString();
+  const id = `${event.transaction.hash.toHex()}_${token}`;
+  const payment = new EvtPayment(id);
+  payment.from = from;
+  payment.to = to;
+  payment.token = token;
+  payment.amount = amount;
+  payment.save();
+}
+
+/** [TBD] Replace both the PaymentReleased Functions
+ * 
+ */
+// export function handleFundsSent(event: FundsSent): void {}
+
+/**
  * Handle a tranfer by token event to create or update claim roles.
  */
 export function handleTransferByToken(event: TransferByToken): void {
-  // Get claim
   let entity = loadOrCreateClaim(event.address.toHexString());
   let tokenId = event.params.id;
   let amount = event.params.value;
 
   //Relation Test 1
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
-    //Add to Recepient
     let sbt = event.params.toOwnerToken.toString();
+    
+    //** Soul Part (Supports Amounts)
+    const entSBT = getSoulByAddr(event.address.toHexString());
+    const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!soulPart) {
+      let role = getRoleName(event.address, tokenId);
+      soulPart = new SoulPart(sbtPartId);
+      soulPart.aEnd = entSBT;
+      soulPart.bEnd = sbt;
+      soulPart.role = role!==null ? role : tokenId.toString();
+      soulPart.roleId = tokenId.toString();
+      soulPart.qty = amount;
+    }else{
+      soulPart.qty = soulPart.qty.plus(amount);
+    }
+    soulPart.save();
+
+
+    //Add to Recepient
     let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (!participant) {
@@ -109,6 +179,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     participant.roles = procRoles;
     participant.save();
 
+    /** DEPRECATED - These relations are to be 'SoulParts'
     //Relation Test 2
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = ProcAssoc.load(participanRoleId);
@@ -125,11 +196,29 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.qty = assoc.qty.plus(amount);
     }
     assoc.save();
+    */
   }
 
   if (!event.params.fromOwnerToken.equals(BigInt.zero())) {
-    //Remove From Origin
     let sbt = event.params.fromOwnerToken.toString();
+    
+    //** Soul Part
+    const entSBT = getSoulByAddr(event.address.toHexString());
+    const sbtPartId = `${entSBT}_${sbt}_${tokenId.toString()}`;
+    let soulPart = SoulPart.load(sbtPartId);
+    if (!!soulPart) {
+      if(soulPart.qty.equals(amount)){
+        //Delete
+        store.remove('SoulPart', sbtPartId);
+      }else{
+        //Remove
+        soulPart.qty = soulPart.qty.minus(amount);
+        soulPart.save();
+      }
+    }
+
+
+    //Remove From Origin
     let participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = ProcParticipant.load(participanId);
     if (participant) {
@@ -142,6 +231,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       }
     }
 
+    /** DEPRECATED - These relations are to be 'SoulParts'
     //Relation Test 2
     let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = ProcAssoc.load(participanRoleId);
@@ -150,31 +240,48 @@ export function handleTransferByToken(event: TransferByToken): void {
       assoc.qty = assoc.qty.minus(amount);
       assoc.save();
     }
+    */
   }
 
-  // ** DEPRECATE
+  // ** DEPRECATE? - Maybe use SoulParts instead...
   // Define transfer type
   let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
   let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
     // Find or create role
     let roleId = `${event.address.toHexString()}_${tokenId}`;
-    let role = ClaimRole.load(roleId);
+    let role = ProcRole.load(roleId);
     if (!role) {
-      role = new ClaimRole(roleId);
-      role.claim = entity.id;
+      role = new ProcRole(roleId);
+      role.ctx = entity.id;
       role.roleId = tokenId;
       role.souls = [];
       role.soulsCount = 0;
       role.name = "";
     }
+    else{
+      if(role.name == "member"){
+        //Update Pending Nominations
+        let nominationId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+        let nomination = ProcNomination.load(nominationId);
+        if(nomination){
+          nomination.status = "accepted";
+          nomination.save();
+        }
+      }
+    }
+    
     // Define role souls and souls count
     let souls = role.souls;
     let soulsCount = role.soulsCount;
-    if (isTokenMinted) {
+    //Add 'to'
+    if (!isTokenBurned && !souls.includes(event.params.toOwnerToken.toString())) {
       souls.push(event.params.toOwnerToken.toString());
       soulsCount = soulsCount + 1;
-    } else if (isTokenBurned) {
+    } 
+    
+    //Remove 'from'
+    if (!isTokenMinted) {
       const accountIndex = souls.indexOf(
         event.params.fromOwnerToken.toString()
       );
@@ -194,25 +301,38 @@ export function handleTransferByToken(event: TransferByToken): void {
  * Handle a nominate event to create or update claim nomination.
  */
 export function handleNominate(event: Nominate): void {
+  const sbt = event.params.id.toString();
   // Get claim
   let claim = loadOrCreateClaim(event.address.toHexString());
   // Skip if nominator account not exists
   let nominatorAccount = Account.load(event.params.account.toHexString());
   if (!nominatorAccount) {
+    log.warning('handleNominate() Unknown Nominator Account:{}', [event.params.account.toHexString()]);
     return;
   }
   // Skip if nominated soul not exists
-  let nominatedSoul = Soul.load(event.params.id.toString());
-  if (!nominatedSoul) {
+  let nominatedSoul = Soul.load(sbt);
+  if (!nominatedSoul){
+    log.warning('handleNominate() Inexisting Nominated Soul id:{}', [sbt]);
     return;
-  }
+  } 
+
   // Create nomination
-  let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
-  let nomination = new ClaimNomination(nominationId);
-  nomination.claim = claim.id;
-  nomination.createdDate = event.block.timestamp;
-  nomination.nominator = nominatorAccount.sbt;
-  nomination.nominated = nominatedSoul.id;
+  // let nominationId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
+  let nominationId = `${event.address.toHexString()}_${sbt}`;
+  let nomination = ProcNomination.load(nominationId);
+  if (!nomination) {
+    nomination = new ProcNomination(nominationId);
+    nomination.claim = claim.id;
+    nomination.createdDate = event.block.timestamp;
+    nomination.nominated = nominatedSoul.id;
+    nomination.nominator = [nominatorAccount.sbt];
+    nomination.uri = [event.params.uri];
+    nomination.status = 'pending';
+  }else{ 
+    nomination.nominator.push(nominatorAccount.sbt);
+    nomination.uri.push(event.params.uri);
+  }
   nomination.save();
 }
 
@@ -225,6 +345,7 @@ export function handlePost(event: Post): void {
   // Skip if author soul is not exists
   let authorSoul = Soul.load(event.params.tokenId.toString());
   if (!authorSoul) {
+    log.warning('handlePost() Failed to fetch poster Soul id:{}', [event.params.tokenId.toString()]);
     return;
   }
   // Create post entity

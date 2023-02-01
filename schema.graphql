@@ -26,6 +26,24 @@ type Account @entity {
   sbt: Soul!
 }
 
+#Log: Payment
+type EvtPayment @entity {
+  id: ID!
+  from: String!
+  to: String!
+  amount: BigInt!
+  token: String
+}
+
+#Log: Payments Tracking
+type PaymentTotal @entity {
+  id: ID!
+  from: String!
+  to: String!
+  amount: BigInt!
+  token: String
+}
+
 #Entity: OpenRepo [WIP]
 type OpenRepo @entity {
   id: ID! # contract address
@@ -56,7 +74,7 @@ type GameRelAddress @entity {
   key: String!
   value: [String!]! # Addresses
 }
-type ClaimRelAddress @entity {
+type ProcRelAddress @entity {
   id: ID! # Unique Combo
   origin: Claim!
   key: String!
@@ -132,15 +150,18 @@ type Game implements CTX @entity {
   name: String!
   type: String!
   role: String! # Entity's function designation
-  uri: String # metadata uri
-  uriData: Bytes
-  metadata: Bytes
+  
+  # DEPRECTED FIELDS
+  #uri: String # metadata uri
+  #uriData: Bytes
+  #metadata: Bytes
+
   createdDate: BigInt!
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
 
   #Relations to Souls (Parts / Members)
-  roles: [GameRole!]! @derivedFrom(field: "game")
+  roles: [GameRole!]! @derivedFrom(field: "ctx")
   rulse: [GameRule!]! @derivedFrom(field: "game")
   parts: [GameParticipant!]! @derivedFrom(field: "entity") # DEPRECATE?
   assoc: [GameAssoc!]! @derivedFrom(field: "bEnt") # DEPRECATE?
@@ -148,7 +169,7 @@ type Game implements CTX @entity {
 
 type GameRole @entity {
   id: ID! # combination of game address and role id
-  game: Game!
+  ctx: Game!
   roleId: BigInt!
   name: String!
   souls: [String!]!
@@ -185,12 +206,14 @@ type GameRuleEffect @entity {
   value: Int!
 }
 
+#TODO: Update Like ProcNominations
 type GameNomination @entity {
   id: ID! # combination of game address and event transaction address
   game: Game!
   createdDate: BigInt!
   nominator: Soul!
   nominated: Soul!
+  #uri: [String!]! #TBD
 }
 
 type GamePost implements Post @entity {
@@ -216,7 +239,7 @@ type Action @entity {
   rules: [GameRule!]! @derivedFrom(field: "about")
 }
 
-#Entity: Claim/Task/Process
+#Entity: Process (Claim/Task/etc')
 type Claim implements CTX @entity {
   id: ID! # contract address
   hub: String # hub address
@@ -224,24 +247,26 @@ type Claim implements CTX @entity {
   game: Game
   type: String!
   role: String! # Entity's function designation
-  uri: String # metadata uri
-  uriData: Bytes
-  metadata: Bytes
+
+  # DEPRECTED FIELDS
+  #uri: String # metadata uri
+  #uriData: Bytes
+  #metadata: Bytes
+
   stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
-  nominations: [ClaimNomination!]! @derivedFrom(field: "claim")
+  nominations: [ProcNomination!]! @derivedFrom(field: "claim")
   posts: [ProcPost!]! @derivedFrom(field: "entity")
-  stageURI: [ClaimStageURI!]! @derivedFrom(field: "entity")
+  stageURI: [ProcStageURI!]! @derivedFrom(field: "entity")
   # Relations to Souls (Parts / Members)
-  roles: [ClaimRole!]! @derivedFrom(field: "claim")
+  roles: [ProcRole!]! @derivedFrom(field: "ctx")
   participants: [ProcParticipant!]! @derivedFrom(field: "entity")
   # Relations
-  assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
+  # assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ClaimStageURI
-  @entity { # [DEV]
+type ProcStageURI @entity { # [DEV]
   id: ID! # combination of claim address and stage name
   entity: Claim!
   stage: Int!
@@ -249,22 +274,24 @@ type ClaimStageURI
   Author: String # SBT
 }
 
-type ClaimRole
-  @entity { # DEPRECATE
+type ProcRole @entity {
   id: ID! # combination of claim address and role id
-  claim: Claim!
+  ctx: Claim!
   name: String!
+  role: String!
   roleId: BigInt!
   souls: [String!]!
   soulsCount: Int!
 }
 
-type ClaimNomination @entity {
+type ProcNomination @entity {
   id: ID! # combination of claim address and event transaction address
   claim: Claim!
   createdDate: BigInt!
-  nominator: Soul!
   nominated: Soul!
+  nominator: [Soul!]!
+  uri: [String!]!
+  status: String
 }
 
 type ProcPost implements Post @entity {
@@ -298,7 +325,10 @@ type GameAssoc @entity {
   role: BigInt!
   qty: BigInt!
 }
-type ProcAssoc @entity {
+
+
+type ProcAssoc 
+  @entity { # DEPRECATED & UNUSED
   id: ID! # combination of claim address and SBT & roleId address
   bEnt: Claim! # Group
   sbt: Soul! # Entity
@@ -322,8 +352,9 @@ type SoulPart
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
-  role: String!
-  qty: BigInt # Quantity?
+  role: String! #can I get the role name here? (e.g. "admin")
+  roleId: String!
+  qty: BigInt! # Quantity?
 }
 
 type SoulAttr

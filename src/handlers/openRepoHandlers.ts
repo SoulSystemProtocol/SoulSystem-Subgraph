@@ -5,7 +5,7 @@ import {
   Account,
   AccountRelAddress,
   GameRelAddress,
-  ClaimRelAddress,
+  ProcRelAddress,
   SoulAssoc,
   SoulAttr,
   Soul,
@@ -16,7 +16,7 @@ import {
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
 import { loadOrCreateClaim, getSoulByAddr } from "../utils";
-// import { store } from '@graphprotocol/graph-ts'
+import { store } from '@graphprotocol/graph-ts'
 import { log } from '@graphprotocol/graph-ts'
 
 
@@ -42,8 +42,6 @@ const assocAdd = (address: string, key: string, value: string): void => {
   }
 }
 
-
-
 /**
  * Add Attributes to a Souls
  * @param address Origin Address
@@ -62,7 +60,7 @@ const attrAdd = (address: string, key: string, value: string): void => {
     attr.save();
 
     //Cache Special Attributes
-    if (key == 'role') {
+    if (key == OPEN_REPO_STRING_KEY_ROLE) {
       let soul = Soul.load(sbt);
       if (soul) {
         soul.role = value;
@@ -71,6 +69,8 @@ const attrAdd = (address: string, key: string, value: string): void => {
     }
   }
 }
+
+
 
 /**
  * Handle a string set event to update a game type.
@@ -82,33 +82,34 @@ export function handleStringSet(event: StringSet): void {
 
   let sbt = getSoulByAddr(originAddr);  //Origin SBT
   if (!!sbt) {
-    /* ERROR
+    
+    /* ERROR 
     let soul = Soul.load(sbt);
     if (soul) {
       //Remove Existing Entities under that key
-      for (let i = 0; i < soul.attrs.length; i++) {
+      // for (let i = 0; i < soul.attrs.length; i++) {
         //Remove Entity
-        store.remove('SoulAttr', soul.attrs[i]);
-      }
+        // store.remove('SoulAttr', soul.attrs[i]);
+        //   log.info('Failed to remove ATTR Entity: {}', [error]);
+      // }
     }
     */
+
     //Add Generic Attributes
     attrAdd(originAddr, key, value);
   }
 
   //Entity's 'role'
   if (event.params.key == OPEN_REPO_STRING_KEY_ROLE) {
-    const id = event.params.originAddress.toHexString();
-    // Get Entity
-    // let game = loadOrCreateGame(event.params.originAddress.toHexString());
-    let game = Game.load(id);  //This actually runs before the entity created event
+    // Try to Fetch Game Entity
+    let game = Game.load(originAddr);  //This actually runs before the entity created event
     if (game) {
       // Update game role
       game.role = event.params.value;
       game.save();
     } else {
-      // let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
-      let claim = Claim.load(id);  //This actually runs before the entity created event
+      // Try to Fetch Claim Entity
+      let claim = Claim.load(originAddr);  //This actually runs before the entity created event
       if (claim) {
         // Update claim role
         claim.role = event.params.value;
@@ -119,16 +120,15 @@ export function handleStringSet(event: StringSet): void {
   //Entity's 'type'
   else if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
     const id = event.params.originAddress.toHexString();
-    // Get Entity
-    // let game = loadOrCreateGame(event.params.originAddress.toHexString());
-    let game = Game.load(id);  //This actually runs before the entity created event
+    // Try to Fetch Game Entity
+    let game = Game.load(originAddr);  //This actually runs before the entity created event
     if (game) {
       // Update game type
       game.type = event.params.value;
       game.save();
     } else {
-      // let claim = loadOrCreateClaim(event.params.originAddress.toHexString());
-      let claim = Claim.load(id);  //This actually runs before the entity created event
+      // Try to Fetch Claim Entity
+      let claim = Claim.load(originAddr);  //This actually runs before the entity created event
       if (claim) {
         // Update claim type
         claim.type = event.params.value;
@@ -180,7 +180,7 @@ export function handleAddressAdd(event: AddressAdd): void {
     // For Claim
     let entity = Claim.load(originAddr);
     if (entity) {
-      let relAddress = new ClaimRelAddress(relId);
+      let relAddress = new ProcRelAddress(relId);
       relAddress.origin = originAddr;
       relAddress.key = key;
       relAddress.value.push(value);
