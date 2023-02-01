@@ -29,8 +29,17 @@ type Account @entity {
 #Log: Payment
 type EvtPayment @entity {
   id: ID!
-  to: String!
   from: String!
+  to: String!
+  amount: BigInt!
+  token: String
+}
+
+#Log: Payments Tracking
+type PaymentTotal @entity {
+  id: ID!
+  from: String!
+  to: String!
   amount: BigInt!
   token: String
 }

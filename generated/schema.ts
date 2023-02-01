@@ -59,8 +59,8 @@ export class EvtPayment extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("to", Value.fromString(""));
     this.set("from", Value.fromString(""));
+    this.set("to", Value.fromString(""));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -89,6 +89,15 @@ export class EvtPayment extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get from(): string {
+    let value = this.get("from");
+    return value!.toString();
+  }
+
+  set from(value: string) {
+    this.set("from", Value.fromString(value));
+  }
+
   get to(): string {
     let value = this.get("to");
     return value!.toString();
@@ -98,6 +107,68 @@ export class EvtPayment extends Entity {
     this.set("to", Value.fromString(value));
   }
 
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get token(): string | null {
+    let value = this.get("token");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set token(value: string | null) {
+    if (!value) {
+      this.unset("token");
+    } else {
+      this.set("token", Value.fromString(<string>value));
+    }
+  }
+}
+
+export class PaymentTotal extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("from", Value.fromString(""));
+    this.set("to", Value.fromString(""));
+    this.set("amount", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PaymentTotal entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type PaymentTotal must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("PaymentTotal", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PaymentTotal | null {
+    return changetype<PaymentTotal | null>(store.get("PaymentTotal", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
   get from(): string {
     let value = this.get("from");
     return value!.toString();
@@ -105,6 +176,15 @@ export class EvtPayment extends Entity {
 
   set from(value: string) {
     this.set("from", Value.fromString(value));
+  }
+
+  get to(): string {
+    let value = this.get("to");
+    return value!.toString();
+  }
+
+  set to(value: string) {
+    this.set("to", Value.fromString(value));
   }
 
   get amount(): BigInt {

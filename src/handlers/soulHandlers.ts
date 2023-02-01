@@ -4,7 +4,7 @@ import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announce
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 import { store } from '@graphprotocol/graph-ts'
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
-import { log } from '@graphprotocol/graph-ts'
+// import { log } from '@graphprotocol/graph-ts'
 
 /**
  * Handle a tranfer event to create or update a soul.

@@ -9,7 +9,7 @@ import {
   ProcParticipant,
   ProcPost,
   SoulPart,
-  EvtPayment,
+  EvtPayment, PaymentTotal,
 } from "../../generated/schema";
 import {
   Nominate,
@@ -87,6 +87,7 @@ export function handleRoleCreated(event: RoleCreated): void {
  * Register Native Payment
  */
 export function handlePaymentReleased(event: PaymentReleased): void {
+  //Payment Events
   const from = event.address.toHexString();
   const to = event.params.to.toHexString();
   const amount = event.params.amount;
@@ -96,6 +97,19 @@ export function handlePaymentReleased(event: PaymentReleased): void {
   payment.to = to;
   payment.amount = amount;
   payment.save();
+
+  //Payment Totals
+  const totalId = `${from}_${to}_0`;
+  let paymentTotal = PaymentTotal.load(totalId);
+  if (paymentTotal) {
+    paymentTotal.amount = paymentTotal.amount.plus(amount);
+  }else{
+    paymentTotal = new PaymentTotal(totalId);
+    paymentTotal.from = from;
+    paymentTotal.to = to;
+    paymentTotal.amount = amount;
+  }
+  paymentTotal.save();
 }
 
 /**
