@@ -217,28 +217,17 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "type_",
+        "name": "name",
         "type": "string"
       },
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "uri_",
-        "type": "string"
-      }
-    ],
-    "name": "claimMake",
-    "outputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "implementation",
         "type": "address"
       }
     ],
+    "name": "beaconAdd",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -253,35 +242,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "type_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "uri_",
-        "type": "string"
-      }
-    ],
-    "name": "gameMake",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -335,6 +295,141 @@
     ],
     "name": "initialize",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "type_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "makeClaim",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "makeERC1155",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "makeERC721",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "type_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "makeGame",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "type_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "name_",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "uri_",
+        "type": "string"
+      }
+    ],
+    "name": "makeTask",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -396,39 +491,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "contractAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "domain",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "rating",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "amount",
-        "type": "uint8"
-      }
-    ],
-    "name": "repAdd",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "role",
     "outputs": [
@@ -476,35 +538,6 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "type_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "name_",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "uri_",
-        "type": "string"
-      }
-    ],
-    "name": "taskMake",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "newOwner",
         "type": "address"
@@ -519,7 +552,7 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "key",
+        "name": "name",
         "type": "string"
       },
       {
