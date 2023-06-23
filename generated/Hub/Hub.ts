@@ -212,41 +212,6 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  claimMake(type_: string, name_: string, uri_: string): Address {
-    let result = super.call(
-      "claimMake",
-      "claimMake(string,string,string):(address)",
-      [
-        ethereum.Value.fromString(type_),
-        ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_claimMake(
-    type_: string,
-    name_: string,
-    uri_: string
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "claimMake",
-      "claimMake(string,string,string):(address)",
-      [
-        ethereum.Value.fromString(type_),
-        ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   contractURI(): string {
     let result = super.call("contractURI", "contractURI():(string)", []);
 
@@ -262,10 +227,25 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  gameMake(type_: string, name_: string, uri_: string): Address {
+  getRepoAddr(): Address {
+    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRepoAddr(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  makeClaim(type_: string, name_: string, uri_: string): Address {
     let result = super.call(
-      "gameMake",
-      "gameMake(string,string,string):(address)",
+      "makeClaim",
+      "makeClaim(string,string,string):(address)",
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
@@ -276,14 +256,14 @@ export class Hub extends ethereum.SmartContract {
     return result[0].toAddress();
   }
 
-  try_gameMake(
+  try_makeClaim(
     type_: string,
     name_: string,
     uri_: string
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "gameMake",
-      "gameMake(string,string,string):(address)",
+      "makeClaim",
+      "makeClaim(string,string,string):(address)",
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
@@ -297,14 +277,123 @@ export class Hub extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getRepoAddr(): Address {
-    let result = super.call("getRepoAddr", "getRepoAddr():(address)", []);
+  makeERC1155(uri_: string): Address {
+    let result = super.call("makeERC1155", "makeERC1155(string):(address)", [
+      ethereum.Value.fromString(uri_)
+    ]);
 
     return result[0].toAddress();
   }
 
-  try_getRepoAddr(): ethereum.CallResult<Address> {
-    let result = super.tryCall("getRepoAddr", "getRepoAddr():(address)", []);
+  try_makeERC1155(uri_: string): ethereum.CallResult<Address> {
+    let result = super.tryCall("makeERC1155", "makeERC1155(string):(address)", [
+      ethereum.Value.fromString(uri_)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  makeERC721(name_: string, symbol_: string, uri_: string): Address {
+    let result = super.call(
+      "makeERC721",
+      "makeERC721(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(symbol_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_makeERC721(
+    name_: string,
+    symbol_: string,
+    uri_: string
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "makeERC721",
+      "makeERC721(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(symbol_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  makeGame(type_: string, name_: string, uri_: string): Address {
+    let result = super.call(
+      "makeGame",
+      "makeGame(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_makeGame(
+    type_: string,
+    name_: string,
+    uri_: string
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "makeGame",
+      "makeGame(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  makeTask(type_: string, name_: string, uri_: string): Address {
+    let result = super.call(
+      "makeTask",
+      "makeTask(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_makeTask(
+    type_: string,
+    name_: string,
+    uri_: string
+  ): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "makeTask",
+      "makeTask(string,string,string):(address)",
+      [
+        ethereum.Value.fromString(type_),
+        ethereum.Value.fromString(name_),
+        ethereum.Value.fromString(uri_)
+      ]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -424,41 +513,6 @@ export class Hub extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
   }
-
-  taskMake(type_: string, name_: string, uri_: string): Address {
-    let result = super.call(
-      "taskMake",
-      "taskMake(string,string,string):(address)",
-      [
-        ethereum.Value.fromString(type_),
-        ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_taskMake(
-    type_: string,
-    name_: string,
-    uri_: string
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "taskMake",
-      "taskMake(string,string,string):(address)",
-      [
-        ethereum.Value.fromString(type_),
-        ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
 }
 
 export class AssocAddCall extends ethereum.Call {
@@ -563,87 +617,37 @@ export class AssocSetCall__Outputs {
   }
 }
 
-export class ClaimMakeCall extends ethereum.Call {
-  get inputs(): ClaimMakeCall__Inputs {
-    return new ClaimMakeCall__Inputs(this);
+export class BeaconAddCall extends ethereum.Call {
+  get inputs(): BeaconAddCall__Inputs {
+    return new BeaconAddCall__Inputs(this);
   }
 
-  get outputs(): ClaimMakeCall__Outputs {
-    return new ClaimMakeCall__Outputs(this);
+  get outputs(): BeaconAddCall__Outputs {
+    return new BeaconAddCall__Outputs(this);
   }
 }
 
-export class ClaimMakeCall__Inputs {
-  _call: ClaimMakeCall;
+export class BeaconAddCall__Inputs {
+  _call: BeaconAddCall;
 
-  constructor(call: ClaimMakeCall) {
+  constructor(call: BeaconAddCall) {
     this._call = call;
   }
 
-  get type_(): string {
+  get name(): string {
     return this._call.inputValues[0].value.toString();
   }
 
-  get name_(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get uri_(): string {
-    return this._call.inputValues[2].value.toString();
+  get implementation(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 
-export class ClaimMakeCall__Outputs {
-  _call: ClaimMakeCall;
+export class BeaconAddCall__Outputs {
+  _call: BeaconAddCall;
 
-  constructor(call: ClaimMakeCall) {
+  constructor(call: BeaconAddCall) {
     this._call = call;
-  }
-
-  get value0(): Address {
-    return this._call.outputValues[0].value.toAddress();
-  }
-}
-
-export class GameMakeCall extends ethereum.Call {
-  get inputs(): GameMakeCall__Inputs {
-    return new GameMakeCall__Inputs(this);
-  }
-
-  get outputs(): GameMakeCall__Outputs {
-    return new GameMakeCall__Outputs(this);
-  }
-}
-
-export class GameMakeCall__Inputs {
-  _call: GameMakeCall;
-
-  constructor(call: GameMakeCall) {
-    this._call = call;
-  }
-
-  get type_(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get name_(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get uri_(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-}
-
-export class GameMakeCall__Outputs {
-  _call: GameMakeCall;
-
-  constructor(call: GameMakeCall) {
-    this._call = call;
-  }
-
-  get value0(): Address {
-    return this._call.outputValues[0].value.toAddress();
   }
 }
 
@@ -719,6 +723,208 @@ export class InitializeCall__Outputs {
   }
 }
 
+export class MakeClaimCall extends ethereum.Call {
+  get inputs(): MakeClaimCall__Inputs {
+    return new MakeClaimCall__Inputs(this);
+  }
+
+  get outputs(): MakeClaimCall__Outputs {
+    return new MakeClaimCall__Outputs(this);
+  }
+}
+
+export class MakeClaimCall__Inputs {
+  _call: MakeClaimCall;
+
+  constructor(call: MakeClaimCall) {
+    this._call = call;
+  }
+
+  get type_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get name_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class MakeClaimCall__Outputs {
+  _call: MakeClaimCall;
+
+  constructor(call: MakeClaimCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class MakeERC1155Call extends ethereum.Call {
+  get inputs(): MakeERC1155Call__Inputs {
+    return new MakeERC1155Call__Inputs(this);
+  }
+
+  get outputs(): MakeERC1155Call__Outputs {
+    return new MakeERC1155Call__Outputs(this);
+  }
+}
+
+export class MakeERC1155Call__Inputs {
+  _call: MakeERC1155Call;
+
+  constructor(call: MakeERC1155Call) {
+    this._call = call;
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class MakeERC1155Call__Outputs {
+  _call: MakeERC1155Call;
+
+  constructor(call: MakeERC1155Call) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class MakeERC721Call extends ethereum.Call {
+  get inputs(): MakeERC721Call__Inputs {
+    return new MakeERC721Call__Inputs(this);
+  }
+
+  get outputs(): MakeERC721Call__Outputs {
+    return new MakeERC721Call__Outputs(this);
+  }
+}
+
+export class MakeERC721Call__Inputs {
+  _call: MakeERC721Call;
+
+  constructor(call: MakeERC721Call) {
+    this._call = call;
+  }
+
+  get name_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get symbol_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class MakeERC721Call__Outputs {
+  _call: MakeERC721Call;
+
+  constructor(call: MakeERC721Call) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class MakeGameCall extends ethereum.Call {
+  get inputs(): MakeGameCall__Inputs {
+    return new MakeGameCall__Inputs(this);
+  }
+
+  get outputs(): MakeGameCall__Outputs {
+    return new MakeGameCall__Outputs(this);
+  }
+}
+
+export class MakeGameCall__Inputs {
+  _call: MakeGameCall;
+
+  constructor(call: MakeGameCall) {
+    this._call = call;
+  }
+
+  get type_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get name_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class MakeGameCall__Outputs {
+  _call: MakeGameCall;
+
+  constructor(call: MakeGameCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
+export class MakeTaskCall extends ethereum.Call {
+  get inputs(): MakeTaskCall__Inputs {
+    return new MakeTaskCall__Inputs(this);
+  }
+
+  get outputs(): MakeTaskCall__Outputs {
+    return new MakeTaskCall__Outputs(this);
+  }
+}
+
+export class MakeTaskCall__Inputs {
+  _call: MakeTaskCall;
+
+  constructor(call: MakeTaskCall) {
+    this._call = call;
+  }
+
+  get type_(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get name_(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get uri_(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+}
+
+export class MakeTaskCall__Outputs {
+  _call: MakeTaskCall;
+
+  constructor(call: MakeTaskCall) {
+    this._call = call;
+  }
+
+  get value0(): Address {
+    return this._call.outputValues[0].value.toAddress();
+  }
+}
+
 export class MintForAccountCall extends ethereum.Call {
   get inputs(): MintForAccountCall__Inputs {
     return new MintForAccountCall__Inputs(this);
@@ -783,94 +989,6 @@ export class RenounceOwnershipCall__Outputs {
   }
 }
 
-export class RepAddCall extends ethereum.Call {
-  get inputs(): RepAddCall__Inputs {
-    return new RepAddCall__Inputs(this);
-  }
-
-  get outputs(): RepAddCall__Outputs {
-    return new RepAddCall__Outputs(this);
-  }
-}
-
-export class RepAddCall__Inputs {
-  _call: RepAddCall;
-
-  constructor(call: RepAddCall) {
-    this._call = call;
-  }
-
-  get contractAddr(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get tokenId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get domain(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-
-  get rating(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-
-  get amount(): i32 {
-    return this._call.inputValues[4].value.toI32();
-  }
-}
-
-export class RepAddCall__Outputs {
-  _call: RepAddCall;
-
-  constructor(call: RepAddCall) {
-    this._call = call;
-  }
-}
-
-export class TaskMakeCall extends ethereum.Call {
-  get inputs(): TaskMakeCall__Inputs {
-    return new TaskMakeCall__Inputs(this);
-  }
-
-  get outputs(): TaskMakeCall__Outputs {
-    return new TaskMakeCall__Outputs(this);
-  }
-}
-
-export class TaskMakeCall__Inputs {
-  _call: TaskMakeCall;
-
-  constructor(call: TaskMakeCall) {
-    this._call = call;
-  }
-
-  get type_(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get name_(): string {
-    return this._call.inputValues[1].value.toString();
-  }
-
-  get uri_(): string {
-    return this._call.inputValues[2].value.toString();
-  }
-}
-
-export class TaskMakeCall__Outputs {
-  _call: TaskMakeCall;
-
-  constructor(call: TaskMakeCall) {
-    this._call = call;
-  }
-
-  get value0(): Address {
-    return this._call.outputValues[0].value.toAddress();
-  }
-}
-
 export class TransferOwnershipCall extends ethereum.Call {
   get inputs(): TransferOwnershipCall__Inputs {
     return new TransferOwnershipCall__Inputs(this);
@@ -918,7 +1036,7 @@ export class UpgradeImplementationCall__Inputs {
     this._call = call;
   }
 
-  get key(): string {
+  get name(): string {
     return this._call.inputValues[0].value.toString();
   }
 

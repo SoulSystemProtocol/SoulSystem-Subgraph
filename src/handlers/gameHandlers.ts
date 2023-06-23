@@ -10,8 +10,8 @@ import {
   GamePost,
   SoulPart,
   GameParticipant,
-  SoulSoulOpinion,
-  SoulSoulOpinionChange,
+  // SoulSoulOpinion,
+  // SoulSoulOpinionChange,
   GameAssoc,
 } from "../../generated/schema";
 import {
@@ -19,9 +19,11 @@ import {
   TransferByToken,
   RoleCreated,
   Post,
-  OpinionChange,
+  // OpinionChange,
 } from "../../generated/templates/Game/Game";
-import { Hub as HubContract } from "../../generated/Hub/Hub";
+// import { OpinionChange } from "../../generated/templates/Soul/Soul";
+
+// import { Hub as HubContract } from "../../generated/Hub/Hub";
 import { getSoulByAddr, loadOrCreateGame } from "../utils";
 
 /**
@@ -266,9 +268,9 @@ export function handlePost(event: Post): void {
   post.save();
 }
 
-/** [TEST]
+/** [TEST] MOVED -- Soul Contract
  * Handle a opinion change event.
- */
+ 
 export function handleOpinionChange(event: OpinionChange): void {
   // Get Entity
   const game = Game.load(event.address.toHexString());
@@ -341,3 +343,4 @@ export function handleOpinionChange(event: OpinionChange): void {
     opinion.save();
   }
 }
+*/

@@ -342,6 +342,84 @@ export class StringSet__Params {
   }
 }
 
+export class UintAdd extends ethereum.Event {
+  get params(): UintAdd__Params {
+    return new UintAdd__Params(this);
+  }
+}
+
+export class UintAdd__Params {
+  _event: UintAdd;
+
+  constructor(event: UintAdd) {
+    this._event = event;
+  }
+
+  get originContract(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class UintRemoved extends ethereum.Event {
+  get params(): UintRemoved__Params {
+    return new UintRemoved__Params(this);
+  }
+}
+
+export class UintRemoved__Params {
+  _event: UintRemoved;
+
+  constructor(event: UintRemoved) {
+    this._event = event;
+  }
+
+  get originContract(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class UintSet extends ethereum.Event {
+  get params(): UintSet__Params {
+    return new UintSet__Params(this);
+  }
+}
+
+export class UintSet__Params {
+  _event: UintSet;
+
+  constructor(event: UintSet) {
+    this._event = event;
+  }
+
+  get originContract(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get key(): string {
+    return this._event.parameters[1].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
 export class Upgraded extends ethereum.Event {
   get params(): Upgraded__Params {
     return new Upgraded__Params(this);
@@ -956,6 +1034,134 @@ export class OpenRepo extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
   }
+
+  uintGet(key: string): BigInt {
+    let result = super.call("uintGet", "uintGet(string):(uint256)", [
+      ethereum.Value.fromString(key)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_uintGet(key: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("uintGet", "uintGet(string):(uint256)", [
+      ethereum.Value.fromString(key)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  uintGetAll(key: string): Array<BigInt> {
+    let result = super.call("uintGetAll", "uintGetAll(string):(uint256[])", [
+      ethereum.Value.fromString(key)
+    ]);
+
+    return result[0].toBigIntArray();
+  }
+
+  try_uintGetAll(key: string): ethereum.CallResult<Array<BigInt>> {
+    let result = super.tryCall("uintGetAll", "uintGetAll(string):(uint256[])", [
+      ethereum.Value.fromString(key)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigIntArray());
+  }
+
+  uintGetIndex(key: string, index: BigInt): BigInt {
+    let result = super.call(
+      "uintGetIndex",
+      "uintGetIndex(string,uint256):(uint256)",
+      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_uintGetIndex(key: string, index: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "uintGetIndex",
+      "uintGetIndex(string,uint256):(uint256)",
+      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  uintGetIndexOf(originContract: Address, key: string, index: BigInt): BigInt {
+    let result = super.call(
+      "uintGetIndexOf",
+      "uintGetIndexOf(address,string,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(originContract),
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_uintGetIndexOf(
+    originContract: Address,
+    key: string,
+    index: BigInt
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "uintGetIndexOf",
+      "uintGetIndexOf(address,string,uint256):(uint256)",
+      [
+        ethereum.Value.fromAddress(originContract),
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  uintGetOf(originContract: Address, key: string): BigInt {
+    let result = super.call(
+      "uintGetOf",
+      "uintGetOf(address,string):(uint256)",
+      [
+        ethereum.Value.fromAddress(originContract),
+        ethereum.Value.fromString(key)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_uintGetOf(
+    originContract: Address,
+    key: string
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "uintGetOf",
+      "uintGetOf(address,string):(uint256)",
+      [
+        ethereum.Value.fromAddress(originContract),
+        ethereum.Value.fromString(key)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
 }
 
 export class AddressAddCall extends ethereum.Call {
@@ -1342,6 +1548,108 @@ export class TransferOwnershipCall__Outputs {
   _call: TransferOwnershipCall;
 
   constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class UintAddCall extends ethereum.Call {
+  get inputs(): UintAddCall__Inputs {
+    return new UintAddCall__Inputs(this);
+  }
+
+  get outputs(): UintAddCall__Outputs {
+    return new UintAddCall__Outputs(this);
+  }
+}
+
+export class UintAddCall__Inputs {
+  _call: UintAddCall;
+
+  constructor(call: UintAddCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UintAddCall__Outputs {
+  _call: UintAddCall;
+
+  constructor(call: UintAddCall) {
+    this._call = call;
+  }
+}
+
+export class UintRemoveCall extends ethereum.Call {
+  get inputs(): UintRemoveCall__Inputs {
+    return new UintRemoveCall__Inputs(this);
+  }
+
+  get outputs(): UintRemoveCall__Outputs {
+    return new UintRemoveCall__Outputs(this);
+  }
+}
+
+export class UintRemoveCall__Inputs {
+  _call: UintRemoveCall;
+
+  constructor(call: UintRemoveCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UintRemoveCall__Outputs {
+  _call: UintRemoveCall;
+
+  constructor(call: UintRemoveCall) {
+    this._call = call;
+  }
+}
+
+export class UintSetCall extends ethereum.Call {
+  get inputs(): UintSetCall__Inputs {
+    return new UintSetCall__Inputs(this);
+  }
+
+  get outputs(): UintSetCall__Outputs {
+    return new UintSetCall__Outputs(this);
+  }
+}
+
+export class UintSetCall__Inputs {
+  _call: UintSetCall;
+
+  constructor(call: UintSetCall) {
+    this._call = call;
+  }
+
+  get key(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get value(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UintSetCall__Outputs {
+  _call: UintSetCall;
+
+  constructor(call: UintSetCall) {
     this._call = call;
   }
 }

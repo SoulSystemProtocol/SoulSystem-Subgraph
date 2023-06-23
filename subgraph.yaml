@@ -7,11 +7,11 @@ dataSources:
   # Soul contract
   - kind: ethereum
     name: Soul
-    network: mumbai
+    network: aurora
     source:
-      address: "0x232902B2460D82d61f04f76F49b888AF67f73ef2"
+      address: "0xD1b792De2c9c358F0C765C9f07DD618A12d8E97C"
       abi: Soul
-      startBlock: 29068400
+      startBlock: 94773622
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -38,15 +38,18 @@ dataSources:
           handler: handleAnnouncement
         - event: SoulHandle(indexed uint256,string)
           handler: handleHandleSet
+        #[TBD]
+        #- event: OpinionChange(uint256,indexed address,indexed uint256,string,int256,int256)
+        #  handler: handleOpinionChange
       file: ./src/handlers/soulHandlers.ts
   # Hub contract
   - kind: ethereum
     name: Hub
-    network: mumbai
+    network: aurora
     source:
-      address: "0xc0d1D74547356B2be0709cE841F5F2Fa5D8c63D7"
+      address: "0x3CfF0AC9554Bc90ac37b8b84c2449F5B27f35740"
       abi: Hub
-      startBlock: 28946112
+      startBlock: 94773622
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -71,11 +74,11 @@ dataSources:
   # Action repository (history) contract
   - kind: ethereum
     name: ActionRepo
-    network: mumbai
+    network: aurora
     source:
-      address: "0x95BD98a656C907fC037aF87Ea740fD94188Cd65f"
+      address: "0x75228869bD1Bbae3b534681826730134e2385a13"
       abi: ActionRepo
-      startBlock: 27506961
+      startBlock: 94773622
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -94,11 +97,11 @@ dataSources:
   # OpenRepo contract
   - kind: ethereum
     name: OpenRepo
-    network: mumbai
+    network: aurora
     source:
-      address: "0x647DBF306fE835E231dB1f9d711364806467E20a"
+      address: "0x2C9cc43C53141AA1CD16699f4Fe24742269c2Fe5"
       abi: OpenRepo
-      startBlock: 27523512
+      startBlock: 94773622
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -128,7 +131,7 @@ templates:
   # Game contract template
   - kind: ethereum
     name: Game
-    network: mumbai
+    network: aurora
     source:
       abi: Game
     mapping:
@@ -153,13 +156,13 @@ templates:
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
         # - event: RoleURIChange(string,string)
-        - event: OpinionChange(uint256,indexed address,indexed uint256,string,bool,uint256)
-          handler: handleOpinionChange
+        #- event: OpinionChange(uint256,indexed address,indexed uint256,string,bool,uint256)
+        #  handler: handleOpinionChange
       file: ./src/handlers/gameHandlers.ts
   # Claim contract template
   - kind: ethereum
     name: Claim
-    network: mumbai
+    network: aurora
     source:
       abi: Claim
     mapping:
@@ -188,8 +191,8 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-#        - event: FundsSent(address, uint256, address)
-#          handler: handleFundsSent
+        #        - event: FundsSent(address, uint256, address)
+        #          handler: handleFundsSent
         - event: PaymentReleased(address,uint256)
           handler: handlePaymentReleased
         - event: ERC20PaymentReleased(indexed address,address,uint256)

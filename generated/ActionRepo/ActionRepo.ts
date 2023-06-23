@@ -136,24 +136,6 @@ export class BeaconUpgraded__Params {
   }
 }
 
-export class ContractURI extends ethereum.Event {
-  get params(): ContractURI__Params {
-    return new ContractURI__Params(this);
-  }
-}
-
-export class ContractURI__Params {
-  _event: ContractURI;
-
-  constructor(event: ContractURI) {
-    this._event = event;
-  }
-
-  get param0(): string {
-    return this._event.parameters[0].value.toString();
-  }
-}
-
 export class GUIDCreated extends ethereum.Event {
   get params(): GUIDCreated__Params {
     return new GUIDCreated__Params(this);
@@ -468,6 +450,29 @@ export class ActionRepo__actionGetResultValue0Struct extends ethereum.Tuple {
   }
 }
 
+export class ActionRepo__actionGetStrResult {
+  value0: string;
+  value1: string;
+  value2: string;
+  value3: string;
+
+  constructor(value0: string, value1: string, value2: string, value3: string) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromString(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromString(this.value2));
+    map.set("value3", ethereum.Value.fromString(this.value3));
+    return map;
+  }
+}
+
 export class ActionRepo__actionHashInputSvoStruct extends ethereum.Tuple {
   get subject(): string {
     return this[0].toString();
@@ -653,6 +658,43 @@ export class ActionRepo extends ethereum.SmartContract {
     );
   }
 
+  actionGetStr(guid: Bytes): ActionRepo__actionGetStrResult {
+    let result = super.call(
+      "actionGetStr",
+      "actionGetStr(bytes32):(string,string,string,string)",
+      [ethereum.Value.fromFixedBytes(guid)]
+    );
+
+    return new ActionRepo__actionGetStrResult(
+      result[0].toString(),
+      result[1].toString(),
+      result[2].toString(),
+      result[3].toString()
+    );
+  }
+
+  try_actionGetStr(
+    guid: Bytes
+  ): ethereum.CallResult<ActionRepo__actionGetStrResult> {
+    let result = super.tryCall(
+      "actionGetStr",
+      "actionGetStr(bytes32):(string,string,string,string)",
+      [ethereum.Value.fromFixedBytes(guid)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ActionRepo__actionGetStrResult(
+        value[0].toString(),
+        value[1].toString(),
+        value[2].toString(),
+        value[3].toString()
+      )
+    );
+  }
+
   actionGetURI(guid: Bytes): string {
     let result = super.call("actionGetURI", "actionGetURI(bytes32):(string)", [
       ethereum.Value.fromFixedBytes(guid)
@@ -802,6 +844,25 @@ export class ActionRepo extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  getCurrentSBT(): BigInt {
+    let result = super.call("getCurrentSBT", "getCurrentSBT():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_getCurrentSBT(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getCurrentSBT",
+      "getCurrentSBT():(uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getExtTokenId(account: Address): BigInt {
