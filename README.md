@@ -2,7 +2,7 @@
 
 ## Commands
 
-- Install Graph CLI: `yarn global add @graphprotocol/graph-cli`
+- Install Graph CLI: `yarn global add @graphprotocol/graph-cli` or `npm install -g @graphprotocol/graph-cli`
 - Install dependencies: `yarn install`
 - Set deployment key: `graph auth`
 - Update generated code: `yarn codegen`
