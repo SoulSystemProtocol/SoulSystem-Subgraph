@@ -4,6 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "deploy": "graph deploy --product hosted-service toledoroy/soulsystem_aurora",
     "deploy-dev": "graph deploy --node https://api.thegraph.com/deploy/ toledoroy/soulsystem_aurora",
     "create-local": "graph create --node http://localhost:8020/ toledoroy/soulsystem_aurora",
     "remove-local": "graph remove --node http://localhost:8020/ toledoroy/soulsystem_aurora",
