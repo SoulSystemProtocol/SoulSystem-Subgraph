@@ -19,6 +19,7 @@ import {
   Post,
   PaymentReleased,
   ERC20PaymentReleased,
+  URI,
 } from "../../generated/templates/Claim/Claim";
 import { getSoulByAddr, loadOrCreateClaim } from "../utils";
 
@@ -77,10 +78,35 @@ export function handleRoleCreated(event: RoleCreated): void {
     role.souls = [];
     role.soulsCount = 0;
     role.name = "";
+    role.uri = "";
   }
   // Add Name
   role.name = event.params.role;
   role.save();
+}
+
+/**
+ * Handle Token URI Change
+ */
+export function handleUriChange(event: URI): void {
+  const gameId = event.address.toHexString();
+  const tokenId = event.params.id;
+  const value = event.params.value;
+  const roleId = `${gameId}_${tokenId}`;
+  const entity = ProcRole.load(roleId);
+  //Validate
+  if(!entity){ 
+    log.error('handleUriChange() Expected Role Missing ID:{}', [roleId]);
+    return;
+  }
+  // Update entity's params
+  entity.uri = value;
+  // Load uri data
+  const uriIpfsHash = value.split("/").at(-1);
+  const metadata = ipfs.cat(uriIpfsHash);
+  if(!!metadata) entity.metadata = metadata;
+  else log.error('handleUriChange() Failed to fetch metadata for {} value:{}', [roleId, value]);
+  entity.save();
 }
 
 /**
@@ -138,13 +164,13 @@ export function handlePaymentReleasedERC20(event: ERC20PaymentReleased): void {
  * Handle a tranfer by token event to create or update claim roles.
  */
 export function handleTransferByToken(event: TransferByToken): void {
-  let entity = loadOrCreateClaim(event.address.toHexString());
-  let tokenId = event.params.id;
-  let amount = event.params.value;
+  const entity = loadOrCreateClaim(event.address.toHexString());
+  const tokenId = event.params.id;
+  const amount = event.params.value;
 
   //Relation Test 1
   if (!event.params.toOwnerToken.equals(BigInt.zero())) {
-    let sbt = event.params.toOwnerToken.toString();
+    const sbt = event.params.toOwnerToken.toString();
     
     //** Soul Part (Supports Amounts)
     const entSBT = getSoulByAddr(event.address.toHexString());
@@ -258,6 +284,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       role.souls = [];
       role.soulsCount = 0;
       role.name = "";
+      role.uri = "";
     }
     else{
       if(role.name == "member"){

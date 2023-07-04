@@ -155,7 +155,9 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-        # - event: RoleURIChange(string,string)
+        #- event: RoleURIChange(string,string)
+        - event: URI(string,indexed uint256)
+          handler: handleUriChange
         #- event: OpinionChange(uint256,indexed address,indexed uint256,string,bool,uint256)
         #  handler: handleOpinionChange
       file: ./src/handlers/gameHandlers.ts
@@ -191,11 +193,12 @@ templates:
           handler: handlePost
         - event: RoleCreated(indexed uint256,string)
           handler: handleRoleCreated
-        #        - event: FundsSent(address, uint256, address)
-        #          handler: handleFundsSent
+        - event: URI(string,indexed uint256)
+          handler: handleUriChange
+        #  - event: FundsSent(address, uint256, address)
+        #  handler: handleFundsSent
         - event: PaymentReleased(address,uint256)
           handler: handlePaymentReleased
         - event: ERC20PaymentReleased(indexed address,address,uint256)
           handler: handlePaymentReleasedERC20
-        # - event: RoleURIChange(string,string)
       file: ./src/handlers/claimHandlers.ts

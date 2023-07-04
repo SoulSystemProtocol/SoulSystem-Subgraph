@@ -703,23 +703,6 @@ export class Soul extends Entity {
     }
   }
 
-  get uriData(): Bytes | null {
-    let value = this.get("uriData");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set uriData(value: Bytes | null) {
-    if (!value) {
-      this.unset("uriData");
-    } else {
-      this.set("uriData", Value.fromBytes(<Bytes>value));
-    }
-  }
-
   get metadata(): Bytes | null {
     let value = this.get("metadata");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1232,6 +1215,7 @@ export class GameRole extends Entity {
     this.set("ctx", Value.fromString(""));
     this.set("roleId", Value.fromBigInt(BigInt.zero()));
     this.set("name", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
     this.set("souls", Value.fromStringArray(new Array(0)));
     this.set("soulsCount", Value.fromI32(0));
   }
@@ -1286,6 +1270,32 @@ export class GameRole extends Entity {
 
   set name(value: string) {
     this.set("name", Value.fromString(value));
+  }
+
+  get uri(): string {
+    let value = this.get("uri");
+    return value!.toString();
+  }
+
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get souls(): Array<string> {
@@ -1419,23 +1429,6 @@ export class GameRule extends Entity {
       this.unset("uri");
     } else {
       this.set("uri", Value.fromString(<string>value));
-    }
-  }
-
-  get uriData(): Bytes | null {
-    let value = this.get("uriData");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set uriData(value: Bytes | null) {
-    if (!value) {
-      this.unset("uriData");
-    } else {
-      this.set("uriData", Value.fromBytes(<Bytes>value));
     }
   }
 
@@ -1939,23 +1932,6 @@ export class Action extends Entity {
     }
   }
 
-  get uriData(): Bytes | null {
-    let value = this.get("uriData");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set uriData(value: Bytes | null) {
-    if (!value) {
-      this.unset("uriData");
-    } else {
-      this.set("uriData", Value.fromBytes(<Bytes>value));
-    }
-  }
-
   get metadata(): Bytes | null {
     let value = this.get("metadata");
     if (!value || value.kind == ValueKind.NULL) {
@@ -2249,6 +2225,7 @@ export class ProcRole extends Entity {
 
     this.set("ctx", Value.fromString(""));
     this.set("name", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
     this.set("role", Value.fromString(""));
     this.set("roleId", Value.fromBigInt(BigInt.zero()));
     this.set("souls", Value.fromStringArray(new Array(0)));
@@ -2296,6 +2273,32 @@ export class ProcRole extends Entity {
 
   set name(value: string) {
     this.set("name", Value.fromString(value));
+  }
+
+  get uri(): string {
+    let value = this.get("uri");
+    return value!.toString();
+  }
+
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
+  }
+
+  get metadata(): Bytes | null {
+    let value = this.get("metadata");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set metadata(value: Bytes | null) {
+    if (!value) {
+      this.unset("metadata");
+    } else {
+      this.set("metadata", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get role(): string {
@@ -3046,8 +3049,8 @@ export class SoulPost extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("author", Value.fromString(""));
-    this.set("uri", Value.fromString(""));
     this.set("context", Value.fromString(""));
+    this.set("uri", Value.fromString(""));
   }
 
   save(): void {
@@ -3101,15 +3104,6 @@ export class SoulPost extends Entity {
     this.set("author", Value.fromString(value));
   }
 
-  get uri(): string {
-    let value = this.get("uri");
-    return value!.toString();
-  }
-
-  set uri(value: string) {
-    this.set("uri", Value.fromString(value));
-  }
-
   get context(): string {
     let value = this.get("context");
     return value!.toString();
@@ -3117,6 +3111,15 @@ export class SoulPost extends Entity {
 
   set context(value: string) {
     this.set("context", Value.fromString(value));
+  }
+
+  get uri(): string {
+    let value = this.get("uri");
+    return value!.toString();
+  }
+
+  set uri(value: string) {
+    this.set("uri", Value.fromString(value));
   }
 
   get metadata(): Bytes | null {

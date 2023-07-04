@@ -1,5 +1,4 @@
-import { Address } from "@graphprotocol/graph-ts";
-import { BigInt, ipfs } from "@graphprotocol/graph-ts";
+import { Address, log, BigInt, ipfs } from "@graphprotocol/graph-ts";
 import { store } from '@graphprotocol/graph-ts'
 import {
   Account,
@@ -19,6 +18,7 @@ import {
   TransferByToken,
   RoleCreated,
   Post,
+  URI,
   // OpinionChange,
 } from "../../generated/templates/Game/Game";
 // import { OpinionChange } from "../../generated/templates/Soul/Soul";
@@ -55,10 +55,35 @@ export function handleRoleCreated(event: RoleCreated): void {
     role.roleId = event.params.id;
     role.souls = [];
     role.soulsCount = 0;
+    role.uri = "";
   }
   // Add Name
   role.name = event.params.role;
   role.save();
+}
+
+/**
+ * Handle Token URI Change
+ */
+export function handleUriChange(event: URI): void {
+  const gameId = event.address.toHexString();
+  const tokenId = event.params.id;
+  const value = event.params.value;
+  const roleId = `${gameId}_${tokenId}`;
+  const entity = GameRole.load(roleId);
+  //Validate
+  if(!entity){ 
+    log.error('handleUriChange() Expected Role Missing ID:{}', [roleId]);
+    return;
+  }
+  // Update entity's params
+  entity.uri = value;
+  // Load uri data
+  const uriIpfsHash = value.split("/").at(-1);
+  const metadata = ipfs.cat(uriIpfsHash);
+  if(!!metadata) entity.metadata = metadata;
+  else log.error('handleUriChange() Failed to fetch metadata for {} value:{}', [roleId, value]);
+  entity.save();
 }
 
 /**
@@ -186,6 +211,7 @@ export function handleTransferByToken(event: TransferByToken): void {
       role.souls = [];
       role.soulsCount = 0;
       role.name = "";
+      role.uri = "";
     } 
     
     // Define role souls and souls count

@@ -102,7 +102,7 @@ export function handleStringSet(event: StringSet): void {
   //Entity's 'role'
   if (event.params.key == OPEN_REPO_STRING_KEY_ROLE) {
     // Try to Fetch Game Entity
-    let game = Game.load(originAddr);  //This actually runs before the entity created event
+    const game = Game.load(originAddr);  //This actually runs before the entity created event
     if (game) {
       // Update game role
       game.role = event.params.value;
@@ -121,7 +121,7 @@ export function handleStringSet(event: StringSet): void {
   else if (event.params.key == OPEN_REPO_STRING_KEY_TYPE) {
     const id = event.params.originAddress.toHexString();
     // Try to Fetch Game Entity
-    let game = Game.load(originAddr);  //This actually runs before the entity created event
+    const game = Game.load(originAddr);  //This actually runs before the entity created event
     if (game) {
       // Update game type
       game.type = event.params.value;
@@ -205,7 +205,7 @@ export function handleAddressAdd(event: AddressAdd): void {
   // If claim value is set
   if (event.params.key == OPEN_REPO_ADDRESS_KEY_CLAIM) {
     // Get game
-    let game = Game.load(originAddr);
+    const game = Game.load(originAddr);
     if (game) {
       // Get claim
       let claim = loadOrCreateClaim(value);

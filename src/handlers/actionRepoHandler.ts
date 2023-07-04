@@ -26,14 +26,13 @@ export function handleActionAdded(event: ActionAdded): void {
  */
 export function handleActionURI(event: ActionURI): void {
   // Find entity and return if not found
-  let entity = Action.load(event.params.guid.toHexString());
+  const entity = Action.load(event.params.guid.toHexString());
   if (!entity) return;
   // Load uri data
-  let uriIpfsHash = event.params.uri.split("/").at(-1);
-  let uriData = ipfs.cat(uriIpfsHash);
+  const uriIpfsHash = event.params.uri.split("/").at(-1);
+  const metadata = ipfs.cat(uriIpfsHash);
   // Update entity's params
   entity.uri = event.params.uri;
-  entity.uriData = uriData; //DEPRECATE
-  entity.metadata = uriData;
+  entity.metadata = metadata;
   entity.save();
 }

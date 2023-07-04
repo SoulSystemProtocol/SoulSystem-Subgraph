@@ -96,7 +96,6 @@ type Soul @entity {
   stage: Int! # Entity's stage (as a process)
   # role: String # ?
   uri: String # metadata uri
-  uriData: Bytes
   metadata: Bytes
   handle: String
 
@@ -150,12 +149,6 @@ type Game implements CTX @entity {
   name: String!
   type: String!
   role: String! # Entity's function designation
-  
-  # DEPRECTED FIELDS
-  #uri: String # metadata uri
-  #uriData: Bytes
-  #metadata: Bytes
-
   createdDate: BigInt!
   nominations: [GameNomination!]! @derivedFrom(field: "game")
   posts: [GamePost!]! @derivedFrom(field: "entity")
@@ -167,11 +160,15 @@ type Game implements CTX @entity {
   assoc: [GameAssoc!]! @derivedFrom(field: "bEnt") # DEPRECATE?
 }
 
+#DEPRECATE? Try to use GamePart Instead
+# ERC1155 Token for Game
 type GameRole @entity {
   id: ID! # combination of game address and role id
   ctx: Game!
   roleId: BigInt!
   name: String!
+  uri: String!
+  metadata: Bytes
   souls: [String!]!
   soulsCount: Int!
 }
@@ -185,7 +182,6 @@ type GameRule @entity {
   ruleId: BigInt!
   affected: String
   uri: String
-  uriData: Bytes
   metadata: Bytes
   uriName: String
   negation: Boolean
@@ -234,7 +230,6 @@ type Action @entity {
   object: String
   tool: String
   uri: String
-  uriData: Bytes
   metadata: Bytes
   rules: [GameRule!]! @derivedFrom(field: "about")
 }
@@ -247,12 +242,6 @@ type Claim implements CTX @entity {
   game: Game
   type: String!
   role: String! # Entity's function designation
-
-  # DEPRECTED FIELDS
-  #uri: String # metadata uri
-  #uriData: Bytes
-  #metadata: Bytes
-
   stage: Int!
   createdDate: BigInt!
   updatedDate: BigInt
@@ -266,7 +255,8 @@ type Claim implements CTX @entity {
   # assoc: [ProcAssoc!]! @derivedFrom(field: "bEnt")
 }
 
-type ProcStageURI @entity { # [DEV]
+type ProcStageURI
+  @entity { # [DEV]
   id: ID! # combination of claim address and stage name
   entity: Claim!
   stage: Int!
@@ -274,10 +264,13 @@ type ProcStageURI @entity { # [DEV]
   Author: String # SBT
 }
 
+# ERC1155 Token for Process
 type ProcRole @entity {
   id: ID! # combination of claim address and role id
   ctx: Claim!
   name: String!
+  uri: String!
+  metadata: Bytes
   role: String!
   roleId: BigInt!
   souls: [String!]!
@@ -309,7 +302,7 @@ type GameParticipant implements Part @entity {
   id: ID!
   entity: Game!
   sbt: Soul!
-  roles: [String!]!
+  roles: [String!]! #Tokens
 }
 type ProcParticipant implements Part @entity {
   id: ID!
@@ -326,8 +319,7 @@ type GameAssoc @entity {
   qty: BigInt!
 }
 
-
-type ProcAssoc 
+type ProcAssoc
   @entity { # DEPRECATED & UNUSED
   id: ID! # combination of claim address and SBT & roleId address
   bEnt: Claim! # Group
@@ -369,8 +361,8 @@ type SoulPost implements Post @entity {
   id: ID!
   createdDate: BigInt
   author: Soul!
-  uri: String!
   context: String!
+  uri: String!
   metadata: Bytes
   #entityRole: String # Role in CTX
 }
