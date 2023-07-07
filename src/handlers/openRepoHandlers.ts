@@ -12,6 +12,8 @@ import {
 } from "../../generated/schema";
 import {
   HUB_CONTRACT_TYPE_CLAIM,
+  HUB_CONTRACT_TYPE_PROCESS,
+  HUB_CONTRACT_TYPE_TASK,
   OPEN_REPO_STRING_KEY_ROLE,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
@@ -200,10 +202,12 @@ export function handleAddressAdd(event: AddressAdd): void {
   }
   /* */
 
-
-
-  // If claim value is set
-  if (event.params.key == HUB_CONTRACT_TYPE_CLAIM) {
+  // If a Process value is set
+  if([
+    HUB_CONTRACT_TYPE_PROCESS,
+    HUB_CONTRACT_TYPE_TASK,
+    HUB_CONTRACT_TYPE_CLAIM
+  ].includes(event.params.key)){
     // Get game
     const game = Game.load(originAddr);
     if (game) {
