@@ -11,7 +11,7 @@ import {
   Soul,
 } from "../../generated/schema";
 import {
-  OPEN_REPO_ADDRESS_KEY_CLAIM,
+  HUB_CONTRACT_TYPE_CLAIM,
   OPEN_REPO_STRING_KEY_ROLE,
   OPEN_REPO_STRING_KEY_TYPE,
 } from "../constants";
@@ -203,7 +203,7 @@ export function handleAddressAdd(event: AddressAdd): void {
 
 
   // If claim value is set
-  if (event.params.key == OPEN_REPO_ADDRESS_KEY_CLAIM) {
+  if (event.params.key == HUB_CONTRACT_TYPE_CLAIM) {
     // Get game
     const game = Game.load(originAddr);
     if (game) {
