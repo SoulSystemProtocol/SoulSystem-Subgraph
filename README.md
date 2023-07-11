@@ -11,5 +11,6 @@
 - Deploy to development subgraph: `yarn deploy-dev`
 
 ## Subgraph
-
-- Deployment [mumbai] - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
+### Deployments
+- Mumbai - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
+- Aurora - https://thegraph.com/hosted-service/subgraph/toledoroy/soulsystem_aurora
