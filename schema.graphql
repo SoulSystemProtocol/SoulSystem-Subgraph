@@ -111,8 +111,8 @@ type Soul @entity {
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
   #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
-  opinion: [SoulSoulOpinion!]! @derivedFrom(field: "subject")
-  opinionOn: [SoulSoulOpinion!]! @derivedFrom(field: "object")
+  opinion: [SoulOpinion!]! @derivedFrom(field: "subject")
+  opinionOn: [SoulOpinion!]! @derivedFrom(field: "object")
   posts: [SoulPost!]! @derivedFrom(field: "author")
   # Semantic Relations
   assoc: [SoulAssoc!]! @derivedFrom(field: "aEnd")
@@ -122,7 +122,7 @@ type Soul @entity {
 
 ## Reputation (SBT Opinions on SBT) [DEV]
 #Opinion Change Events
-type SoulSoulOpinionChange @entity {
+type SoulOpinionChange @entity {
   id: ID! # combination of subject, object, and domain name
   subject: Soul!
   object: Soul!
@@ -132,7 +132,7 @@ type SoulSoulOpinionChange @entity {
 }
 
 #Accumelated Opinion
-type SoulSoulOpinion @entity {
+type SoulOpinion @entity {
   id: ID! # combination of subject, object, and domain name
   subject: Soul!
   object: Soul!

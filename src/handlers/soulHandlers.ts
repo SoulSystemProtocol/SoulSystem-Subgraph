@@ -250,7 +250,7 @@ export function handleOpinionChange(event: OpinionChange): void {
 
     //** Opinion Change Events  //TODO: Move this to new Rep Events
     const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
-    let opinionChange = new SoulSoulOpinionChange(opChangeId);
+    let opinionChange = new SoulOpinionChange(opChangeId);
     opinionChange.subject = gameSBT;
     opinionChange.object = aboutEnt.id;
     opinionChange.domain = event.params.domain;
@@ -262,10 +262,10 @@ export function handleOpinionChange(event: OpinionChange): void {
     // Load/Make Opinion
     const opId = `${gameSBT}_${aboutEnt.id}_${event.params.domain.toString()}`;
     // Find or create Opinion
-    let opinion = SoulSoulOpinion.load(opId);
+    let opinion = SoulOpinion.load(opId);
     if (!opinion) {
       // Create opinion
-      opinion = new SoulSoulOpinion(opId);
+      opinion = new SoulOpinion(opId);
       opinion.subject = gameSBT;
       opinion.object = aboutEnt.id;
       opinion.domain = event.params.domain;
