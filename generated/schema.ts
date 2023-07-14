@@ -1151,6 +1151,23 @@ export class SoulOpinionExt extends Entity {
     this.set("bContract", Value.fromString(value));
   }
 
+  get bSoul(): string | null {
+    let value = this.get("bSoul");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set bSoul(value: string | null) {
+    if (!value) {
+      this.unset("bSoul");
+    } else {
+      this.set("bSoul", Value.fromString(<string>value));
+    }
+  }
+
   get role(): string | null {
     let value = this.get("role");
     if (!value || value.kind == ValueKind.NULL) {

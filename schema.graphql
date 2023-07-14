@@ -109,9 +109,12 @@ type Soul @entity {
   searchField: String
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
-  #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
-  opinion: [SoulOpinion!]! @derivedFrom(field: "aEnd")
-  opinionOn: [SoulOpinion!]! @derivedFrom(field: "bEnd")
+
+  #opinion: [SoulOpinion!]! @derivedFrom(field: "aEnd")
+  #opinionOn: [SoulOpinion!]! @derivedFrom(field: "bEnd")
+  opinion: [SoulOpinionExt!]! @derivedFrom(field: "aEnd")
+  opinionOn: [SoulOpinionExt!]! @derivedFrom(field: "bSoul")
+
   posts: [SoulPost!]! @derivedFrom(field: "author")
 
   # Semantic Relations
@@ -132,7 +135,7 @@ type SoulOpinionChange @entity {
   valueAfter: BigInt!
 }
 
-#Accumelated Opinion
+#Accumelated Opinion  #DEPRECATE & Try to Use SoulOpinionExt instead
 type SoulOpinion @entity {
   id: ID! # combination of subject, object, and domain name
   aEnd: Soul!
@@ -149,6 +152,7 @@ type SoulOpinionExt
   aEnd: Soul!
   bEnd: String! # Dest. Token ID
   bContract: String! # Dest. Contract Address
+  bSoul: Soul
   role: String
   value: BigInt!
   # Destination

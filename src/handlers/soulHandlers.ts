@@ -240,12 +240,12 @@ export function handleOpinionChange(event: OpinionChange): void {
   */
   const sbt = event.params.sbt.toString();
   const role = event.params.domain;
-  const contractAddr = event.params.contractAddr.toString();
+  const contractAddr = event.params.contractAddr.toHexString();
   const tokenId = event.params.tokenId.toString();
   const value = event.params.newValue;
 
   // Fetch Opinionated Soul
-  let soul = Soul.load(sbt);
+  const soul = Soul.load(sbt);
   if (!soul){
     log.error('OpinionChange Event - Soul ID:{} Missing', [sbt]);
     return;
@@ -260,61 +260,41 @@ export function handleOpinionChange(event: OpinionChange): void {
     opinionExt.bContract = contractAddr;
     opinionExt.bEnd = tokenId;
     opinionExt.role = role;
+  }else{
+    //Validate
+    if(event.params.oldValue != opinionExt.value){
+      log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinionExt.value.toString()]);
+    }
   }
+
   //Set New Value
   opinionExt.value = value;
-  //Save
-  opinionExt.save();
+  
 
   //** Handle opinions about another soul (Soul-to-Soul)
-  if (contractAddr.toString() == event.address.toHexString()) {
+  if (contractAddr == event.address.toHexString()) {
     // Find The Object of the Opinion
     const aboutEnt = Soul.load(tokenId);
     if (!aboutEnt){ 
       log.error('OpinionChange Event - Target Soul:{} Missing', [tokenId]);
-      return;
+      // return;
+    }else{
+      opinionExt.bSoul = tokenId;
     }
-
-    //** Opinion Accumelation (Current State)
-    // Load/Make Opinion
-    const opId = `${sbt}_${tokenId}_${role}`;
-    // Find or create Opinion
-    let opinion = SoulOpinion.load(opId);
-    if (!opinion) {
-      // Create opinion
-      opinion = new SoulOpinion(opId);
-      opinion.aEnd = sbt;
-      opinion.bEnd = tokenId;
-      opinion.role = role;
-      // opinion.negativeRating = BigInt.zero(); //DEPRECATED
-      // opinion.positiveRating = BigInt.zero(); //DEPRECATED
-    }
-    else{
-      //Validate
-      if(event.params.oldValue != opinion.value){
-        log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinion.value.toString()]);
-      }
-    }
-    //Set New Value
-    opinion.value = event.params.newValue;
-    //Save
-    opinion.save();
-
-    //** Opinion As Association
-
-    //** Opinion Change Events
+    
+    //** Opinion Change Event
     const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
     const opinionChange = new SoulOpinionChange(opChangeId);
     opinionChange.subject = sbt;
     opinionChange.object = tokenId;
-    opinionChange.role = event.params.domain;
+    opinionChange.role = role;
     opinionChange.valueBefore = event.params.oldValue;
     opinionChange.valueAfter = event.params.newValue;
     opinionChange.save();
 
 
     /* DEPRECATED
-    // Update positive rating (rating=true)
+    // Separate positive & Negative Opinions (rating=true)
     if (event.params.rating === true) {
       // aboutEnt.totalPositiveRating = aboutEnt.totalPositiveRating.plus(
       //   event.params.score
@@ -339,4 +319,7 @@ export function handleOpinionChange(event: OpinionChange): void {
     */
     
   }//soul-to-soul
+
+  //Save
+  opinionExt.save();
 }
