@@ -94,7 +94,6 @@ type Soul @entity {
   type: String! # human or contract type (classified by contract)
   role: String! # Entity's function designation
   stage: Int! # Entity's stage (as a process)
-  # role: String # ?
   uri: String # metadata uri
   metadata: Bytes
   handle: String
@@ -111,9 +110,10 @@ type Soul @entity {
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")
   participantProc: [ProcParticipant!]! @derivedFrom(field: "sbt")
   #reputation: [GameSoulOpinion!]! @derivedFrom(field: "sbt")
-  opinion: [SoulOpinion!]! @derivedFrom(field: "subject")
-  opinionOn: [SoulOpinion!]! @derivedFrom(field: "object")
+  opinion: [SoulOpinion!]! @derivedFrom(field: "aEnd")
+  opinionOn: [SoulOpinion!]! @derivedFrom(field: "bEnd")
   posts: [SoulPost!]! @derivedFrom(field: "author")
+
   # Semantic Relations
   assoc: [SoulAssoc!]! @derivedFrom(field: "aEnd")
   parts: [SoulPart!]! @derivedFrom(field: "aEnd")
@@ -126,20 +126,32 @@ type SoulOpinionChange @entity {
   id: ID! # combination of subject, object, and domain name
   subject: Soul!
   object: Soul!
-  domain: String!
-  rating: Boolean!
-  value: BigInt!
+  role: String!
+  # rating: Boolean! #DEPRECATED
+  valueBefore: BigInt!
+  valueAfter: BigInt!
 }
 
 #Accumelated Opinion
 type SoulOpinion @entity {
   id: ID! # combination of subject, object, and domain name
-  subject: Soul!
-  object: Soul!
-  domain: String!
-  negativeRating: BigInt! #DEPRECATE
-  positiveRating: BigInt! #DEPRECATE
+  aEnd: Soul!
+  bEnd: Soul!
+  role: String
   value: BigInt!
+  negativeRating: BigInt #DEPRECATE
+  positiveRating: BigInt #DEPRECATE
+}
+
+type SoulOpinionExt
+  @entity { # S?H? (SBT->Ext.Token)
+  id: ID! # combination of A,B,R
+  aEnd: Soul!
+  bEnd: String! # Dest. Token ID
+  bContract: String! # Dest. Contract Address
+  role: String
+  value: BigInt!
+  # Destination
 }
 
 #Entity: Game
@@ -331,7 +343,7 @@ type ProcAssoc
 # Semantic Relations
 
 type SoulAssoc
-  @entity { #S2H0
+  @entity { #S2H0 (SBT->SBT)
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
@@ -340,7 +352,7 @@ type SoulAssoc
 }
 
 type SoulPart
-  @entity { #S3H1
+  @entity { #S3H1 (SBT->SBTx2)
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: Soul!
@@ -350,7 +362,7 @@ type SoulPart
 }
 
 type SoulAttr
-  @entity { # S4H0
+  @entity { # S4H0 (SBT->String)
   id: ID! # combination of A,B,R
   aEnd: Soul!
   bEnd: String!

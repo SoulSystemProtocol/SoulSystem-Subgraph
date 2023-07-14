@@ -1,6 +1,6 @@
-import { Address, ipfs, json, JSONValue, JSONValueKind  } from "@graphprotocol/graph-ts";
-import { Soul, SoulPost } from "../../generated/schema"; //[TBD]
-import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement } from "../../generated/Soul/Soul";
+import { Address, ipfs, json, JSONValue, JSONValueKind, log  } from "@graphprotocol/graph-ts";
+import { Soul, SoulPost, SoulOpinionChange, SoulOpinion, SoulOpinionExt } from "../../generated/schema";
+import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement, OpinionChange } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 import { store } from '@graphprotocol/graph-ts'
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
@@ -224,55 +224,96 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
 }
 
 
-/** [TEST] MOVED TO Soul Contract
+/** [WIP] 
  * Handle a opinion change event.
- 
+ */
 export function handleOpinionChange(event: OpinionChange): void {
-  // Get Entity
-  const game = Game.load(event.address.toHexString());
-  if (!game) return;
-  // Hub Address
-  const hubAddress = game.hub;
-  // Load claim name from contract
-  const hubContract = HubContract.bind(Address.fromString(hubAddress));
-  // Fetch Soul Contract Address
-  const soulContractAddr = hubContract.assocGet("SBT");
-  //Check if Game's Opinion is About a Soul
-  if (event.params.contractAddr.toString() == soulContractAddr.toString()) {
-    const gameAccount = Account.load(game.id);
-    if (!gameAccount) return;
-    // Fetch Game's Soul
-    const gameSBT = gameAccount.sbt;
-    // Find Opinion's Object
-    const aboutId = event.params.tokenId.toString();
-    const aboutEnt = Soul.load(aboutId);
-    if (!aboutEnt) return;
+  /* Opinion (Relationships?)
+  Subject - uint256 sbt, 
+  Object: 
+    address indexed contractAddr, 
+    uint256 indexed tokenId, 
+  What: string domain, 
+  Value:
+    int256 oldValue, 
+    int256 newValue
+  */
+  const sbt = event.params.sbt.toString();
+  const role = event.params.domain;
+  const contractAddr = event.params.contractAddr.toString();
+  const tokenId = event.params.tokenId.toString();
+  const value = event.params.newValue;
 
-    //** Opinion Change Events  //TODO: Move this to new Rep Events
-    const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
-    let opinionChange = new SoulOpinionChange(opChangeId);
-    opinionChange.subject = gameSBT;
-    opinionChange.object = aboutEnt.id;
-    opinionChange.domain = event.params.domain;
-    opinionChange.rating = event.params.rating;
-    opinionChange.value = event.params.score;
-    opinionChange.save();
+  // Fetch Opinionated Soul
+  let soul = Soul.load(sbt);
+  if (!soul){
+    log.error('OpinionChange Event - Soul ID:{} Missing', [sbt]);
+    return;
+  }
 
-    //** Opinion Accumelation
+  //** Register Opinion about token of any contract
+  const opinionExtId = `${sbt}_${contractAddr}_${tokenId}_${role}`;
+  let opinionExt = SoulOpinionExt.load(opinionExtId);
+  if (!opinionExt){
+    opinionExt = new SoulOpinionExt(opinionExtId);
+    opinionExt.aEnd = sbt;
+    opinionExt.bContract = contractAddr;
+    opinionExt.bEnd = tokenId;
+    opinionExt.role = role;
+  }
+  //Set New Value
+  opinionExt.value = value;
+  //Save
+  opinionExt.save();
+
+  //** Handle opinions about another soul (Soul-to-Soul)
+  if (contractAddr.toString() == event.address.toHexString()) {
+    // Find The Object of the Opinion
+    const aboutEnt = Soul.load(tokenId);
+    if (!aboutEnt){ 
+      log.error('OpinionChange Event - Target Soul:{} Missing', [tokenId]);
+      return;
+    }
+
+    //** Opinion Accumelation (Current State)
     // Load/Make Opinion
-    const opId = `${gameSBT}_${aboutEnt.id}_${event.params.domain.toString()}`;
+    const opId = `${sbt}_${tokenId}_${role}`;
     // Find or create Opinion
     let opinion = SoulOpinion.load(opId);
     if (!opinion) {
       // Create opinion
       opinion = new SoulOpinion(opId);
-      opinion.subject = gameSBT;
-      opinion.object = aboutEnt.id;
-      opinion.domain = event.params.domain;
-      opinion.negativeRating = BigInt.zero();
-      opinion.positiveRating = BigInt.zero();
+      opinion.aEnd = sbt;
+      opinion.bEnd = tokenId;
+      opinion.role = role;
+      // opinion.negativeRating = BigInt.zero(); //DEPRECATED
+      // opinion.positiveRating = BigInt.zero(); //DEPRECATED
     }
+    else{
+      //Validate
+      if(event.params.oldValue != opinion.value){
+        log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinion.value.toString()]);
+      }
+    }
+    //Set New Value
+    opinion.value = event.params.newValue;
+    //Save
+    opinion.save();
 
+    //** Opinion As Association
+
+    //** Opinion Change Events
+    const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
+    const opinionChange = new SoulOpinionChange(opChangeId);
+    opinionChange.subject = sbt;
+    opinionChange.object = tokenId;
+    opinionChange.role = event.params.domain;
+    opinionChange.valueBefore = event.params.oldValue;
+    opinionChange.valueAfter = event.params.newValue;
+    opinionChange.save();
+
+
+    /* DEPRECATED
     // Update positive rating (rating=true)
     if (event.params.rating === true) {
       // aboutEnt.totalPositiveRating = aboutEnt.totalPositiveRating.plus(
@@ -293,10 +334,9 @@ export function handleOpinionChange(event: OpinionChange): void {
       );
       opinion.value.minus(event.params.score);
     }
-    // Save entities
+     // Save entities
     // aboutEnt.save();
-
-    opinion.save();
-  }
+    */
+    
+  }//soul-to-soul
 }
-*/

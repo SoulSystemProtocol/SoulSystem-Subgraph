@@ -889,36 +889,33 @@ export class Soul extends Entity {
   }
 }
 
-export class SoulSoulOpinionChange extends Entity {
+export class SoulOpinionChange extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
     this.set("subject", Value.fromString(""));
     this.set("object", Value.fromString(""));
-    this.set("domain", Value.fromString(""));
-    this.set("rating", Value.fromBoolean(false));
-    this.set("value", Value.fromBigInt(BigInt.zero()));
+    this.set("role", Value.fromString(""));
+    this.set("valueBefore", Value.fromBigInt(BigInt.zero()));
+    this.set("valueAfter", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save SoulSoulOpinionChange entity without an ID"
-    );
+    assert(id != null, "Cannot save SoulOpinionChange entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SoulSoulOpinionChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SoulOpinionChange must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SoulSoulOpinionChange", id.toString(), this);
+      store.set("SoulOpinionChange", id.toString(), this);
     }
   }
 
-  static load(id: string): SoulSoulOpinionChange | null {
-    return changetype<SoulSoulOpinionChange | null>(
-      store.get("SoulSoulOpinionChange", id)
+  static load(id: string): SoulOpinionChange | null {
+    return changetype<SoulOpinionChange | null>(
+      store.get("SoulOpinionChange", id)
     );
   }
 
@@ -949,22 +946,102 @@ export class SoulSoulOpinionChange extends Entity {
     this.set("object", Value.fromString(value));
   }
 
-  get domain(): string {
-    let value = this.get("domain");
+  get role(): string {
+    let value = this.get("role");
     return value!.toString();
   }
 
-  set domain(value: string) {
-    this.set("domain", Value.fromString(value));
+  set role(value: string) {
+    this.set("role", Value.fromString(value));
   }
 
-  get rating(): boolean {
-    let value = this.get("rating");
-    return value!.toBoolean();
+  get valueBefore(): BigInt {
+    let value = this.get("valueBefore");
+    return value!.toBigInt();
   }
 
-  set rating(value: boolean) {
-    this.set("rating", Value.fromBoolean(value));
+  set valueBefore(value: BigInt) {
+    this.set("valueBefore", Value.fromBigInt(value));
+  }
+
+  get valueAfter(): BigInt {
+    let value = this.get("valueAfter");
+    return value!.toBigInt();
+  }
+
+  set valueAfter(value: BigInt) {
+    this.set("valueAfter", Value.fromBigInt(value));
+  }
+}
+
+export class SoulOpinion extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("aEnd", Value.fromString(""));
+    this.set("bEnd", Value.fromString(""));
+    this.set("value", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save SoulOpinion entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type SoulOpinion must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("SoulOpinion", id.toString(), this);
+    }
+  }
+
+  static load(id: string): SoulOpinion | null {
+    return changetype<SoulOpinion | null>(store.get("SoulOpinion", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get aEnd(): string {
+    let value = this.get("aEnd");
+    return value!.toString();
+  }
+
+  set aEnd(value: string) {
+    this.set("aEnd", Value.fromString(value));
+  }
+
+  get bEnd(): string {
+    let value = this.get("bEnd");
+    return value!.toString();
+  }
+
+  set bEnd(value: string) {
+    this.set("bEnd", Value.fromString(value));
+  }
+
+  get role(): string | null {
+    let value = this.get("role");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set role(value: string | null) {
+    if (!value) {
+      this.unset("role");
+    } else {
+      this.set("role", Value.fromString(<string>value));
+    }
   }
 
   get value(): BigInt {
@@ -975,35 +1052,67 @@ export class SoulSoulOpinionChange extends Entity {
   set value(value: BigInt) {
     this.set("value", Value.fromBigInt(value));
   }
+
+  get negativeRating(): BigInt | null {
+    let value = this.get("negativeRating");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set negativeRating(value: BigInt | null) {
+    if (!value) {
+      this.unset("negativeRating");
+    } else {
+      this.set("negativeRating", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get positiveRating(): BigInt | null {
+    let value = this.get("positiveRating");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set positiveRating(value: BigInt | null) {
+    if (!value) {
+      this.unset("positiveRating");
+    } else {
+      this.set("positiveRating", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
-export class SoulSoulOpinion extends Entity {
+export class SoulOpinionExt extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("subject", Value.fromString(""));
-    this.set("object", Value.fromString(""));
-    this.set("domain", Value.fromString(""));
-    this.set("negativeRating", Value.fromBigInt(BigInt.zero()));
-    this.set("positiveRating", Value.fromBigInt(BigInt.zero()));
+    this.set("aEnd", Value.fromString(""));
+    this.set("bEnd", Value.fromString(""));
+    this.set("bContract", Value.fromString(""));
     this.set("value", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SoulSoulOpinion entity without an ID");
+    assert(id != null, "Cannot save SoulOpinionExt entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type SoulSoulOpinion must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type SoulOpinionExt must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SoulSoulOpinion", id.toString(), this);
+      store.set("SoulOpinionExt", id.toString(), this);
     }
   }
 
-  static load(id: string): SoulSoulOpinion | null {
-    return changetype<SoulSoulOpinion | null>(store.get("SoulSoulOpinion", id));
+  static load(id: string): SoulOpinionExt | null {
+    return changetype<SoulOpinionExt | null>(store.get("SoulOpinionExt", id));
   }
 
   get id(): string {
@@ -1015,49 +1124,48 @@ export class SoulSoulOpinion extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get subject(): string {
-    let value = this.get("subject");
+  get aEnd(): string {
+    let value = this.get("aEnd");
     return value!.toString();
   }
 
-  set subject(value: string) {
-    this.set("subject", Value.fromString(value));
+  set aEnd(value: string) {
+    this.set("aEnd", Value.fromString(value));
   }
 
-  get object(): string {
-    let value = this.get("object");
+  get bEnd(): string {
+    let value = this.get("bEnd");
     return value!.toString();
   }
 
-  set object(value: string) {
-    this.set("object", Value.fromString(value));
+  set bEnd(value: string) {
+    this.set("bEnd", Value.fromString(value));
   }
 
-  get domain(): string {
-    let value = this.get("domain");
+  get bContract(): string {
+    let value = this.get("bContract");
     return value!.toString();
   }
 
-  set domain(value: string) {
-    this.set("domain", Value.fromString(value));
+  set bContract(value: string) {
+    this.set("bContract", Value.fromString(value));
   }
 
-  get negativeRating(): BigInt {
-    let value = this.get("negativeRating");
-    return value!.toBigInt();
+  get role(): string | null {
+    let value = this.get("role");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set negativeRating(value: BigInt) {
-    this.set("negativeRating", Value.fromBigInt(value));
-  }
-
-  get positiveRating(): BigInt {
-    let value = this.get("positiveRating");
-    return value!.toBigInt();
-  }
-
-  set positiveRating(value: BigInt) {
-    this.set("positiveRating", Value.fromBigInt(value));
+  set role(value: string | null) {
+    if (!value) {
+      this.unset("role");
+    } else {
+      this.set("role", Value.fromString(<string>value));
+    }
   }
 
   get value(): BigInt {

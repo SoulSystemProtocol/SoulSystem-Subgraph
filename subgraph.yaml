@@ -38,9 +38,8 @@ dataSources:
           handler: handleAnnouncement
         - event: SoulHandle(indexed uint256,string)
           handler: handleHandleSet
-        #[TBD]
-        #- event: OpinionChange(uint256,indexed address,indexed uint256,string,int256,int256)
-        #  handler: handleOpinionChange
+        - event: OpinionChange(uint256,indexed address,indexed uint256,string,int256,int256)
+          handler: handleOpinionChange
       file: ./src/handlers/soulHandlers.ts
   # Hub contract
   - kind: ethereum

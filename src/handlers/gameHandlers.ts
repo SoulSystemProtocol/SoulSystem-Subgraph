@@ -33,8 +33,8 @@ import { getSoulByAddr, loadOrCreateGame } from "../utils";
  * @returns 
  */
 const getRoleName = (address: Address, id: BigInt): string | null => {
-  let roleId = `${address.toHexString()}_${id.toString()}`;
-  let role = GameRole.load(roleId);
+  const roleId = `${address.toHexString()}_${id.toString()}`;
+  const role = GameRole.load(roleId);
   if(!role) return null;
   return role.name;
 }
@@ -44,7 +44,7 @@ const getRoleName = (address: Address, id: BigInt): string | null => {
  */
 export function handleRoleCreated(event: RoleCreated): void {
   // Find role
-  let roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
+  const roleId = `${event.address.toHexString()}_${event.params.id.toString()}`;
   let role = GameRole.load(roleId);
   if (!role) {
     // Create Role
@@ -111,7 +111,8 @@ export function handleTransferByToken(event: TransferByToken): void {
       soulPart = new SoulPart(sbtPartId);
       soulPart.aEnd = entSBT;
       soulPart.bEnd = sbt;
-      soulPart.role = role!==null ? role : tokenId.toString();
+      // soulPart.role = role!==null ? role : tokenId.toString();
+      soulPart.role = role!==null ? role : '';
       soulPart.roleId = tokenId.toString();
       soulPart.qty = amount;
     }else{
@@ -173,7 +174,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     }
 
     //** Game Participants - Remove From Origin
-    let participanId = `${event.address.toHexString()}_${sbt}`;
+    const participanId = `${event.address.toHexString()}_${sbt}`;
     let participant = GameParticipant.load(participanId);
     if (participant) {
       const accountIndex = participant.roles.indexOf(tokenId.toString());
@@ -186,7 +187,7 @@ export function handleTransferByToken(event: TransferByToken): void {
     }
 
     //Relation Test 2 - Association
-    let participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
+    const participanRoleId = `${event.address.toHexString()}_${sbt}_${tokenId.toString()}`;
     let assoc = GameAssoc.load(participanRoleId);
     if (assoc) {
       //Subtract Amount
@@ -198,8 +199,8 @@ export function handleTransferByToken(event: TransferByToken): void {
 
   // ** Currently Used for fetching Game's Roles .. & members
   // Define transfer type
-  let isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
-  let isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
+  const isTokenMinted = event.params.fromOwnerToken.equals(BigInt.zero());
+  const isTokenBurned = event.params.toOwnerToken.equals(BigInt.zero());
   if (isTokenMinted || isTokenBurned) {
     // Find or create role
     const roleId = `${event.address.toHexString()}_${tokenId.toString()}`;
@@ -244,7 +245,7 @@ export function handleTransferByToken(event: TransferByToken): void {
  */
 export function handleNominate(event: Nominate): void {
   // Get game
-  let game = loadOrCreateGame(event.address.toHexString());
+  const game = loadOrCreateGame(event.address.toHexString());
   // Skip if nominator account not exists
   let nominatorAccount = Account.load(event.params.account.toHexString());
   if (!nominatorAccount) {
@@ -279,8 +280,8 @@ export function handlePost(event: Post): void {
   // Create post entity
   // const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}`;
   const postId = `${event.address.toHexString()}_${event.transaction.hash.toHexString()}_${event.logIndex.toString()}`;
-  let post = new GamePost(postId);
-  // let post = new CTXPost(postId);
+  const post = new GamePost(postId);
+  // const post = new CTXPost(postId);
   post.entity = game.id;
   post.createdDate = event.block.timestamp;
   post.author = authorSoul.id;
