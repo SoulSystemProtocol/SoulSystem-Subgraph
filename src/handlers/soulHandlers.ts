@@ -252,23 +252,23 @@ export function handleOpinionChange(event: OpinionChange): void {
   }
 
   //** Register Opinion about token of any contract
-  const opinionExtId = `${sbt}_${contractAddr}_${tokenId}_${role}`;
-  let opinionExt = SoulOpinion.load(opinionExtId);
-  if (!opinionExt){
-    opinionExt = new SoulOpinion(opinionExtId);
-    opinionExt.aEnd = sbt;
-    opinionExt.bContract = contractAddr;
-    opinionExt.bEnd = tokenId;
-    opinionExt.role = role;
+  const opinionId = `${sbt}_${contractAddr}_${tokenId}_${role}`;
+  let opinion = SoulOpinion.load(opinionId);
+  if (!opinion){
+    opinion = new SoulOpinion(opinionId);
+    opinion.aEnd = sbt;
+    opinion.bContract = contractAddr;
+    opinion.bEnd = tokenId;
+    opinion.role = role;
   }else{
     //Validate
-    if(event.params.oldValue != opinionExt.value){
-      log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinionExt.value.toString()]);
+    if(event.params.oldValue != opinion.value){
+      log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinion.value.toString()]);
     }
   }
 
   //Set New Value
-  opinionExt.value = value;
+  opinion.value = value;
   
 
   //** Handle opinions about another soul (Soul-to-Soul)
@@ -279,7 +279,7 @@ export function handleOpinionChange(event: OpinionChange): void {
       log.error('OpinionChange Event - Target Soul:{} Missing', [tokenId]);
       // return;
     }else{
-      opinionExt.bSoul = tokenId;
+      opinion.bSoul = tokenId;
     }
     
     //** Opinion Change Event
@@ -321,5 +321,5 @@ export function handleOpinionChange(event: OpinionChange): void {
   }//soul-to-soul
 
   //Save
-  opinionExt.save();
+  opinion.save();
 }
