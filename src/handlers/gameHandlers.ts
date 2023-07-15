@@ -9,8 +9,6 @@ import {
   GamePost,
   SoulPart,
   GameParticipant,
-  // SoulOpinion,
-  // SoulOpinionChange,
   GameAssoc,
 } from "../../generated/schema";
 import {
@@ -294,80 +292,3 @@ export function handlePost(event: Post): void {
   //Save
   post.save();
 }
-
-/** [TEST] MOVED -- Soul Contract
- * Handle a opinion change event.
- 
-export function handleOpinionChange(event: OpinionChange): void {
-  // Get Entity
-  const game = Game.load(event.address.toHexString());
-  if (!game) return;
-  // Hub Address
-  const hubAddress = game.hub;
-  // Load claim name from contract
-  const hubContract = HubContract.bind(Address.fromString(hubAddress));
-  // Fetch Soul Contract Address
-  const soulContractAddr = hubContract.assocGet("SBT");
-  //Check if Game's Opinion is About a Soul
-  if (event.params.contractAddr.toString() == soulContractAddr.toString()) {
-    const gameAccount = Account.load(game.id);
-    if (!gameAccount) return;
-    // Fetch Game's Soul
-    const gameSBT = gameAccount.sbt;
-    // Find Opinion's Object
-    const aboutId = event.params.tokenId.toString();
-    const aboutEnt = Soul.load(aboutId);
-    if (!aboutEnt) return;
-
-    //** Opinion Change Events  //TODO: Move this to new Rep Events
-    const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
-    let opinionChange = new SoulOpinionChange(opChangeId);
-    opinionChange.subject = gameSBT;
-    opinionChange.object = aboutEnt.id;
-    opinionChange.domain = event.params.domain;
-    opinionChange.rating = event.params.rating;
-    opinionChange.value = event.params.score;
-    opinionChange.save();
-
-    //** Opinion Accumelation
-    // Load/Make Opinion
-    const opId = `${gameSBT}_${aboutEnt.id}_${event.params.domain.toString()}`;
-    // Find or create Opinion
-    let opinion = SoulOpinion.load(opId);
-    if (!opinion) {
-      // Create opinion
-      opinion = new SoulOpinion(opId);
-      opinion.subject = gameSBT;
-      opinion.object = aboutEnt.id;
-      opinion.domain = event.params.domain;
-      opinion.negativeRating = BigInt.zero();
-      opinion.positiveRating = BigInt.zero();
-    }
-
-    // Update positive rating (rating=true)
-    if (event.params.rating === true) {
-      // aboutEnt.totalPositiveRating = aboutEnt.totalPositiveRating.plus(
-      //   event.params.score
-      // );
-      opinion.positiveRating = opinion.positiveRating.plus(
-        event.params.score
-      );
-      opinion.value.plus(event.params.score);
-    }
-    // Update negative rating (rating=false)
-    else {
-      // aboutEnt.totalNegativeRating = aboutEnt.totalNegativeRating.plus(
-      //   event.params.score
-      // );
-      opinion.negativeRating = opinion.negativeRating.plus(
-        event.params.score
-      );
-      opinion.value.minus(event.params.score);
-    }
-    // Save entities
-    // aboutEnt.save();
-
-    opinion.save();
-  }
-}
-*/

@@ -112,8 +112,8 @@ type Soul @entity {
 
   #opinion: [SoulOpinion!]! @derivedFrom(field: "aEnd")
   #opinionOn: [SoulOpinion!]! @derivedFrom(field: "bEnd")
-  opinion: [SoulOpinionExt!]! @derivedFrom(field: "aEnd")
-  opinionOn: [SoulOpinionExt!]! @derivedFrom(field: "bSoul")
+  opinion: [SoulOpinion!]! @derivedFrom(field: "aEnd")
+  opinionOn: [SoulOpinion!]! @derivedFrom(field: "bSoul")
 
   posts: [SoulPost!]! @derivedFrom(field: "author")
 
@@ -135,18 +135,8 @@ type SoulOpinionChange @entity {
   valueAfter: BigInt!
 }
 
-#Accumelated Opinion  #DEPRECATE & Try to Use SoulOpinionExt instead
-type SoulOpinion @entity {
-  id: ID! # combination of subject, object, and domain name
-  aEnd: Soul!
-  bEnd: Soul!
-  role: String
-  value: BigInt!
-  negativeRating: BigInt #DEPRECATE
-  positiveRating: BigInt #DEPRECATE
-}
-
-type SoulOpinionExt
+#Accumelated Opinion
+type SoulOpinion
   @entity { # S?H? (SBT->Ext.Token)
   id: ID! # combination of A,B,R
   aEnd: Soul!
@@ -155,7 +145,8 @@ type SoulOpinionExt
   bSoul: Soul
   role: String
   value: BigInt!
-  # Destination
+  #negativeRating: BigInt #DEPRECATED
+  #positiveRating: BigInt #DEPRECATED
 }
 
 #Entity: Game

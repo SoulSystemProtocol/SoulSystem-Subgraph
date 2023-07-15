@@ -1,5 +1,5 @@
 import { Address, ipfs, json, JSONValue, JSONValueKind, log  } from "@graphprotocol/graph-ts";
-import { Soul, SoulPost, SoulOpinionChange, SoulOpinion, SoulOpinionExt } from "../../generated/schema";
+import { Soul, SoulPost, SoulOpinionChange, SoulOpinion } from "../../generated/schema";
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement, OpinionChange } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
 import { store } from '@graphprotocol/graph-ts'
@@ -253,9 +253,9 @@ export function handleOpinionChange(event: OpinionChange): void {
 
   //** Register Opinion about token of any contract
   const opinionExtId = `${sbt}_${contractAddr}_${tokenId}_${role}`;
-  let opinionExt = SoulOpinionExt.load(opinionExtId);
+  let opinionExt = SoulOpinion.load(opinionExtId);
   if (!opinionExt){
-    opinionExt = new SoulOpinionExt(opinionExtId);
+    opinionExt = new SoulOpinion(opinionExtId);
     opinionExt.aEnd = sbt;
     opinionExt.bContract = contractAddr;
     opinionExt.bEnd = tokenId;

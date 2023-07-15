@@ -981,6 +981,7 @@ export class SoulOpinion extends Entity {
 
     this.set("aEnd", Value.fromString(""));
     this.set("bEnd", Value.fromString(""));
+    this.set("bContract", Value.fromString(""));
     this.set("value", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -998,121 +999,6 @@ export class SoulOpinion extends Entity {
 
   static load(id: string): SoulOpinion | null {
     return changetype<SoulOpinion | null>(store.get("SoulOpinion", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get aEnd(): string {
-    let value = this.get("aEnd");
-    return value!.toString();
-  }
-
-  set aEnd(value: string) {
-    this.set("aEnd", Value.fromString(value));
-  }
-
-  get bEnd(): string {
-    let value = this.get("bEnd");
-    return value!.toString();
-  }
-
-  set bEnd(value: string) {
-    this.set("bEnd", Value.fromString(value));
-  }
-
-  get role(): string | null {
-    let value = this.get("role");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set role(value: string | null) {
-    if (!value) {
-      this.unset("role");
-    } else {
-      this.set("role", Value.fromString(<string>value));
-    }
-  }
-
-  get value(): BigInt {
-    let value = this.get("value");
-    return value!.toBigInt();
-  }
-
-  set value(value: BigInt) {
-    this.set("value", Value.fromBigInt(value));
-  }
-
-  get negativeRating(): BigInt | null {
-    let value = this.get("negativeRating");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set negativeRating(value: BigInt | null) {
-    if (!value) {
-      this.unset("negativeRating");
-    } else {
-      this.set("negativeRating", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get positiveRating(): BigInt | null {
-    let value = this.get("positiveRating");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set positiveRating(value: BigInt | null) {
-    if (!value) {
-      this.unset("positiveRating");
-    } else {
-      this.set("positiveRating", Value.fromBigInt(<BigInt>value));
-    }
-  }
-}
-
-export class SoulOpinionExt extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("aEnd", Value.fromString(""));
-    this.set("bEnd", Value.fromString(""));
-    this.set("bContract", Value.fromString(""));
-    this.set("value", Value.fromBigInt(BigInt.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save SoulOpinionExt entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type SoulOpinionExt must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("SoulOpinionExt", id.toString(), this);
-    }
-  }
-
-  static load(id: string): SoulOpinionExt | null {
-    return changetype<SoulOpinionExt | null>(store.get("SoulOpinionExt", id));
   }
 
   get id(): string {
