@@ -1,4 +1,4 @@
-import { Address, ipfs, json, JSONValue, JSONValueKind, log  } from "@graphprotocol/graph-ts";
+import { Address, ipfs, json, JSONValue, JSONValueKind, log } from "@graphprotocol/graph-ts";
 import { Soul, SoulPost, SoulOpinionChange, SoulOpinion } from "../../generated/schema";
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement, OpinionChange } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
@@ -15,7 +15,7 @@ export function handleTransfer(event: Transfer): void {
   if (event.params.to == Address.zero()) {
     //Delete Soul
     store.remove('Soul', soulId);
-  }else{
+  } else {
     // Find or create soul
     let soul = loadOrCreateSoul(soulId);
     //Reset Type & Role
@@ -53,15 +53,15 @@ export function handleURI(event: URI): void {
   let uriJson = metadata ? json.fromBytes(metadata) : null;
   let uriJsonObject = uriJson ? uriJson.toObject() : null;
   //Extract Tags
-  if(uriJsonObject){
+  if (uriJsonObject) {
     const metadataTags = uriJsonObject
       ? uriJsonObject.get("tags")
       : null;
-    if(metadataTags && Array.isArray(metadataTags)){
+    if (metadataTags && Array.isArray(metadataTags)) {
       let metadataTagsArray = metadataTags.toArray();
       let tagsArray = new Array<string>(0);
-      for(let i=0; i<metadataTagsArray.length; i++){
-        if(typeof metadataTagsArray[i].toString() == 'string'){
+      for (let i = 0; i < metadataTagsArray.length; i++) {
+        if (typeof metadataTagsArray[i].toString() == 'string') {
           tagsArray.push(metadataTagsArray[i].toString());
         }
       }
@@ -82,7 +82,7 @@ export function handleURI(event: URI): void {
   // Get name from metadata
   const uriJsonName = uriJsonObject ? uriJsonObject.get("name") : null;
   const uriJsonNameString: string = uriJsonName ? uriJsonName.toString() : "";
-  if(!!uriJsonNameString){
+  if (!!uriJsonNameString) {
     soul.name = uriJsonNameString;
   } else {
     /**
@@ -91,37 +91,33 @@ export function handleURI(event: URI): void {
      */
     // Get attributes from uri data
     const uriJsonAttributes = uriJsonObject
-    ? uriJsonObject.get("attributes")
-    : null;
-    if(uriJsonAttributes){
+      ? uriJsonObject.get("attributes")
+      : null;
+    if (uriJsonAttributes) {
       const uriJsonAttributesArray: JSONValue[] = uriJsonAttributes.toArray();
       // Get uri first name and last name
-      let uriFirstNameString: string = "";
-      let uriLastNameString: string = "";
+      // let uriFirstNameString: string = "";
+      // let uriLastNameString: string = "";
       let fullName: string = "";
       for (let i = 0; i < uriJsonAttributesArray.length; i++) {
         //Validate Type
-        if(uriJsonAttributesArray[i].kind == JSONValueKind.OBJECT){
+        if (uriJsonAttributesArray[i].kind == JSONValueKind.OBJECT) {
           // Get trait type and value
           let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
           let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
           // first name
           if (
-            uriAttributeTraitType &&
+            uriAttributeTraitType && uriAttributeValue &&
             uriAttributeTraitType.toString().toLowerCase() == "first name"
           ) {
-            uriFirstNameString = uriAttributeValue
-              ? uriAttributeValue.toString()
-              : "";
+            soul.uriFirstName = uriAttributeValue.toString();
           }
           // last name
           if (
-            uriAttributeTraitType &&
+            uriAttributeTraitType && uriAttributeValue &&
             uriAttributeTraitType.toString().toLowerCase() == "last name"
           ) {
-            uriLastNameString = uriAttributeValue
-              ? uriAttributeValue.toString()
-              : "";
+            soul.uriLastName = uriAttributeValue.toString();
           }
           // name
           if (
@@ -134,14 +130,14 @@ export function handleURI(event: URI): void {
           }
         }
       }
-      if(fullName) soul.name = fullName;
-      else{
+      if (fullName) soul.name = fullName;
+      else {
         //Backward Compatibility
-        soul.uriFirstName = uriFirstNameString;
-        soul.uriLastName = uriLastNameString;
-        let name = uriFirstNameString;
-        if (!!uriLastNameString) name += ' ' + uriLastNameString;
-        soul.name = name
+        // soul.uriFirstName = uriFirstNameString;
+        // soul.uriLastName = uriLastNameString;
+        let name = soul.uriFirstName;
+        if (!!soul.uriLastName) name += ' ' + soul.uriLastName;
+        soul.name = name;
       }
     }
   }
@@ -246,7 +242,7 @@ export function handleOpinionChange(event: OpinionChange): void {
 
   // Fetch Opinionated Soul
   const soul = Soul.load(sbt);
-  if (!soul){
+  if (!soul) {
     log.error('OpinionChange Event - Soul ID:{} Missing', [sbt]);
     return;
   }
@@ -254,34 +250,34 @@ export function handleOpinionChange(event: OpinionChange): void {
   //** Register Opinion about token of any contract
   const opinionId = `${sbt}_${contractAddr}_${tokenId}_${role}`;
   let opinion = SoulOpinion.load(opinionId);
-  if (!opinion){
+  if (!opinion) {
     opinion = new SoulOpinion(opinionId);
     opinion.aEnd = sbt;
     opinion.bContract = contractAddr;
     opinion.bEnd = tokenId;
     opinion.role = role;
-  }else{
+  } else {
     //Validate
-    if(event.params.oldValue != opinion.value){
+    if (event.params.oldValue != opinion.value) {
       log.error('Opinion Change Mismatch expected:{} got:{}', [event.params.oldValue.toString(), opinion.value.toString()]);
     }
   }
 
   //Set New Value
   opinion.value = value;
-  
+
 
   //** Handle opinions about another soul (Soul-to-Soul)
   if (contractAddr == event.address.toHexString()) {
     // Find The Object of the Opinion
     const aboutEnt = Soul.load(tokenId);
-    if (!aboutEnt){ 
+    if (!aboutEnt) {
       log.error('OpinionChange Event - Target Soul:{} Missing', [tokenId]);
       // return;
-    }else{
+    } else {
       opinion.bSoul = tokenId;
     }
-    
+
     //** Opinion Change Event
     const opChangeId = `${event.transaction.hash.toHex()}_${event.logIndex.toString()}`;
     const opinionChange = new SoulOpinionChange(opChangeId);
@@ -317,7 +313,7 @@ export function handleOpinionChange(event: OpinionChange): void {
      // Save entities
     // aboutEnt.save();
     */
-    
+
   }//soul-to-soul
 
   //Save
