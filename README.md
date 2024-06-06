@@ -10,6 +10,11 @@
 - Deploy subgraph: `yarn deploy --product hosted-service [SUBGRAPH]`
 - Deploy to development subgraph: `yarn deploy-dev`
 
+###NPM
+
+ - npx graph build
+ - npx graph deploy
+
 ## Subgraph
 ### Deployments
 - Mumbai - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
