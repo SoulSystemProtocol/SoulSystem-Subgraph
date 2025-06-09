@@ -4,15 +4,15 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --product hosted-service toledoroy/soulsystem_aurora",
-    "deploy-dev": "graph deploy --node https://api.thegraph.com/deploy/ toledoroy/soulsystem_aurora",
+    "deploy": "graph deploy --studio your-subgraph-slug",
+    "deploy-dev": "graph deploy --studio your-dev-subgraph-slug",
     "create-local": "graph create --node http://localhost:8020/ toledoroy/soulsystem_aurora",
     "remove-local": "graph remove --node http://localhost:8020/ toledoroy/soulsystem_aurora",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 toledoroy/soulsystem_aurora"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.28.0",
-    "@graphprotocol/graph-ts": "0.26.0"
+    "@graphprotocol/graph-cli": "^0.68.0",
+    "@graphprotocol/graph-ts": "^0.32.0"
   },
   "packageManager": "yarn@3.6.0"
 }

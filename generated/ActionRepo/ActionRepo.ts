@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ActionAdded extends ethereum.Event {
@@ -471,6 +471,22 @@ export class ActionRepo__actionGetStrResult {
     map.set("value3", ethereum.Value.fromString(this.value3));
     return map;
   }
+
+  getValue0(): string {
+    return this.value0;
+  }
+
+  getValue1(): string {
+    return this.value1;
+  }
+
+  getValue2(): string {
+    return this.value2;
+  }
+
+  getValue3(): string {
+    return this.value3;
+  }
 }
 
 export class ActionRepo__actionHashInputSvoStruct extends ethereum.Tuple {
@@ -499,7 +515,7 @@ export class ActionRepo extends ethereum.SmartContract {
   GUIDHas(account: Address, guid: Bytes): boolean {
     let result = super.call("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toBoolean();
@@ -508,7 +524,7 @@ export class ActionRepo extends ethereum.SmartContract {
   try_GUIDHas(account: Address, guid: Bytes): ethereum.CallResult<boolean> {
     let result = super.tryCall("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -523,8 +539,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
 
     return result[0].toBoolean();
@@ -532,15 +548,15 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_GUIDHasByToken(
     soulToken: BigInt,
-    guid: Bytes
+    guid: Bytes,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "GUIDHasByToken",
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -551,7 +567,7 @@ export class ActionRepo extends ethereum.SmartContract {
 
   GUIDURI(guid: Bytes): string {
     let result = super.call("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toString();
@@ -559,7 +575,7 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_GUIDURI(guid: Bytes): ethereum.CallResult<string> {
     let result = super.tryCall("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -572,7 +588,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "actionAdd",
       "actionAdd((string,string,string,string),string):(bytes32)",
-      [ethereum.Value.fromTuple(svo), ethereum.Value.fromString(uri)]
+      [ethereum.Value.fromTuple(svo), ethereum.Value.fromString(uri)],
     );
 
     return result[0].toBytes();
@@ -580,12 +596,12 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_actionAdd(
     svo: ActionRepo__actionAddInputSvoStruct,
-    uri: string
+    uri: string,
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "actionAdd",
       "actionAdd((string,string,string,string),string):(bytes32)",
-      [ethereum.Value.fromTuple(svo), ethereum.Value.fromString(uri)]
+      [ethereum.Value.fromTuple(svo), ethereum.Value.fromString(uri)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -596,15 +612,15 @@ export class ActionRepo extends ethereum.SmartContract {
 
   actionAddBatch(
     svos: Array<ActionRepo__actionAddBatchInputSvosStruct>,
-    uris: Array<string>
+    uris: Array<string>,
   ): Array<Bytes> {
     let result = super.call(
       "actionAddBatch",
       "actionAddBatch((string,string,string,string)[],string[]):(bytes32[])",
       [
         ethereum.Value.fromTupleArray(svos),
-        ethereum.Value.fromStringArray(uris)
-      ]
+        ethereum.Value.fromStringArray(uris),
+      ],
     );
 
     return result[0].toBytesArray();
@@ -612,15 +628,15 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_actionAddBatch(
     svos: Array<ActionRepo__actionAddBatchInputSvosStruct>,
-    uris: Array<string>
+    uris: Array<string>,
   ): ethereum.CallResult<Array<Bytes>> {
     let result = super.tryCall(
       "actionAddBatch",
       "actionAddBatch((string,string,string,string)[],string[]):(bytes32[])",
       [
         ethereum.Value.fromTupleArray(svos),
-        ethereum.Value.fromStringArray(uris)
-      ]
+        ethereum.Value.fromStringArray(uris),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -633,28 +649,28 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "actionGet",
       "actionGet(bytes32):((string,string,string,string))",
-      [ethereum.Value.fromFixedBytes(guid)]
+      [ethereum.Value.fromFixedBytes(guid)],
     );
 
     return changetype<ActionRepo__actionGetResultValue0Struct>(
-      result[0].toTuple()
+      result[0].toTuple(),
     );
   }
 
   try_actionGet(
-    guid: Bytes
+    guid: Bytes,
   ): ethereum.CallResult<ActionRepo__actionGetResultValue0Struct> {
     let result = super.tryCall(
       "actionGet",
       "actionGet(bytes32):((string,string,string,string))",
-      [ethereum.Value.fromFixedBytes(guid)]
+      [ethereum.Value.fromFixedBytes(guid)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<ActionRepo__actionGetResultValue0Struct>(value[0].toTuple())
+      changetype<ActionRepo__actionGetResultValue0Struct>(value[0].toTuple()),
     );
   }
 
@@ -662,24 +678,24 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "actionGetStr",
       "actionGetStr(bytes32):(string,string,string,string)",
-      [ethereum.Value.fromFixedBytes(guid)]
+      [ethereum.Value.fromFixedBytes(guid)],
     );
 
     return new ActionRepo__actionGetStrResult(
       result[0].toString(),
       result[1].toString(),
       result[2].toString(),
-      result[3].toString()
+      result[3].toString(),
     );
   }
 
   try_actionGetStr(
-    guid: Bytes
+    guid: Bytes,
   ): ethereum.CallResult<ActionRepo__actionGetStrResult> {
     let result = super.tryCall(
       "actionGetStr",
       "actionGetStr(bytes32):(string,string,string,string)",
-      [ethereum.Value.fromFixedBytes(guid)]
+      [ethereum.Value.fromFixedBytes(guid)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -690,14 +706,14 @@ export class ActionRepo extends ethereum.SmartContract {
         value[0].toString(),
         value[1].toString(),
         value[2].toString(),
-        value[3].toString()
-      )
+        value[3].toString(),
+      ),
     );
   }
 
   actionGetURI(guid: Bytes): string {
     let result = super.call("actionGetURI", "actionGetURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toString();
@@ -707,7 +723,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "actionGetURI",
       "actionGetURI(bytes32):(string)",
-      [ethereum.Value.fromFixedBytes(guid)]
+      [ethereum.Value.fromFixedBytes(guid)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -720,19 +736,19 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "actionHash",
       "actionHash((string,string,string,string)):(bytes32)",
-      [ethereum.Value.fromTuple(svo)]
+      [ethereum.Value.fromTuple(svo)],
     );
 
     return result[0].toBytes();
   }
 
   try_actionHash(
-    svo: ActionRepo__actionHashInputSvoStruct
+    svo: ActionRepo__actionHashInputSvoStruct,
   ): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
       "actionHash",
       "actionHash((string,string,string,string)):(bytes32)",
-      [ethereum.Value.fromTuple(svo)]
+      [ethereum.Value.fromTuple(svo)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -747,8 +763,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -760,8 +776,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -776,8 +792,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
 
     return result[0].toBigIntArray();
@@ -785,15 +801,15 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_balanceOfBatch(
     accounts: Array<Address>,
-    ids: Array<BigInt>
+    ids: Array<BigInt>,
   ): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall(
       "balanceOfBatch",
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -808,8 +824,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -821,8 +837,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -856,7 +872,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "getCurrentSBT",
       "getCurrentSBT():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -869,7 +885,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
 
     return result[0].toBigInt();
@@ -879,7 +895,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -922,7 +938,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -932,7 +948,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -947,8 +963,8 @@ export class ActionRepo extends ethereum.SmartContract {
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
 
     return result[0].toBoolean();
@@ -956,15 +972,15 @@ export class ActionRepo extends ethereum.SmartContract {
 
   try_isApprovedForAll(
     account: Address,
-    operator: Address
+    operator: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1013,7 +1029,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1026,7 +1042,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -1036,7 +1052,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1064,7 +1080,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigIntArray();
@@ -1074,7 +1090,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1087,7 +1103,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigInt();
@@ -1097,7 +1113,7 @@ export class ActionRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1126,7 +1142,7 @@ export class ActionAddCall__Inputs {
 
   get svo(): ActionAddCallSvoStruct {
     return changetype<ActionAddCallSvoStruct>(
-      this._call.inputValues[0].value.toTuple()
+      this._call.inputValues[0].value.toTuple(),
     );
   }
 
@@ -1183,9 +1199,7 @@ export class ActionAddBatchCall__Inputs {
   }
 
   get svos(): Array<ActionAddBatchCallSvosStruct> {
-    return this._call.inputValues[0].value.toTupleArray<
-      ActionAddBatchCallSvosStruct
-    >();
+    return this._call.inputValues[0].value.toTupleArray<ActionAddBatchCallSvosStruct>();
   }
 
   get uris(): Array<string> {

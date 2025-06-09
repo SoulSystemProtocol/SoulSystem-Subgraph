@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AdminChanged extends ethereum.Event {
@@ -195,7 +195,7 @@ export class Hub extends ethereum.SmartContract {
 
   assocGet(key: string): Address {
     let result = super.call("assocGet", "assocGet(string):(address)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toAddress();
@@ -203,7 +203,7 @@ export class Hub extends ethereum.SmartContract {
 
   try_assocGet(key: string): ethereum.CallResult<Address> {
     let result = super.tryCall("assocGet", "assocGet(string):(address)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -249,8 +249,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
 
     return result[0].toAddress();
@@ -259,7 +259,7 @@ export class Hub extends ethereum.SmartContract {
   try_makeClaim(
     type_: string,
     name_: string,
-    uri_: string
+    uri_: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "makeClaim",
@@ -267,8 +267,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -279,7 +279,7 @@ export class Hub extends ethereum.SmartContract {
 
   makeERC1155(uri_: string): Address {
     let result = super.call("makeERC1155", "makeERC1155(string):(address)", [
-      ethereum.Value.fromString(uri_)
+      ethereum.Value.fromString(uri_),
     ]);
 
     return result[0].toAddress();
@@ -287,7 +287,7 @@ export class Hub extends ethereum.SmartContract {
 
   try_makeERC1155(uri_: string): ethereum.CallResult<Address> {
     let result = super.tryCall("makeERC1155", "makeERC1155(string):(address)", [
-      ethereum.Value.fromString(uri_)
+      ethereum.Value.fromString(uri_),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -303,8 +303,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(name_),
         ethereum.Value.fromString(symbol_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
 
     return result[0].toAddress();
@@ -313,7 +313,7 @@ export class Hub extends ethereum.SmartContract {
   try_makeERC721(
     name_: string,
     symbol_: string,
-    uri_: string
+    uri_: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "makeERC721",
@@ -321,8 +321,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(name_),
         ethereum.Value.fromString(symbol_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -338,8 +338,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
 
     return result[0].toAddress();
@@ -348,7 +348,7 @@ export class Hub extends ethereum.SmartContract {
   try_makeGame(
     type_: string,
     name_: string,
-    uri_: string
+    uri_: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "makeGame",
@@ -356,8 +356,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -373,8 +373,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
 
     return result[0].toAddress();
@@ -383,7 +383,7 @@ export class Hub extends ethereum.SmartContract {
   try_makeTask(
     type_: string,
     name_: string,
-    uri_: string
+    uri_: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "makeTask",
@@ -391,8 +391,8 @@ export class Hub extends ethereum.SmartContract {
       [
         ethereum.Value.fromString(type_),
         ethereum.Value.fromString(name_),
-        ethereum.Value.fromString(uri_)
-      ]
+        ethereum.Value.fromString(uri_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -405,7 +405,10 @@ export class Hub extends ethereum.SmartContract {
     let result = super.call(
       "mintForAccount",
       "mintForAccount(address,string):(uint256)",
-      [ethereum.Value.fromAddress(account), ethereum.Value.fromString(tokenURI)]
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromString(tokenURI),
+      ],
     );
 
     return result[0].toBigInt();
@@ -413,12 +416,15 @@ export class Hub extends ethereum.SmartContract {
 
   try_mintForAccount(
     account: Address,
-    tokenURI: string
+    tokenURI: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "mintForAccount",
       "mintForAccount(address,string):(uint256)",
-      [ethereum.Value.fromAddress(account), ethereum.Value.fromString(tokenURI)]
+      [
+        ethereum.Value.fromAddress(account),
+        ethereum.Value.fromString(tokenURI),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -452,7 +458,7 @@ export class Hub extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -480,7 +486,7 @@ export class Hub extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -490,7 +496,7 @@ export class Hub extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AddressAdd extends ethereum.Event {
@@ -445,7 +445,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   addressGet(key: string): Address {
     let result = super.call("addressGet", "addressGet(string):(address)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toAddress();
@@ -453,7 +453,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_addressGet(key: string): ethereum.CallResult<Address> {
     let result = super.tryCall("addressGet", "addressGet(string):(address)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -466,7 +466,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "addressGetAll",
       "addressGetAll(string):(address[])",
-      [ethereum.Value.fromString(key)]
+      [ethereum.Value.fromString(key)],
     );
 
     return result[0].toAddressArray();
@@ -476,7 +476,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "addressGetAll",
       "addressGetAll(string):(address[])",
-      [ethereum.Value.fromString(key)]
+      [ethereum.Value.fromString(key)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -491,8 +491,8 @@ export class OpenRepo extends ethereum.SmartContract {
       "addressGetAllOf(address,string):(address[])",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
 
     return result[0].toAddressArray();
@@ -500,15 +500,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_addressGetAllOf(
     originContract: Address,
-    key: string
+    key: string,
   ): ethereum.CallResult<Array<Address>> {
     let result = super.tryCall(
       "addressGetAllOf",
       "addressGetAllOf(address,string):(address[])",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -521,7 +521,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "addressGetIndex",
       "addressGetIndex(string,uint256):(address)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toAddress();
@@ -529,12 +532,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_addressGetIndex(
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "addressGetIndex",
       "addressGetIndex(string,uint256):(address)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -546,7 +552,7 @@ export class OpenRepo extends ethereum.SmartContract {
   addressGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): Address {
     let result = super.call(
       "addressGetIndexOf",
@@ -554,8 +560,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toAddress();
@@ -564,7 +570,7 @@ export class OpenRepo extends ethereum.SmartContract {
   try_addressGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "addressGetIndexOf",
@@ -572,8 +578,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -588,8 +594,8 @@ export class OpenRepo extends ethereum.SmartContract {
       "addressGetOf(address,string):(address)",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
 
     return result[0].toAddress();
@@ -597,15 +603,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_addressGetOf(
     originContract: Address,
-    key: string
+    key: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "addressGetOf",
       "addressGetOf(address,string):(address)",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -617,7 +623,7 @@ export class OpenRepo extends ethereum.SmartContract {
   addressHas(key: string, targetAddress: Address): boolean {
     let result = super.call("addressHas", "addressHas(string,address):(bool)", [
       ethereum.Value.fromString(key),
-      ethereum.Value.fromAddress(targetAddress)
+      ethereum.Value.fromAddress(targetAddress),
     ]);
 
     return result[0].toBoolean();
@@ -625,15 +631,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_addressHas(
     key: string,
-    targetAddress: Address
+    targetAddress: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "addressHas",
       "addressHas(string,address):(bool)",
       [
         ethereum.Value.fromString(key),
-        ethereum.Value.fromAddress(targetAddress)
-      ]
+        ethereum.Value.fromAddress(targetAddress),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -645,7 +651,7 @@ export class OpenRepo extends ethereum.SmartContract {
   addressHasOf(
     originContract: Address,
     key: string,
-    targetAddress: Address
+    targetAddress: Address,
   ): boolean {
     let result = super.call(
       "addressHasOf",
@@ -653,8 +659,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromAddress(targetAddress)
-      ]
+        ethereum.Value.fromAddress(targetAddress),
+      ],
     );
 
     return result[0].toBoolean();
@@ -663,7 +669,7 @@ export class OpenRepo extends ethereum.SmartContract {
   try_addressHasOf(
     originContract: Address,
     key: string,
-    targetAddress: Address
+    targetAddress: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "addressHasOf",
@@ -671,8 +677,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromAddress(targetAddress)
-      ]
+        ethereum.Value.fromAddress(targetAddress),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -683,7 +689,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   boolGet(key: string): boolean {
     let result = super.call("boolGet", "boolGet(string):(bool)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBoolean();
@@ -691,7 +697,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_boolGet(key: string): ethereum.CallResult<boolean> {
     let result = super.tryCall("boolGet", "boolGet(string):(bool)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -702,7 +708,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   boolGetAll(key: string): Array<boolean> {
     let result = super.call("boolGetAll", "boolGetAll(string):(bool[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBooleanArray();
@@ -710,7 +716,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_boolGetAll(key: string): ethereum.CallResult<Array<boolean>> {
     let result = super.tryCall("boolGetAll", "boolGetAll(string):(bool[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -723,7 +729,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "boolGetIndex",
       "boolGetIndex(string,uint256):(bool)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBoolean();
@@ -733,7 +742,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "boolGetIndex",
       "boolGetIndex(string,uint256):(bool)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -749,8 +761,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBoolean();
@@ -759,7 +771,7 @@ export class OpenRepo extends ethereum.SmartContract {
   try_boolGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "boolGetIndexOf",
@@ -767,8 +779,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -780,7 +792,7 @@ export class OpenRepo extends ethereum.SmartContract {
   boolGetOf(originContract: Address, key: string): boolean {
     let result = super.call("boolGetOf", "boolGetOf(address,string):(bool)", [
       ethereum.Value.fromAddress(originContract),
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBoolean();
@@ -788,15 +800,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_boolGetOf(
     originContract: Address,
-    key: string
+    key: string,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "boolGetOf",
       "boolGetOf(address,string):(bool)",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -860,7 +872,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -871,7 +883,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   stringGet(key: string): string {
     let result = super.call("stringGet", "stringGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toString();
@@ -879,7 +891,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_stringGet(key: string): ethereum.CallResult<string> {
     let result = super.tryCall("stringGet", "stringGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -890,7 +902,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   stringGetAll(key: string): Array<string> {
     let result = super.call("stringGetAll", "stringGetAll(string):(string[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toStringArray();
@@ -900,7 +912,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "stringGetAll",
       "stringGetAll(string):(string[])",
-      [ethereum.Value.fromString(key)]
+      [ethereum.Value.fromString(key)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -913,7 +925,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "stringGetIndex",
       "stringGetIndex(string,uint256):(string)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toString();
@@ -923,7 +938,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "stringGetIndex",
       "stringGetIndex(string,uint256):(string)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -935,7 +953,7 @@ export class OpenRepo extends ethereum.SmartContract {
   stringGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): string {
     let result = super.call(
       "stringGetIndexOf",
@@ -943,8 +961,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toString();
@@ -953,7 +971,7 @@ export class OpenRepo extends ethereum.SmartContract {
   try_stringGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<string> {
     let result = super.tryCall(
       "stringGetIndexOf",
@@ -961,8 +979,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -975,7 +993,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "stringGetOf",
       "stringGetOf(address,string):(string)",
-      [ethereum.Value.fromAddress(ownerAddr), ethereum.Value.fromString(key)]
+      [ethereum.Value.fromAddress(ownerAddr), ethereum.Value.fromString(key)],
     );
 
     return result[0].toString();
@@ -983,12 +1001,12 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_stringGetOf(
     ownerAddr: Address,
-    key: string
+    key: string,
   ): ethereum.CallResult<string> {
     let result = super.tryCall(
       "stringGetOf",
       "stringGetOf(address,string):(string)",
-      [ethereum.Value.fromAddress(ownerAddr), ethereum.Value.fromString(key)]
+      [ethereum.Value.fromAddress(ownerAddr), ethereum.Value.fromString(key)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1001,7 +1019,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -1011,7 +1029,7 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1037,7 +1055,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   uintGet(key: string): BigInt {
     let result = super.call("uintGet", "uintGet(string):(uint256)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBigInt();
@@ -1045,7 +1063,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_uintGet(key: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("uintGet", "uintGet(string):(uint256)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1056,7 +1074,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   uintGetAll(key: string): Array<BigInt> {
     let result = super.call("uintGetAll", "uintGetAll(string):(uint256[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBigIntArray();
@@ -1064,7 +1082,7 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_uintGetAll(key: string): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall("uintGetAll", "uintGetAll(string):(uint256[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1077,7 +1095,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.call(
       "uintGetIndex",
       "uintGetIndex(string,uint256):(uint256)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1087,7 +1108,10 @@ export class OpenRepo extends ethereum.SmartContract {
     let result = super.tryCall(
       "uintGetIndex",
       "uintGetIndex(string,uint256):(uint256)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1103,8 +1127,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1113,7 +1137,7 @@ export class OpenRepo extends ethereum.SmartContract {
   try_uintGetIndexOf(
     originContract: Address,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "uintGetIndexOf",
@@ -1121,8 +1145,8 @@ export class OpenRepo extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(originContract),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1137,8 +1161,8 @@ export class OpenRepo extends ethereum.SmartContract {
       "uintGetOf(address,string):(uint256)",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1146,15 +1170,15 @@ export class OpenRepo extends ethereum.SmartContract {
 
   try_uintGetOf(
     originContract: Address,
-    key: string
+    key: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "uintGetOf",
       "uintGetOf(address,string):(uint256)",
       [
         ethereum.Value.fromAddress(originContract),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();

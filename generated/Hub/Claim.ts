@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ApprovalForAll extends ethereum.Event {
@@ -588,7 +588,7 @@ export class Claim extends ethereum.SmartContract {
   GUIDHas(account: Address, guid: Bytes): boolean {
     let result = super.call("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toBoolean();
@@ -597,7 +597,7 @@ export class Claim extends ethereum.SmartContract {
   try_GUIDHas(account: Address, guid: Bytes): ethereum.CallResult<boolean> {
     let result = super.tryCall("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -612,8 +612,8 @@ export class Claim extends ethereum.SmartContract {
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
 
     return result[0].toBoolean();
@@ -621,15 +621,15 @@ export class Claim extends ethereum.SmartContract {
 
   try_GUIDHasByToken(
     soulToken: BigInt,
-    guid: Bytes
+    guid: Bytes,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "GUIDHasByToken",
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -640,7 +640,7 @@ export class Claim extends ethereum.SmartContract {
 
   GUIDURI(guid: Bytes): string {
     let result = super.call("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toString();
@@ -648,7 +648,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_GUIDURI(guid: Bytes): ethereum.CallResult<string> {
     let result = super.tryCall("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -663,8 +663,8 @@ export class Claim extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -676,8 +676,8 @@ export class Claim extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -692,8 +692,8 @@ export class Claim extends ethereum.SmartContract {
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
 
     return result[0].toBigIntArray();
@@ -701,15 +701,15 @@ export class Claim extends ethereum.SmartContract {
 
   try_balanceOfBatch(
     accounts: Array<Address>,
-    ids: Array<BigInt>
+    ids: Array<BigInt>,
   ): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall(
       "balanceOfBatch",
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -724,8 +724,8 @@ export class Claim extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -737,8 +737,8 @@ export class Claim extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -749,7 +749,7 @@ export class Claim extends ethereum.SmartContract {
 
   confGet(key: string): string {
     let result = super.call("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toString();
@@ -757,7 +757,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_confGet(key: string): ethereum.CallResult<string> {
     let result = super.tryCall("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -770,7 +770,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "contractBalance",
       "contractBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(token)]
+      [ethereum.Value.fromAddress(token)],
     );
 
     return result[0].toBigInt();
@@ -780,7 +780,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "contractBalance",
       "contractBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(token)]
+      [ethereum.Value.fromAddress(token)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -814,7 +814,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "getCurrentSBT",
       "getCurrentSBT():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -827,7 +827,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
 
     return result[0].toBigInt();
@@ -837,7 +837,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -880,7 +880,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -890,7 +890,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -905,8 +905,8 @@ export class Claim extends ethereum.SmartContract {
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
 
     return result[0].toBoolean();
@@ -914,15 +914,15 @@ export class Claim extends ethereum.SmartContract {
 
   try_isApprovedForAll(
     account: Address,
-    operator: Address
+    operator: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -963,7 +963,7 @@ export class Claim extends ethereum.SmartContract {
 
   roleExist(role: string): boolean {
     let result = super.call("roleExist", "roleExist(string):(bool)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBoolean();
@@ -971,7 +971,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_roleExist(role: string): ethereum.CallResult<boolean> {
     let result = super.tryCall("roleExist", "roleExist(string):(bool)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -983,7 +983,7 @@ export class Claim extends ethereum.SmartContract {
   roleHas(account: Address, role: string): boolean {
     let result = super.call("roleHas", "roleHas(address,string):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBoolean();
@@ -992,7 +992,7 @@ export class Claim extends ethereum.SmartContract {
   try_roleHas(account: Address, role: string): ethereum.CallResult<boolean> {
     let result = super.tryCall("roleHas", "roleHas(address,string):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1007,8 +1007,8 @@ export class Claim extends ethereum.SmartContract {
       "roleHasByToken(uint256,string):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromString(role)
-      ]
+        ethereum.Value.fromString(role),
+      ],
     );
 
     return result[0].toBoolean();
@@ -1016,15 +1016,15 @@ export class Claim extends ethereum.SmartContract {
 
   try_roleHasByToken(
     soulToken: BigInt,
-    role: string
+    role: string,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "roleHasByToken",
       "roleHasByToken(uint256,string):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromString(role)
-      ]
+        ethereum.Value.fromString(role),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1035,7 +1035,7 @@ export class Claim extends ethereum.SmartContract {
 
   roleToId(role: string): BigInt {
     let result = super.call("roleToId", "roleToId(string):(uint256)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBigInt();
@@ -1043,7 +1043,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_roleToId(role: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("roleToId", "roleToId(string):(uint256)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1054,7 +1054,7 @@ export class Claim extends ethereum.SmartContract {
 
   roleURI(role: string): string {
     let result = super.call("roleURI", "roleURI(string):(string)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toString();
@@ -1062,7 +1062,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_roleURI(role: string): ethereum.CallResult<string> {
     let result = super.tryCall("roleURI", "roleURI(string):(string)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1074,7 +1074,7 @@ export class Claim extends ethereum.SmartContract {
   rolesHas(account: Address, roles: Array<string>): boolean {
     let result = super.call("rolesHas", "rolesHas(address,string[]):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromStringArray(roles)
+      ethereum.Value.fromStringArray(roles),
     ]);
 
     return result[0].toBoolean();
@@ -1082,15 +1082,15 @@ export class Claim extends ethereum.SmartContract {
 
   try_rolesHas(
     account: Address,
-    roles: Array<string>
+    roles: Array<string>,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "rolesHas",
       "rolesHas(address,string[]):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromStringArray(roles)
-      ]
+        ethereum.Value.fromStringArray(roles),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1118,7 +1118,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -1128,7 +1128,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1156,7 +1156,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigIntArray();
@@ -1166,7 +1166,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1179,7 +1179,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigInt();
@@ -1189,7 +1189,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1202,7 +1202,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "uniqueRoleMembers",
       "uniqueRoleMembers(string):(uint256[])",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
 
     return result[0].toBigIntArray();
@@ -1212,7 +1212,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueRoleMembers",
       "uniqueRoleMembers(string):(uint256[])",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1225,7 +1225,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.call(
       "uniqueRoleMembersCount",
       "uniqueRoleMembersCount(string):(uint256)",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
 
     return result[0].toBigInt();
@@ -1235,7 +1235,7 @@ export class Claim extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueRoleMembersCount",
       "uniqueRoleMembersCount(string):(uint256)",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1246,7 +1246,7 @@ export class Claim extends ethereum.SmartContract {
 
   uri(token_id: BigInt): string {
     let result = super.call("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(token_id)
+      ethereum.Value.fromUnsignedBigInt(token_id),
     ]);
 
     return result[0].toString();
@@ -1254,7 +1254,7 @@ export class Claim extends ethereum.SmartContract {
 
   try_uri(token_id: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(token_id)
+      ethereum.Value.fromUnsignedBigInt(token_id),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();

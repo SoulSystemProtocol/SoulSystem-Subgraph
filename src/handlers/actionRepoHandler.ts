@@ -29,10 +29,11 @@ export function handleActionURI(event: ActionURI): void {
   const entity = Action.load(event.params.guid.toHexString());
   if (!entity) return;
   // Load uri data
-  const uriIpfsHash = event.params.uri.split("/").at(-1);
-  const metadata = ipfs.cat(uriIpfsHash);
+  // const uriIpfsHash = event.params.uri.split("/").at(-1);
+  // const metadata = ipfs.cat(uriIpfsHash); //DEPRECATE
   // Update entity's params
   entity.uri = event.params.uri;
-  entity.metadata = metadata;
+  // entity.metadata = metadata; //DEPRECATE
+  entity.metadata = null; //Set to null
   entity.save();
 }

@@ -77,10 +77,11 @@ export function handleUriChange(event: URI): void {
   // Update entity's params
   entity.uri = value;
   // Load uri data
-  const uriIpfsHash = value.split("/").at(-1);
-  const metadata = ipfs.cat(uriIpfsHash);
-  if(!!metadata) entity.metadata = metadata;
-  else log.error('handleUriChange() Failed to fetch metadata for {} value:{}', [roleId, value]);
+  // const uriIpfsHash = value.split("/").at(-1);
+  // const metadata = ipfs.cat(uriIpfsHash);
+  // if(!!metadata) entity.metadata = metadata; //DEPRECATE
+  // else log.error('handleUriChange() Failed to fetch metadata for {} value:{}', [roleId, value]);
+  entity.metadata = null; //Set to null
   entity.save();
 }
 
@@ -286,9 +287,10 @@ export function handlePost(event: Post): void {
   post.entityRole = event.params.entRole.toString();
   post.uri = event.params.uri;
   // Load uri data
-  const ipfsHash = event.params.uri.split("/").at(-1);
-  const metadata = ipfs.cat(ipfsHash);
-  post.metadata = metadata;
+  // const ipfsHash = event.params.uri.split("/").at(-1);
+  // const metadata = ipfs.cat(ipfsHash);
+  // post.metadata = metadata; //DEPRECATE
+  post.metadata = null; //Set to null
   //Save
   post.save();
 }

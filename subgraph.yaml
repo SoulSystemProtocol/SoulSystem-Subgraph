@@ -1,8 +1,6 @@
-specVersion: 0.0.4
+specVersion: 0.0.8
 schema:
   file: ./schema.graphql
-features:
-  - ipfsOnEthereumContracts
 dataSources:
   # Soul contract
   - kind: ethereum
@@ -14,7 +12,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Account
@@ -51,7 +49,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Game
@@ -80,7 +78,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Action
@@ -103,7 +101,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Game
@@ -135,7 +133,7 @@ templates:
       abi: Game
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Game
@@ -168,7 +166,7 @@ templates:
       abi: Claim
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Soul

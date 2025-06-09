@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AdminChanged extends ethereum.Event {
@@ -435,7 +435,7 @@ export class Soul extends ethereum.SmartContract {
 
   accountURI(account: Address): string {
     let result = super.call("accountURI", "accountURI(address):(string)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toString();
@@ -443,7 +443,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_accountURI(account: Address): ethereum.CallResult<string> {
     let result = super.tryCall("accountURI", "accountURI(address):(string)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -454,7 +454,7 @@ export class Soul extends ethereum.SmartContract {
 
   balanceOf(owner: Address): BigInt {
     let result = super.call("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
 
     return result[0].toBigInt();
@@ -462,7 +462,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_balanceOf(owner: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("balanceOf", "balanceOf(address):(uint256)", [
-      ethereum.Value.fromAddress(owner)
+      ethereum.Value.fromAddress(owner),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -488,7 +488,7 @@ export class Soul extends ethereum.SmartContract {
 
   getApproved(tokenId: BigInt): Address {
     let result = super.call("getApproved", "getApproved(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
 
     return result[0].toAddress();
@@ -498,7 +498,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "getApproved",
       "getApproved(uint256):(address)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+      [ethereum.Value.fromUnsignedBigInt(tokenId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -517,7 +517,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "getCurrentSBT",
       "getCurrentSBT():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -545,7 +545,7 @@ export class Soul extends ethereum.SmartContract {
     sbt: BigInt,
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string
+    domain: string,
   ): BigInt {
     let result = super.call(
       "getOpinion",
@@ -554,8 +554,8 @@ export class Soul extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
 
     return result[0].toBigInt();
@@ -565,7 +565,7 @@ export class Soul extends ethereum.SmartContract {
     sbt: BigInt,
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string
+    domain: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getOpinion",
@@ -574,8 +574,8 @@ export class Soul extends ethereum.SmartContract {
         ethereum.Value.fromUnsignedBigInt(sbt),
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -587,7 +587,7 @@ export class Soul extends ethereum.SmartContract {
   getOpinionMine(
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string
+    domain: string,
   ): BigInt {
     let result = super.call(
       "getOpinionMine",
@@ -595,8 +595,8 @@ export class Soul extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
 
     return result[0].toBigInt();
@@ -605,7 +605,7 @@ export class Soul extends ethereum.SmartContract {
   try_getOpinionMine(
     contractAddr: Address,
     tokenId: BigInt,
-    domain: string
+    domain: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getOpinionMine",
@@ -613,8 +613,8 @@ export class Soul extends ethereum.SmartContract {
       [
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -629,8 +629,8 @@ export class Soul extends ethereum.SmartContract {
       "getOpinionOnSoul(uint256,string):(int256)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
 
     return result[0].toBigInt();
@@ -638,15 +638,15 @@ export class Soul extends ethereum.SmartContract {
 
   try_getOpinionOnSoul(
     tokenId: BigInt,
-    domain: string
+    domain: string,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getOpinionOnSoul",
       "getOpinionOnSoul(uint256,string):(int256)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromString(domain)
-      ]
+        ethereum.Value.fromString(domain),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -660,7 +660,7 @@ export class Soul extends ethereum.SmartContract {
     contractAddr: Address,
     tokenId: BigInt,
     domain: string,
-    blockNumber: BigInt
+    blockNumber: BigInt,
   ): BigInt {
     let result = super.call(
       "getPastRepForDomain",
@@ -670,8 +670,8 @@ export class Soul extends ethereum.SmartContract {
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromString(domain),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
 
     return result[0].toBigInt();
@@ -682,7 +682,7 @@ export class Soul extends ethereum.SmartContract {
     contractAddr: Address,
     tokenId: BigInt,
     domain: string,
-    blockNumber: BigInt
+    blockNumber: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getPastRepForDomain",
@@ -692,8 +692,8 @@ export class Soul extends ethereum.SmartContract {
         ethereum.Value.fromAddress(contractAddr),
         ethereum.Value.fromUnsignedBigInt(tokenId),
         ethereum.Value.fromString(domain),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -719,7 +719,7 @@ export class Soul extends ethereum.SmartContract {
 
   handleFind(handle: string): BigInt {
     let result = super.call("handleFind", "handleFind(string):(uint256)", [
-      ethereum.Value.fromString(handle)
+      ethereum.Value.fromString(handle),
     ]);
 
     return result[0].toBigInt();
@@ -727,7 +727,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_handleFind(handle: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("handleFind", "handleFind(string):(uint256)", [
-      ethereum.Value.fromString(handle)
+      ethereum.Value.fromString(handle),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -738,7 +738,7 @@ export class Soul extends ethereum.SmartContract {
 
   handleGet(tokenId: BigInt): string {
     let result = super.call("handleGet", "handleGet(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
 
     return result[0].toString();
@@ -746,7 +746,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_handleGet(tokenId: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("handleGet", "handleGet(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -759,7 +759,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.call(
       "hasTokenControl",
       "hasTokenControl(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+      [ethereum.Value.fromUnsignedBigInt(tokenId)],
     );
 
     return result[0].toBoolean();
@@ -769,7 +769,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "hasTokenControl",
       "hasTokenControl(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(tokenId)]
+      [ethereum.Value.fromUnsignedBigInt(tokenId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -784,8 +784,8 @@ export class Soul extends ethereum.SmartContract {
       "hasTokenControlAccount(uint256,address):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromAddress(account)
-      ]
+        ethereum.Value.fromAddress(account),
+      ],
     );
 
     return result[0].toBoolean();
@@ -793,15 +793,15 @@ export class Soul extends ethereum.SmartContract {
 
   try_hasTokenControlAccount(
     tokenId: BigInt,
-    account: Address
+    account: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "hasTokenControlAccount",
       "hasTokenControlAccount(uint256,address):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(tokenId),
-        ethereum.Value.fromAddress(account)
-      ]
+        ethereum.Value.fromAddress(account),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -814,7 +814,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.call(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)],
     );
 
     return result[0].toBoolean();
@@ -822,12 +822,12 @@ export class Soul extends ethereum.SmartContract {
 
   try_isApprovedForAll(
     owner: Address,
-    operator: Address
+    operator: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
-      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)]
+      [ethereum.Value.fromAddress(owner), ethereum.Value.fromAddress(operator)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -838,7 +838,7 @@ export class Soul extends ethereum.SmartContract {
 
   mint(tokenURI: string): BigInt {
     let result = super.call("mint", "mint(string):(uint256)", [
-      ethereum.Value.fromString(tokenURI)
+      ethereum.Value.fromString(tokenURI),
     ]);
 
     return result[0].toBigInt();
@@ -846,7 +846,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_mint(tokenURI: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("mint", "mint(string):(uint256)", [
-      ethereum.Value.fromString(tokenURI)
+      ethereum.Value.fromString(tokenURI),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -858,7 +858,7 @@ export class Soul extends ethereum.SmartContract {
   mintFor(to: Address, tokenURI: string): BigInt {
     let result = super.call("mintFor", "mintFor(address,string):(uint256)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromString(tokenURI)
+      ethereum.Value.fromString(tokenURI),
     ]);
 
     return result[0].toBigInt();
@@ -867,7 +867,7 @@ export class Soul extends ethereum.SmartContract {
   try_mintFor(to: Address, tokenURI: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("mintFor", "mintFor(address,string):(uint256)", [
       ethereum.Value.fromAddress(to),
-      ethereum.Value.fromString(tokenURI)
+      ethereum.Value.fromString(tokenURI),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -908,7 +908,7 @@ export class Soul extends ethereum.SmartContract {
 
   ownerOf(tokenId: BigInt): Address {
     let result = super.call("ownerOf", "ownerOf(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
 
     return result[0].toAddress();
@@ -916,7 +916,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_ownerOf(tokenId: BigInt): ethereum.CallResult<Address> {
     let result = super.tryCall("ownerOf", "ownerOf(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -935,7 +935,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "proxiableUUID",
       "proxiableUUID():(bytes32)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -946,7 +946,7 @@ export class Soul extends ethereum.SmartContract {
 
   relGet(key: string): BigInt {
     let result = super.call("relGet", "relGet(string):(uint256)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBigInt();
@@ -954,7 +954,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_relGet(key: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("relGet", "relGet(string):(uint256)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -965,7 +965,7 @@ export class Soul extends ethereum.SmartContract {
 
   relGetAll(key: string): Array<BigInt> {
     let result = super.call("relGetAll", "relGetAll(string):(uint256[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBigIntArray();
@@ -973,7 +973,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_relGetAll(key: string): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall("relGetAll", "relGetAll(string):(uint256[])", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -988,8 +988,8 @@ export class Soul extends ethereum.SmartContract {
       "relGetAllOf(uint256,string):(uint256[])",
       [
         ethereum.Value.fromUnsignedBigInt(fromSBT),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
 
     return result[0].toBigIntArray();
@@ -997,15 +997,15 @@ export class Soul extends ethereum.SmartContract {
 
   try_relGetAllOf(
     fromSBT: BigInt,
-    key: string
+    key: string,
   ): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall(
       "relGetAllOf",
       "relGetAllOf(uint256,string):(uint256[])",
       [
         ethereum.Value.fromUnsignedBigInt(fromSBT),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1018,7 +1018,10 @@ export class Soul extends ethereum.SmartContract {
     let result = super.call(
       "relGetIndex",
       "relGetIndex(string,uint256):(uint256)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1028,7 +1031,10 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "relGetIndex",
       "relGetIndex(string,uint256):(uint256)",
-      [ethereum.Value.fromString(key), ethereum.Value.fromUnsignedBigInt(index)]
+      [
+        ethereum.Value.fromString(key),
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1044,8 +1050,8 @@ export class Soul extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(fromSBT),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1054,7 +1060,7 @@ export class Soul extends ethereum.SmartContract {
   try_relGetIndexOf(
     fromSBT: BigInt,
     key: string,
-    index: BigInt
+    index: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "relGetIndexOf",
@@ -1062,8 +1068,8 @@ export class Soul extends ethereum.SmartContract {
       [
         ethereum.Value.fromUnsignedBigInt(fromSBT),
         ethereum.Value.fromString(key),
-        ethereum.Value.fromUnsignedBigInt(index)
-      ]
+        ethereum.Value.fromUnsignedBigInt(index),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1075,7 +1081,7 @@ export class Soul extends ethereum.SmartContract {
   relGetOf(fromSBT: BigInt, key: string): BigInt {
     let result = super.call("relGetOf", "relGetOf(uint256,string):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(fromSBT),
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toBigInt();
@@ -1087,8 +1093,8 @@ export class Soul extends ethereum.SmartContract {
       "relGetOf(uint256,string):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(fromSBT),
-        ethereum.Value.fromString(key)
-      ]
+        ethereum.Value.fromString(key),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1101,7 +1107,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -1111,7 +1117,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1139,7 +1145,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.call(
       "tokenByAddress",
       "tokenByAddress(address):(uint256)",
-      [ethereum.Value.fromAddress(owner)]
+      [ethereum.Value.fromAddress(owner)],
     );
 
     return result[0].toBigInt();
@@ -1149,7 +1155,7 @@ export class Soul extends ethereum.SmartContract {
     let result = super.tryCall(
       "tokenByAddress",
       "tokenByAddress(address):(uint256)",
-      [ethereum.Value.fromAddress(owner)]
+      [ethereum.Value.fromAddress(owner)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1160,7 +1166,7 @@ export class Soul extends ethereum.SmartContract {
 
   tokenURI(tokenId: BigInt): string {
     let result = super.call("tokenURI", "tokenURI(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
 
     return result[0].toString();
@@ -1168,7 +1174,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_tokenURI(tokenId: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("tokenURI", "tokenURI(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(tokenId)
+      ethereum.Value.fromUnsignedBigInt(tokenId),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1179,7 +1185,7 @@ export class Soul extends ethereum.SmartContract {
 
   types(param0: BigInt): string {
     let result = super.call("types", "types(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
 
     return result[0].toString();
@@ -1187,7 +1193,7 @@ export class Soul extends ethereum.SmartContract {
 
   try_types(param0: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("types", "types(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
+      ethereum.Value.fromUnsignedBigInt(param0),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1199,7 +1205,7 @@ export class Soul extends ethereum.SmartContract {
   update(tokenId: BigInt, uri: string): BigInt {
     let result = super.call("update", "update(uint256,string):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(tokenId),
-      ethereum.Value.fromString(uri)
+      ethereum.Value.fromString(uri),
     ]);
 
     return result[0].toBigInt();
@@ -1208,7 +1214,7 @@ export class Soul extends ethereum.SmartContract {
   try_update(tokenId: BigInt, uri: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("update", "update(uint256,string):(uint256)", [
       ethereum.Value.fromUnsignedBigInt(tokenId),
-      ethereum.Value.fromString(uri)
+      ethereum.Value.fromString(uri),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();

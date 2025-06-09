@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class ApprovalForAll extends ethereum.Event {
@@ -844,7 +844,7 @@ export class Game extends ethereum.SmartContract {
   GUIDHas(account: Address, guid: Bytes): boolean {
     let result = super.call("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toBoolean();
@@ -853,7 +853,7 @@ export class Game extends ethereum.SmartContract {
   try_GUIDHas(account: Address, guid: Bytes): ethereum.CallResult<boolean> {
     let result = super.tryCall("GUIDHas", "GUIDHas(address,bytes32):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -868,8 +868,8 @@ export class Game extends ethereum.SmartContract {
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
 
     return result[0].toBoolean();
@@ -877,15 +877,15 @@ export class Game extends ethereum.SmartContract {
 
   try_GUIDHasByToken(
     soulToken: BigInt,
-    guid: Bytes
+    guid: Bytes,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "GUIDHasByToken",
       "GUIDHasByToken(uint256,bytes32):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromFixedBytes(guid)
-      ]
+        ethereum.Value.fromFixedBytes(guid),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -896,7 +896,7 @@ export class Game extends ethereum.SmartContract {
 
   GUIDURI(guid: Bytes): string {
     let result = super.call("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
 
     return result[0].toString();
@@ -904,7 +904,7 @@ export class Game extends ethereum.SmartContract {
 
   try_GUIDURI(guid: Bytes): ethereum.CallResult<string> {
     let result = super.tryCall("GUIDURI", "GUIDURI(bytes32):(string)", [
-      ethereum.Value.fromFixedBytes(guid)
+      ethereum.Value.fromFixedBytes(guid),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -919,8 +919,8 @@ export class Game extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -932,8 +932,8 @@ export class Game extends ethereum.SmartContract {
       "balanceOf(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -948,8 +948,8 @@ export class Game extends ethereum.SmartContract {
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
 
     return result[0].toBigIntArray();
@@ -957,15 +957,15 @@ export class Game extends ethereum.SmartContract {
 
   try_balanceOfBatch(
     accounts: Array<Address>,
-    ids: Array<BigInt>
+    ids: Array<BigInt>,
   ): ethereum.CallResult<Array<BigInt>> {
     let result = super.tryCall(
       "balanceOfBatch",
       "balanceOfBatch(address[],uint256[]):(uint256[])",
       [
         ethereum.Value.fromAddressArray(accounts),
-        ethereum.Value.fromUnsignedBigIntArray(ids)
-      ]
+        ethereum.Value.fromUnsignedBigIntArray(ids),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -980,8 +980,8 @@ export class Game extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
 
     return result[0].toBigInt();
@@ -993,8 +993,8 @@ export class Game extends ethereum.SmartContract {
       "balanceOfToken(uint256,uint256):(uint256)",
       [
         ethereum.Value.fromUnsignedBigInt(sbt),
-        ethereum.Value.fromUnsignedBigInt(id)
-      ]
+        ethereum.Value.fromUnsignedBigInt(id),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1005,7 +1005,7 @@ export class Game extends ethereum.SmartContract {
 
   claimHas(claimContract: Address): boolean {
     let result = super.call("claimHas", "claimHas(address):(bool)", [
-      ethereum.Value.fromAddress(claimContract)
+      ethereum.Value.fromAddress(claimContract),
     ]);
 
     return result[0].toBoolean();
@@ -1013,7 +1013,7 @@ export class Game extends ethereum.SmartContract {
 
   try_claimHas(claimContract: Address): ethereum.CallResult<boolean> {
     let result = super.tryCall("claimHas", "claimHas(address):(bool)", [
-      ethereum.Value.fromAddress(claimContract)
+      ethereum.Value.fromAddress(claimContract),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1026,32 +1026,32 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "conditionsGet",
       "conditionsGet(uint256):((string,bytes32)[])",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
 
     return result[0].toTupleArray<Game__conditionsGetResultValue0Struct>();
   }
 
   try_conditionsGet(
-    ruleId: BigInt
+    ruleId: BigInt,
   ): ethereum.CallResult<Array<Game__conditionsGetResultValue0Struct>> {
     let result = super.tryCall(
       "conditionsGet",
       "conditionsGet(uint256):((string,bytes32)[])",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      value[0].toTupleArray<Game__conditionsGetResultValue0Struct>()
+      value[0].toTupleArray<Game__conditionsGetResultValue0Struct>(),
     );
   }
 
   confGet(key: string): string {
     let result = super.call("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
 
     return result[0].toString();
@@ -1059,7 +1059,7 @@ export class Game extends ethereum.SmartContract {
 
   try_confGet(key: string): ethereum.CallResult<string> {
     let result = super.tryCall("confGet", "confGet(string):(string)", [
-      ethereum.Value.fromString(key)
+      ethereum.Value.fromString(key),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1072,28 +1072,28 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "confirmationGet",
       "confirmationGet(uint256):((string,bool,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return changetype<Game__confirmationGetResultValue0Struct>(
-      result[0].toTuple()
+      result[0].toTuple(),
     );
   }
 
   try_confirmationGet(
-    id: BigInt
+    id: BigInt,
   ): ethereum.CallResult<Game__confirmationGetResultValue0Struct> {
     let result = super.tryCall(
       "confirmationGet",
       "confirmationGet(uint256):((string,bool,uint256))",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<Game__confirmationGetResultValue0Struct>(value[0].toTuple())
+      changetype<Game__confirmationGetResultValue0Struct>(value[0].toTuple()),
     );
   }
 
@@ -1116,26 +1116,26 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "effectsGet",
       "effectsGet(uint256):((string,int256,bool)[])",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
 
     return result[0].toTupleArray<Game__effectsGetResultValue0Struct>();
   }
 
   try_effectsGet(
-    ruleId: BigInt
+    ruleId: BigInt,
   ): ethereum.CallResult<Array<Game__effectsGetResultValue0Struct>> {
     let result = super.tryCall(
       "effectsGet",
       "effectsGet(uint256):((string,int256,bool)[])",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      value[0].toTupleArray<Game__effectsGetResultValue0Struct>()
+      value[0].toTupleArray<Game__effectsGetResultValue0Struct>(),
     );
   }
 
@@ -1149,7 +1149,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "getCurrentSBT",
       "getCurrentSBT():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1162,7 +1162,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
 
     return result[0].toBigInt();
@@ -1172,7 +1172,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "getExtTokenId",
       "getExtTokenId(address):(uint256)",
-      [ethereum.Value.fromAddress(account)]
+      [ethereum.Value.fromAddress(account)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1215,7 +1215,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -1225,7 +1225,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "getTargetContract",
       "getTargetContract():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1240,8 +1240,8 @@ export class Game extends ethereum.SmartContract {
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
 
     return result[0].toBoolean();
@@ -1249,15 +1249,15 @@ export class Game extends ethereum.SmartContract {
 
   try_isApprovedForAll(
     account: Address,
-    operator: Address
+    operator: Address,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "isApprovedForAll",
       "isApprovedForAll(address,address):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromAddress(operator)
-      ]
+        ethereum.Value.fromAddress(operator),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1328,7 +1328,7 @@ export class Game extends ethereum.SmartContract {
 
   roleExist(role: string): boolean {
     let result = super.call("roleExist", "roleExist(string):(bool)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBoolean();
@@ -1336,7 +1336,7 @@ export class Game extends ethereum.SmartContract {
 
   try_roleExist(role: string): ethereum.CallResult<boolean> {
     let result = super.tryCall("roleExist", "roleExist(string):(bool)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1348,7 +1348,7 @@ export class Game extends ethereum.SmartContract {
   roleHas(account: Address, role: string): boolean {
     let result = super.call("roleHas", "roleHas(address,string):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBoolean();
@@ -1357,7 +1357,7 @@ export class Game extends ethereum.SmartContract {
   try_roleHas(account: Address, role: string): ethereum.CallResult<boolean> {
     let result = super.tryCall("roleHas", "roleHas(address,string):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1372,8 +1372,8 @@ export class Game extends ethereum.SmartContract {
       "roleHasByToken(uint256,string):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromString(role)
-      ]
+        ethereum.Value.fromString(role),
+      ],
     );
 
     return result[0].toBoolean();
@@ -1381,15 +1381,15 @@ export class Game extends ethereum.SmartContract {
 
   try_roleHasByToken(
     soulToken: BigInt,
-    role: string
+    role: string,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "roleHasByToken",
       "roleHasByToken(uint256,string):(bool)",
       [
         ethereum.Value.fromUnsignedBigInt(soulToken),
-        ethereum.Value.fromString(role)
-      ]
+        ethereum.Value.fromString(role),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1400,7 +1400,7 @@ export class Game extends ethereum.SmartContract {
 
   roleToId(role: string): BigInt {
     let result = super.call("roleToId", "roleToId(string):(uint256)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toBigInt();
@@ -1408,7 +1408,7 @@ export class Game extends ethereum.SmartContract {
 
   try_roleToId(role: string): ethereum.CallResult<BigInt> {
     let result = super.tryCall("roleToId", "roleToId(string):(uint256)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1419,7 +1419,7 @@ export class Game extends ethereum.SmartContract {
 
   roleURI(role: string): string {
     let result = super.call("roleURI", "roleURI(string):(string)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
 
     return result[0].toString();
@@ -1427,7 +1427,7 @@ export class Game extends ethereum.SmartContract {
 
   try_roleURI(role: string): ethereum.CallResult<string> {
     let result = super.tryCall("roleURI", "roleURI(string):(string)", [
-      ethereum.Value.fromString(role)
+      ethereum.Value.fromString(role),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1439,7 +1439,7 @@ export class Game extends ethereum.SmartContract {
   rolesHas(account: Address, roles: Array<string>): boolean {
     let result = super.call("rolesHas", "rolesHas(address,string[]):(bool)", [
       ethereum.Value.fromAddress(account),
-      ethereum.Value.fromStringArray(roles)
+      ethereum.Value.fromStringArray(roles),
     ]);
 
     return result[0].toBoolean();
@@ -1447,15 +1447,15 @@ export class Game extends ethereum.SmartContract {
 
   try_rolesHas(
     account: Address,
-    roles: Array<string>
+    roles: Array<string>,
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "rolesHas",
       "rolesHas(address,string[]):(bool)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromStringArray(roles)
-      ]
+        ethereum.Value.fromStringArray(roles),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1467,7 +1467,7 @@ export class Game extends ethereum.SmartContract {
   ruleAdd(
     rule: Game__ruleAddInputRuleStruct,
     effects: Array<Game__ruleAddInputEffectsStruct>,
-    confirmation: Game__ruleAddInputConfirmationStruct
+    confirmation: Game__ruleAddInputConfirmationStruct,
   ): BigInt {
     let result = super.call(
       "ruleAdd",
@@ -1475,8 +1475,8 @@ export class Game extends ethereum.SmartContract {
       [
         ethereum.Value.fromTuple(rule),
         ethereum.Value.fromTupleArray(effects),
-        ethereum.Value.fromTuple(confirmation)
-      ]
+        ethereum.Value.fromTuple(confirmation),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1485,7 +1485,7 @@ export class Game extends ethereum.SmartContract {
   try_ruleAdd(
     rule: Game__ruleAddInputRuleStruct,
     effects: Array<Game__ruleAddInputEffectsStruct>,
-    confirmation: Game__ruleAddInputConfirmationStruct
+    confirmation: Game__ruleAddInputConfirmationStruct,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "ruleAdd",
@@ -1493,8 +1493,8 @@ export class Game extends ethereum.SmartContract {
       [
         ethereum.Value.fromTuple(rule),
         ethereum.Value.fromTupleArray(effects),
-        ethereum.Value.fromTuple(confirmation)
-      ]
+        ethereum.Value.fromTuple(confirmation),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1507,26 +1507,26 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "ruleGet",
       "ruleGet(uint256):((bytes32,string,bool,string,bool))",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
 
     return changetype<Game__ruleGetResultValue0Struct>(result[0].toTuple());
   }
 
   try_ruleGet(
-    ruleId: BigInt
+    ruleId: BigInt,
   ): ethereum.CallResult<Game__ruleGetResultValue0Struct> {
     let result = super.tryCall(
       "ruleGet",
       "ruleGet(uint256):((bytes32,string,bool,string,bool))",
-      [ethereum.Value.fromUnsignedBigInt(ruleId)]
+      [ethereum.Value.fromUnsignedBigInt(ruleId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<Game__ruleGetResultValue0Struct>(value[0].toTuple())
+      changetype<Game__ruleGetResultValue0Struct>(value[0].toTuple()),
     );
   }
 
@@ -1534,7 +1534,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
 
     return result[0].toBoolean();
@@ -1544,7 +1544,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "supportsInterface",
       "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
+      [ethereum.Value.fromFixedBytes(interfaceId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1572,7 +1572,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigIntArray();
@@ -1582,7 +1582,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembers",
       "uniqueMembers(uint256):(uint256[])",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1595,7 +1595,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
 
     return result[0].toBigInt();
@@ -1605,7 +1605,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueMembersCount",
       "uniqueMembersCount(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(id)]
+      [ethereum.Value.fromUnsignedBigInt(id)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1618,7 +1618,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "uniqueRoleMembers",
       "uniqueRoleMembers(string):(uint256[])",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
 
     return result[0].toBigIntArray();
@@ -1628,7 +1628,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueRoleMembers",
       "uniqueRoleMembers(string):(uint256[])",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1641,7 +1641,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "uniqueRoleMembersCount",
       "uniqueRoleMembersCount(string):(uint256)",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
 
     return result[0].toBigInt();
@@ -1651,7 +1651,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "uniqueRoleMembersCount",
       "uniqueRoleMembersCount(string):(uint256)",
-      [ethereum.Value.fromString(role)]
+      [ethereum.Value.fromString(role)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1662,7 +1662,7 @@ export class Game extends ethereum.SmartContract {
 
   uri(token_id: BigInt): string {
     let result = super.call("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(token_id)
+      ethereum.Value.fromUnsignedBigInt(token_id),
     ]);
 
     return result[0].toString();
@@ -1670,7 +1670,7 @@ export class Game extends ethereum.SmartContract {
 
   try_uri(token_id: BigInt): ethereum.CallResult<string> {
     let result = super.tryCall("uri", "uri(uint256):(string)", [
-      ethereum.Value.fromUnsignedBigInt(token_id)
+      ethereum.Value.fromUnsignedBigInt(token_id),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1712,7 +1712,7 @@ export class Game extends ethereum.SmartContract {
   ruleAdd1(
     rule: Game__ruleAdd1InputRuleStruct,
     confirmation: Game__ruleAdd1InputConfirmationStruct,
-    effects: Array<Game__ruleAdd1InputEffectsStruct>
+    effects: Array<Game__ruleAdd1InputEffectsStruct>,
   ): BigInt {
     let result = super.call(
       "ruleAdd",
@@ -1720,8 +1720,8 @@ export class Game extends ethereum.SmartContract {
       [
         ethereum.Value.fromTuple(rule),
         ethereum.Value.fromTuple(confirmation),
-        ethereum.Value.fromTupleArray(effects)
-      ]
+        ethereum.Value.fromTupleArray(effects),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1730,7 +1730,7 @@ export class Game extends ethereum.SmartContract {
   try_ruleAdd1(
     rule: Game__ruleAdd1InputRuleStruct,
     confirmation: Game__ruleAdd1InputConfirmationStruct,
-    effects: Array<Game__ruleAdd1InputEffectsStruct>
+    effects: Array<Game__ruleAdd1InputEffectsStruct>,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "ruleAdd",
@@ -1738,8 +1738,8 @@ export class Game extends ethereum.SmartContract {
       [
         ethereum.Value.fromTuple(rule),
         ethereum.Value.fromTuple(confirmation),
-        ethereum.Value.fromTupleArray(effects)
-      ]
+        ethereum.Value.fromTupleArray(effects),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1752,7 +1752,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "contractBalance",
       "contractBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(token)]
+      [ethereum.Value.fromAddress(token)],
     );
 
     return result[0].toBigInt();
@@ -1762,7 +1762,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "contractBalance",
       "contractBalance(address):(uint256)",
-      [ethereum.Value.fromAddress(token)]
+      [ethereum.Value.fromAddress(token)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1773,7 +1773,7 @@ export class Game extends ethereum.SmartContract {
 
   delegates(account: Address): Address {
     let result = super.call("delegates", "delegates(address):(address)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toAddress();
@@ -1781,7 +1781,7 @@ export class Game extends ethereum.SmartContract {
 
   try_delegates(account: Address): ethereum.CallResult<Address> {
     let result = super.tryCall("delegates", "delegates(address):(address)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1794,7 +1794,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.call(
       "getPastTotalSupply",
       "getPastTotalSupply(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(blockNumber)]
+      [ethereum.Value.fromUnsignedBigInt(blockNumber)],
     );
 
     return result[0].toBigInt();
@@ -1804,7 +1804,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "getPastTotalSupply",
       "getPastTotalSupply(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(blockNumber)]
+      [ethereum.Value.fromUnsignedBigInt(blockNumber)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1819,8 +1819,8 @@ export class Game extends ethereum.SmartContract {
       "getPastVotes(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
 
     return result[0].toBigInt();
@@ -1828,15 +1828,15 @@ export class Game extends ethereum.SmartContract {
 
   try_getPastVotes(
     account: Address,
-    blockNumber: BigInt
+    blockNumber: BigInt,
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "getPastVotes",
       "getPastVotes(address,uint256):(uint256)",
       [
         ethereum.Value.fromAddress(account),
-        ethereum.Value.fromUnsignedBigInt(blockNumber)
-      ]
+        ethereum.Value.fromUnsignedBigInt(blockNumber),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1847,7 +1847,7 @@ export class Game extends ethereum.SmartContract {
 
   getVotes(account: Address): BigInt {
     let result = super.call("getVotes", "getVotes(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
 
     return result[0].toBigInt();
@@ -1855,7 +1855,7 @@ export class Game extends ethereum.SmartContract {
 
   try_getVotes(account: Address): ethereum.CallResult<BigInt> {
     let result = super.tryCall("getVotes", "getVotes(address):(uint256)", [
-      ethereum.Value.fromAddress(account)
+      ethereum.Value.fromAddress(account),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1874,7 +1874,7 @@ export class Game extends ethereum.SmartContract {
     let result = super.tryCall(
       "votesRepoAddr",
       "votesRepoAddr():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1888,7 +1888,7 @@ export class Game extends ethereum.SmartContract {
     uri_: string,
     rules: Array<Game__caseMakeInputRulesStruct>,
     assignRoles: Array<Game__caseMakeInputAssignRolesStruct>,
-    posts: Array<Game__caseMakeInputPostsStruct>
+    posts: Array<Game__caseMakeInputPostsStruct>,
   ): Address {
     let result = super.call(
       "caseMake",
@@ -1898,8 +1898,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromString(uri_),
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
-        ethereum.Value.fromTupleArray(posts)
-      ]
+        ethereum.Value.fromTupleArray(posts),
+      ],
     );
 
     return result[0].toAddress();
@@ -1910,7 +1910,7 @@ export class Game extends ethereum.SmartContract {
     uri_: string,
     rules: Array<Game__caseMakeInputRulesStruct>,
     assignRoles: Array<Game__caseMakeInputAssignRolesStruct>,
-    posts: Array<Game__caseMakeInputPostsStruct>
+    posts: Array<Game__caseMakeInputPostsStruct>,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "caseMake",
@@ -1920,8 +1920,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromString(uri_),
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
-        ethereum.Value.fromTupleArray(posts)
-      ]
+        ethereum.Value.fromTupleArray(posts),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1936,7 +1936,7 @@ export class Game extends ethereum.SmartContract {
     rules: Array<Game__caseMakeClosedInputRulesStruct>,
     assignRoles: Array<Game__caseMakeClosedInputAssignRolesStruct>,
     posts: Array<Game__caseMakeClosedInputPostsStruct>,
-    decisionURI_: string
+    decisionURI_: string,
   ): Address {
     let result = super.call(
       "caseMakeClosed",
@@ -1947,8 +1947,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
         ethereum.Value.fromTupleArray(posts),
-        ethereum.Value.fromString(decisionURI_)
-      ]
+        ethereum.Value.fromString(decisionURI_),
+      ],
     );
 
     return result[0].toAddress();
@@ -1960,7 +1960,7 @@ export class Game extends ethereum.SmartContract {
     rules: Array<Game__caseMakeClosedInputRulesStruct>,
     assignRoles: Array<Game__caseMakeClosedInputAssignRolesStruct>,
     posts: Array<Game__caseMakeClosedInputPostsStruct>,
-    decisionURI_: string
+    decisionURI_: string,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "caseMakeClosed",
@@ -1971,8 +1971,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
         ethereum.Value.fromTupleArray(posts),
-        ethereum.Value.fromString(decisionURI_)
-      ]
+        ethereum.Value.fromString(decisionURI_),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1986,7 +1986,7 @@ export class Game extends ethereum.SmartContract {
     uri_: string,
     rules: Array<Game__caseMakeOpenInputRulesStruct>,
     assignRoles: Array<Game__caseMakeOpenInputAssignRolesStruct>,
-    posts: Array<Game__caseMakeOpenInputPostsStruct>
+    posts: Array<Game__caseMakeOpenInputPostsStruct>,
   ): Address {
     let result = super.call(
       "caseMakeOpen",
@@ -1996,8 +1996,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromString(uri_),
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
-        ethereum.Value.fromTupleArray(posts)
-      ]
+        ethereum.Value.fromTupleArray(posts),
+      ],
     );
 
     return result[0].toAddress();
@@ -2008,7 +2008,7 @@ export class Game extends ethereum.SmartContract {
     uri_: string,
     rules: Array<Game__caseMakeOpenInputRulesStruct>,
     assignRoles: Array<Game__caseMakeOpenInputAssignRolesStruct>,
-    posts: Array<Game__caseMakeOpenInputPostsStruct>
+    posts: Array<Game__caseMakeOpenInputPostsStruct>,
   ): ethereum.CallResult<Address> {
     let result = super.tryCall(
       "caseMakeOpen",
@@ -2018,8 +2018,8 @@ export class Game extends ethereum.SmartContract {
         ethereum.Value.fromString(uri_),
         ethereum.Value.fromTupleArray(rules),
         ethereum.Value.fromTupleArray(assignRoles),
-        ethereum.Value.fromTupleArray(posts)
-      ]
+        ethereum.Value.fromTupleArray(posts),
+      ],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -2610,19 +2610,17 @@ export class RuleAddCall__Inputs {
 
   get rule(): RuleAddCallRuleStruct {
     return changetype<RuleAddCallRuleStruct>(
-      this._call.inputValues[0].value.toTuple()
+      this._call.inputValues[0].value.toTuple(),
     );
   }
 
   get effects(): Array<RuleAddCallEffectsStruct> {
-    return this._call.inputValues[1].value.toTupleArray<
-      RuleAddCallEffectsStruct
-    >();
+    return this._call.inputValues[1].value.toTupleArray<RuleAddCallEffectsStruct>();
   }
 
   get confirmation(): RuleAddCallConfirmationStruct {
     return changetype<RuleAddCallConfirmationStruct>(
-      this._call.inputValues[2].value.toTuple()
+      this._call.inputValues[2].value.toTuple(),
     );
   }
 }
@@ -2745,9 +2743,7 @@ export class RuleUpdateConditionsCall__Inputs {
   }
 
   get conditions(): Array<RuleUpdateConditionsCallConditionsStruct> {
-    return this._call.inputValues[1].value.toTupleArray<
-      RuleUpdateConditionsCallConditionsStruct
-    >();
+    return this._call.inputValues[1].value.toTupleArray<RuleUpdateConditionsCallConditionsStruct>();
   }
 }
 
@@ -2792,7 +2788,7 @@ export class RuleUpdateConfirmationCall__Inputs {
 
   get confirmation(): RuleUpdateConfirmationCallConfirmationStruct {
     return changetype<RuleUpdateConfirmationCallConfirmationStruct>(
-      this._call.inputValues[1].value.toTuple()
+      this._call.inputValues[1].value.toTuple(),
     );
   }
 }
@@ -2841,9 +2837,7 @@ export class RuleUpdateEffectsCall__Inputs {
   }
 
   get effects(): Array<RuleUpdateEffectsCallEffectsStruct> {
-    return this._call.inputValues[1].value.toTupleArray<
-      RuleUpdateEffectsCallEffectsStruct
-    >();
+    return this._call.inputValues[1].value.toTupleArray<RuleUpdateEffectsCallEffectsStruct>();
   }
 }
 
@@ -3117,21 +3111,15 @@ export class RunActionXXCall__Inputs {
   }
 
   get roleMap(): Array<RunActionXXCallRoleMapStruct> {
-    return this._call.inputValues[1].value.toTupleArray<
-      RunActionXXCallRoleMapStruct
-    >();
+    return this._call.inputValues[1].value.toTupleArray<RunActionXXCallRoleMapStruct>();
   }
 
   get intMap(): Array<RunActionXXCallIntMapStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      RunActionXXCallIntMapStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<RunActionXXCallIntMapStruct>();
   }
 
   get strMap(): Array<RunActionXXCallStrMapStruct> {
-    return this._call.inputValues[3].value.toTupleArray<
-      RunActionXXCallStrMapStruct
-    >();
+    return this._call.inputValues[3].value.toTupleArray<RunActionXXCallStrMapStruct>();
   }
 }
 
@@ -3192,20 +3180,18 @@ export class RuleAdd1Call__Inputs {
 
   get rule(): RuleAdd1CallRuleStruct {
     return changetype<RuleAdd1CallRuleStruct>(
-      this._call.inputValues[0].value.toTuple()
+      this._call.inputValues[0].value.toTuple(),
     );
   }
 
   get confirmation(): RuleAdd1CallConfirmationStruct {
     return changetype<RuleAdd1CallConfirmationStruct>(
-      this._call.inputValues[1].value.toTuple()
+      this._call.inputValues[1].value.toTuple(),
     );
   }
 
   get effects(): Array<RuleAdd1CallEffectsStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      RuleAdd1CallEffectsStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<RuleAdd1CallEffectsStruct>();
   }
 }
 
@@ -3294,14 +3280,12 @@ export class RuleUpdateCall__Inputs {
 
   get rule(): RuleUpdateCallRuleStruct {
     return changetype<RuleUpdateCallRuleStruct>(
-      this._call.inputValues[1].value.toTuple()
+      this._call.inputValues[1].value.toTuple(),
     );
   }
 
   get effects(): Array<RuleUpdateCallEffectsStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      RuleUpdateCallEffectsStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<RuleUpdateCallEffectsStruct>();
   }
 }
 
@@ -3637,21 +3621,15 @@ export class CaseMakeCall__Inputs {
   }
 
   get rules(): Array<CaseMakeCallRulesStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      CaseMakeCallRulesStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<CaseMakeCallRulesStruct>();
   }
 
   get assignRoles(): Array<CaseMakeCallAssignRolesStruct> {
-    return this._call.inputValues[3].value.toTupleArray<
-      CaseMakeCallAssignRolesStruct
-    >();
+    return this._call.inputValues[3].value.toTupleArray<CaseMakeCallAssignRolesStruct>();
   }
 
   get posts(): Array<CaseMakeCallPostsStruct> {
-    return this._call.inputValues[4].value.toTupleArray<
-      CaseMakeCallPostsStruct
-    >();
+    return this._call.inputValues[4].value.toTupleArray<CaseMakeCallPostsStruct>();
   }
 }
 
@@ -3727,21 +3705,15 @@ export class CaseMakeClosedCall__Inputs {
   }
 
   get rules(): Array<CaseMakeClosedCallRulesStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      CaseMakeClosedCallRulesStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<CaseMakeClosedCallRulesStruct>();
   }
 
   get assignRoles(): Array<CaseMakeClosedCallAssignRolesStruct> {
-    return this._call.inputValues[3].value.toTupleArray<
-      CaseMakeClosedCallAssignRolesStruct
-    >();
+    return this._call.inputValues[3].value.toTupleArray<CaseMakeClosedCallAssignRolesStruct>();
   }
 
   get posts(): Array<CaseMakeClosedCallPostsStruct> {
-    return this._call.inputValues[4].value.toTupleArray<
-      CaseMakeClosedCallPostsStruct
-    >();
+    return this._call.inputValues[4].value.toTupleArray<CaseMakeClosedCallPostsStruct>();
   }
 
   get decisionURI_(): string {
@@ -3821,21 +3793,15 @@ export class CaseMakeOpenCall__Inputs {
   }
 
   get rules(): Array<CaseMakeOpenCallRulesStruct> {
-    return this._call.inputValues[2].value.toTupleArray<
-      CaseMakeOpenCallRulesStruct
-    >();
+    return this._call.inputValues[2].value.toTupleArray<CaseMakeOpenCallRulesStruct>();
   }
 
   get assignRoles(): Array<CaseMakeOpenCallAssignRolesStruct> {
-    return this._call.inputValues[3].value.toTupleArray<
-      CaseMakeOpenCallAssignRolesStruct
-    >();
+    return this._call.inputValues[3].value.toTupleArray<CaseMakeOpenCallAssignRolesStruct>();
   }
 
   get posts(): Array<CaseMakeOpenCallPostsStruct> {
-    return this._call.inputValues[4].value.toTupleArray<
-      CaseMakeOpenCallPostsStruct
-    >();
+    return this._call.inputValues[4].value.toTupleArray<CaseMakeOpenCallPostsStruct>();
   }
 }
 
