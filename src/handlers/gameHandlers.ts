@@ -1,5 +1,6 @@
 import { Address, log, BigInt, ipfs } from "@graphprotocol/graph-ts";
-import { store } from '@graphprotocol/graph-ts'
+import { store } from '@graphprotocol/graph-ts';
+import { GameRoleIpfsMetadataTemplate, GamePostIpfsMetadataTemplate } from "../../../generated/templates";
 import {
   Account,
   Game,
@@ -76,12 +77,22 @@ export function handleUriChange(event: URI): void {
   }
   // Update entity's params
   entity.uri = value;
-  // Load uri data
-  // const uriIpfsHash = value.split("/").at(-1);
-  // const metadata = ipfs.cat(uriIpfsHash);
-  // if(!!metadata) entity.metadata = metadata; //DEPRECATE
-  // else log.error('handleUriChange() Failed to fetch metadata for {} value:{}', [roleId, value]);
-  entity.metadata = null; //Set to null
+
+  // Extract IPFS hash from URI
+  let ipfsHash = "";
+  if (entity.uri) { // entity.uri is 'value' which is event.params.value
+    let parts = entity.uri.split("/");
+    if (parts.length > 0) {
+      ipfsHash = parts[parts.length - 1];
+    }
+  }
+
+  // If IPFS hash is found, call the template
+  if (ipfsHash != "") {
+    GameRoleIpfsMetadataTemplate.createWithContext(ipfsHash, entity.id);
+  }
+
+  entity.metadata = null; //Set to null (will be populated by IPFS handler)
   entity.save();
 }
 
@@ -286,11 +297,22 @@ export function handlePost(event: Post): void {
   post.author = authorSoul.id;
   post.entityRole = event.params.entRole.toString();
   post.uri = event.params.uri;
-  // Load uri data
-  // const ipfsHash = event.params.uri.split("/").at(-1);
-  // const metadata = ipfs.cat(ipfsHash);
-  // post.metadata = metadata; //DEPRECATE
-  post.metadata = null; //Set to null
+
+  // Extract IPFS hash from URI
+  let ipfsHash = "";
+  if (post.uri) {
+    let parts = post.uri.split("/");
+    if (parts.length > 0) {
+      ipfsHash = parts[parts.length - 1];
+    }
+  }
+
+  // If IPFS hash is found, call the template
+  if (ipfsHash != "") {
+    GamePostIpfsMetadataTemplate.createWithContext(ipfsHash, post.id);
+  }
+
+  post.metadata = null; //Set to null (will be populated by IPFS handler)
   //Save
   post.save();
 }

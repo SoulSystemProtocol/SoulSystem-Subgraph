@@ -98,13 +98,8 @@ type Soul @entity {
   metadata: Bytes
   handle: String
 
-  #DEPRECATE THESE
-  uriImage: String!
-  uriFirstName: String!
-  uriLastName: String!
-
-  image: String!
-  name: String!
+  image: String
+  name: String
   tags: [String!]
   searchField: String
   participantGame: [GameParticipant!]! @derivedFrom(field: "sbt")

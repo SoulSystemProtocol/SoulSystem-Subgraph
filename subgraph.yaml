@@ -199,3 +199,58 @@ templates:
         - event: ERC20PaymentReleased(indexed address,address,uint256)
           handler: handlePaymentReleasedERC20
       file: ./src/handlers/claimHandlers.ts
+
+  # Template for Soul IPFS Metadata
+  - name: SoulIpfsMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfsHandlers.ts
+      handler: handleSoulIpfsMetadata
+      entities: # Entities that this handler might affect or create
+        - Soul
+
+  # Template for GamePost IPFS Metadata
+  - name: GamePostIpfsMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfsHandlers.ts
+      handler: handleGamePostIpfsMetadata
+      entities:
+        - GamePost
+
+  # Template for GameRole IPFS Metadata
+  - name: GameRoleIpfsMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfsHandlers.ts
+      handler: handleGameRoleIpfsMetadata
+      entities:
+        - GameRole
+
+  # Template for Action IPFS Metadata
+  - name: ActionIpfsMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfsHandlers.ts
+      handler: handleActionIpfsMetadata
+      entities:
+        - Action
+
+  # Template for SoulPost IPFS Metadata
+  - name: SoulPostIpfsMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/ipfsHandlers.ts
+      handler: handleSoulPostIpfsMetadata
+      entities:
+        - SoulPost

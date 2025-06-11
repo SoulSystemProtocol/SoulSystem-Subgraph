@@ -2,7 +2,8 @@ import { Address, ipfs, json, JSONValue, JSONValueKind, log } from "@graphprotoc
 import { Soul, SoulPost, SoulOpinionChange, SoulOpinion } from "../../generated/schema";
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement, OpinionChange } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
-import { store } from '@graphprotocol/graph-ts'
+import { store } from '@graphprotocol/graph-ts';
+import { SoulIpfsMetadataTemplate, SoulPostIpfsMetadataTemplate } from "../../generated/templates";
 // import { Soul as SoulContract } from "../../generated/Soul/Soul";
 // import { log } from '@graphprotocol/graph-ts'
 
@@ -43,108 +44,28 @@ export function handleURI(event: URI): void {
   // Find soul and return if not found
   let soul = Soul.load(event.params.id.toString());
   if (!soul) return;
+  soul.uri = event.params.value; // Set URI first
 
-  //TODO: Extract 'tags' and save that as 'post.tags'
+  // Extract IPFS hash from URI
+  let ipfsHash = "";
+  if (soul.uri) {
+    let parts = soul.uri.split("/");
+    if (parts.length > 0) {
+      ipfsHash = parts[parts.length - 1];
+    }
+  }
 
-  // Load uri data
-  // let uriIpfsHash = event.params.value.split("/").at(-1);
-  // let metadata = ipfs.cat(uriIpfsHash);
-  // Parse metadata json
-  // let uriJson = metadata ? json.fromBytes(metadata) : null;
-  // let uriJsonObject = uriJson ? uriJson.toObject() : null;
-  //Extract Tags
-  // if (uriJsonObject) {
-  //   const metadataTags = uriJsonObject
-  //     ? uriJsonObject.get("tags")
-  //     : null;
-  //   if (metadataTags && Array.isArray(metadataTags)) {
-  //     let metadataTagsArray = metadataTags.toArray();
-  //     let tagsArray = new Array<string>(0);
-  //     for (let i = 0; i < metadataTagsArray.length; i++) {
-  //       if (typeof metadataTagsArray[i].toString() == 'string') {
-  //         tagsArray.push(metadataTagsArray[i].toString());
-  //       }
-  //     }
-  //     soul.tags = tagsArray;
-  //   }
-  // }
-  soul.tags = []; //Set to empty array
+  // If IPFS hash is found, call the template
+  if (ipfsHash != "") {
+    SoulIpfsMetadataTemplate.createWithContext(ipfsHash, soul.id);
+  }
 
-  // Cached Soul Data
-  soul.uri = event.params.value;
-  // soul.metadata = metadata; //DEPRECATE
-  soul.metadata = null; //Set to null
+  // Reset fields before async IPFS population
+  soul.tags = [];
+  soul.image = "";
+  soul.name = "";
+  soul.metadata = null;
 
-  // Get image from metadata
-  // const uriJsonImage = uriJsonObject ? uriJsonObject.get("image") : null;
-  // const uriJsonImageString: string = uriJsonImage ? uriJsonImage.toString() : "";
-  // soul.uriImage = uriJsonImageString; //DEPRECATE
-  // soul.image = uriJsonImageString;
-  soul.image = ""; //Set to empty string
-
-  // Get name from metadata
-  // const uriJsonName = uriJsonObject ? uriJsonObject.get("name") : null;
-  // const uriJsonNameString: string = uriJsonName ? uriJsonName.toString() : "";
-  // if (!!uriJsonNameString) {
-  //   soul.name = uriJsonNameString;
-  // } else {
-    /**
-     * Extract Name From JSON
-     * *** This is a rather silly backward compatibility thing we should get rid of!
-     */
-    // Get attributes from uri data
-    // const uriJsonAttributes = uriJsonObject
-    //   ? uriJsonObject.get("attributes")
-    //   : null;
-    // if (uriJsonAttributes) {
-    //   const uriJsonAttributesArray: JSONValue[] = uriJsonAttributes.toArray();
-      // Get uri first name and last name
-      // let uriFirstNameString: string = "";
-      // let uriLastNameString: string = "";
-      // let fullName: string = "";
-      // for (let i = 0; i < uriJsonAttributesArray.length; i++) {
-        //Validate Type
-        // if (uriJsonAttributesArray[i].kind == JSONValueKind.OBJECT) {
-          // Get trait type and value
-          // let uriAttributeTraitType = uriJsonAttributesArray[i].toObject().get("trait_type");
-          // let uriAttributeValue = uriJsonAttributesArray[i].toObject().get("value");
-          // first name
-          // if (
-          //   uriAttributeTraitType && uriAttributeValue &&
-          //   uriAttributeTraitType.toString().toLowerCase() == "first name"
-          // ) {
-          //   soul.uriFirstName = uriAttributeValue.toString();
-          // }
-          // last name
-          // if (
-          //   uriAttributeTraitType && uriAttributeValue &&
-          //   uriAttributeTraitType.toString().toLowerCase() == "last name"
-          // ) {
-          //   soul.uriLastName = uriAttributeValue.toString();
-          // }
-          // name
-          // if (
-          //   uriAttributeTraitType &&
-          //   uriAttributeTraitType.toString().toLowerCase() == "name"
-          // ) {
-          //   fullName = uriAttributeValue
-          //     ? uriAttributeValue.toString()
-          //     : "";
-          // }
-        // }
-      // }
-      // if (fullName) soul.name = fullName;
-      // else {
-        //Backward Compatibility
-        // soul.uriFirstName = uriFirstNameString;
-        // soul.uriLastName = uriLastNameString;
-        // let name = soul.uriFirstName;
-        // if (!!soul.uriLastName) name += ' ' + soul.uriLastName;
-        // soul.name = name;
-      // }
-    // }
-  // }
-  soul.name = ""; //Set to empty string
   soul.searchField = makeSearchField(soul);
   soul.save();
 }
@@ -192,20 +113,22 @@ export function handleAnnouncement(event: Announcement): void {
   post.uri = event.params.uri;
   post.context = event.params.context;
 
-  // Load uri data
-  // const ipfsHash = event.params.uri.split("/").at(-1);
-  // const metadata = ipfs.cat(ipfsHash);
-  // post.metadata = metadata; //DEPRECATE
-  post.metadata = null; //Set to null
-  /*
-  if(!!metadata){
-    // Parse metadata json
-    let uriJson = json.fromBytes(metadata);
-    let uriJsonObject: any = uriJson.toObject();
-    // post.entityRole = event.params.entRole.toString();
-    post.entityRole = uriJsonObject?.entRole; //Maybe get from metadata ?
+  // Extract IPFS hash from URI
+  let ipfsHash = "";
+  if (post.uri) {
+    let parts = post.uri.split("/");
+    if (parts.length > 0) {
+      ipfsHash = parts[parts.length - 1];
+    }
   }
-  */
+
+  // If IPFS hash is found, call the template
+  if (ipfsHash != "") {
+    SoulPostIpfsMetadataTemplate.createWithContext(ipfsHash, post.id);
+  }
+
+  post.metadata = null; //Set to null (will be populated by IPFS handler)
+
   //Save
   post.save();
 }

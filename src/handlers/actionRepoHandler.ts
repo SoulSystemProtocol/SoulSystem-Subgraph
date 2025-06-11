@@ -1,9 +1,9 @@
-import { ipfs } from "@graphprotocol/graph-ts";
 import { Action } from "../../generated/schema";
 import {
   ActionAdded,
   ActionURI
 } from "../../generated/ActionRepo/ActionRepo";
+import { ActionIpfsMetadataTemplate } from "../../../generated/templates";
 // import { loadOrCreateClaim } from "../utils";
 
 /**
@@ -28,12 +28,23 @@ export function handleActionURI(event: ActionURI): void {
   // Find entity and return if not found
   const entity = Action.load(event.params.guid.toHexString());
   if (!entity) return;
-  // Load uri data
-  // const uriIpfsHash = event.params.uri.split("/").at(-1);
-  // const metadata = ipfs.cat(uriIpfsHash); //DEPRECATE
   // Update entity's params
   entity.uri = event.params.uri;
-  // entity.metadata = metadata; //DEPRECATE
-  entity.metadata = null; //Set to null
+
+  // Extract IPFS hash from URI
+  let ipfsHash = "";
+  if (entity.uri) {
+    let parts = entity.uri.split("/");
+    if (parts.length > 0) {
+      ipfsHash = parts[parts.length - 1];
+    }
+  }
+
+  // If IPFS hash is found, call the template
+  if (ipfsHash != "") {
+    ActionIpfsMetadataTemplate.createWithContext(ipfsHash, entity.id);
+  }
+
+  entity.metadata = null; //Set to null (will be populated by IPFS handler)
   entity.save();
 }
