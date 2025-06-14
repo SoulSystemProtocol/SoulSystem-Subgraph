@@ -49,7 +49,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Game
@@ -78,7 +78,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Action
@@ -101,7 +101,7 @@ dataSources:
       startBlock: 94773622
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Game
@@ -133,7 +133,7 @@ templates:
       abi: Game
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Game
@@ -166,7 +166,7 @@ templates:
       abi: Claim
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.7
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Soul
@@ -210,6 +210,7 @@ templates:
       handler: handleSoulIpfsMetadata
       entities: # Entities that this handler might affect or create
         - Soul
+      abis: []
 
   # Template for GamePost IPFS Metadata
   - name: GamePostIpfsMetadataTemplate
@@ -221,6 +222,7 @@ templates:
       handler: handleGamePostIpfsMetadata
       entities:
         - GamePost
+      abis: []
 
   # Template for GameRole IPFS Metadata
   - name: GameRoleIpfsMetadataTemplate
@@ -232,6 +234,7 @@ templates:
       handler: handleGameRoleIpfsMetadata
       entities:
         - GameRole
+      abis: []
 
   # Template for Action IPFS Metadata
   - name: ActionIpfsMetadataTemplate
@@ -243,6 +246,7 @@ templates:
       handler: handleActionIpfsMetadata
       entities:
         - Action
+      abis: []
 
   # Template for SoulPost IPFS Metadata
   - name: SoulPostIpfsMetadataTemplate
@@ -254,3 +258,4 @@ templates:
       handler: handleSoulPostIpfsMetadata
       entities:
         - SoulPost
+      abis: []

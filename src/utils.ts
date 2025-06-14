@@ -103,7 +103,7 @@ export function loadOrCreateClaim(id: string): Claim {
 export function makeSearchField(entity: Soul): string {
   const sep = '';
   let fields: string[] = [];
-  if (entity.name) fields.push(entity.name);
+  if (entity.name != null) { fields.push(entity.name!); }
   if (entity.owner) fields.push(entity.owner);
   /* Type Fails no matter what I do :( 
   if(entity.tags!==null){

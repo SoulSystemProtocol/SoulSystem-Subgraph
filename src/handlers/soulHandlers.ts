@@ -1,4 +1,4 @@
-import { Address, ipfs, json, JSONValue, JSONValueKind, log } from "@graphprotocol/graph-ts";
+import { Address, ipfs, json, JSONValue, JSONValueKind, log, DataSourceContext } from "@graphprotocol/graph-ts"; // Added DataSourceContext
 import { Soul, SoulPost, SoulOpinionChange, SoulOpinion } from "../../generated/schema";
 import { SoulType, SoulHandle, Transfer, Approval, ApprovalForAll, URI, Announcement, OpinionChange } from "../../generated/Soul/Soul";
 import { addSoulToAccount, loadOrCreateSoul, makeSearchField, removeSoulFromAccount } from "../utils";
@@ -48,8 +48,9 @@ export function handleURI(event: URI): void {
 
   // Extract IPFS hash from URI
   let ipfsHash = "";
-  if (soul.uri) {
-    let parts = soul.uri.split("/");
+  // Ensure soul.uri is not null before calling split
+  if (soul.uri && (soul.uri as string).length > 0) {
+    let parts = (soul.uri as string).split("/");
     if (parts.length > 0) {
       ipfsHash = parts[parts.length - 1];
     }
@@ -57,7 +58,9 @@ export function handleURI(event: URI): void {
 
   // If IPFS hash is found, call the template
   if (ipfsHash != "") {
-    SoulIpfsMetadataTemplate.createWithContext(ipfsHash, soul.id);
+    let context = new DataSourceContext();
+    context.setString("entityId", soul.id);
+    SoulIpfsMetadataTemplate.createWithContext(ipfsHash, context);
   }
 
   // Reset fields before async IPFS population
@@ -115,8 +118,9 @@ export function handleAnnouncement(event: Announcement): void {
 
   // Extract IPFS hash from URI
   let ipfsHash = "";
-  if (post.uri) {
-    let parts = post.uri.split("/");
+  // Ensure post.uri is not null before calling split
+  if (post.uri && (post.uri as string).length > 0) {
+    let parts = (post.uri as string).split("/");
     if (parts.length > 0) {
       ipfsHash = parts[parts.length - 1];
     }
@@ -124,7 +128,9 @@ export function handleAnnouncement(event: Announcement): void {
 
   // If IPFS hash is found, call the template
   if (ipfsHash != "") {
-    SoulPostIpfsMetadataTemplate.createWithContext(ipfsHash, post.id);
+    let context = new DataSourceContext();
+    context.setString("entityId", post.id);
+    SoulPostIpfsMetadataTemplate.createWithContext(ipfsHash, context);
   }
 
   post.metadata = null; //Set to null (will be populated by IPFS handler)

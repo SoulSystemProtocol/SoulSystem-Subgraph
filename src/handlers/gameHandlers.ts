@@ -1,6 +1,6 @@
-import { Address, log, BigInt, ipfs } from "@graphprotocol/graph-ts";
+import { Address, log, BigInt, DataSourceContext } from "@graphprotocol/graph-ts"; // Removed ipfs, Added DataSourceContext
 import { store } from '@graphprotocol/graph-ts';
-import { GameRoleIpfsMetadataTemplate, GamePostIpfsMetadataTemplate } from "../../../generated/templates";
+import { GameRoleIpfsMetadataTemplate, GamePostIpfsMetadataTemplate } from "../../generated/templates"; // Corrected path
 import {
   Account,
   Game,
@@ -89,7 +89,9 @@ export function handleUriChange(event: URI): void {
 
   // If IPFS hash is found, call the template
   if (ipfsHash != "") {
-    GameRoleIpfsMetadataTemplate.createWithContext(ipfsHash, entity.id);
+    let context = new DataSourceContext();
+    context.setString("entityId", entity.id);
+    GameRoleIpfsMetadataTemplate.createWithContext(ipfsHash, context);
   }
 
   entity.metadata = null; //Set to null (will be populated by IPFS handler)
@@ -309,7 +311,9 @@ export function handlePost(event: Post): void {
 
   // If IPFS hash is found, call the template
   if (ipfsHash != "") {
-    GamePostIpfsMetadataTemplate.createWithContext(ipfsHash, post.id);
+    let context = new DataSourceContext();
+    context.setString("entityId", post.id);
+    GamePostIpfsMetadataTemplate.createWithContext(ipfsHash, context);
   }
 
   post.metadata = null; //Set to null (will be populated by IPFS handler)

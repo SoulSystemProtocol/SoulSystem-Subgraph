@@ -25,3 +25,73 @@ export class Claim extends DataSourceTemplate {
     DataSourceTemplate.createWithContext("Claim", [address.toHex()], context);
   }
 }
+
+export class SoulIpfsMetadataTemplate extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("SoulIpfsMetadataTemplate", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "SoulIpfsMetadataTemplate",
+      [cid],
+      context,
+    );
+  }
+}
+
+export class GamePostIpfsMetadataTemplate extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("GamePostIpfsMetadataTemplate", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "GamePostIpfsMetadataTemplate",
+      [cid],
+      context,
+    );
+  }
+}
+
+export class GameRoleIpfsMetadataTemplate extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("GameRoleIpfsMetadataTemplate", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "GameRoleIpfsMetadataTemplate",
+      [cid],
+      context,
+    );
+  }
+}
+
+export class ActionIpfsMetadataTemplate extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("ActionIpfsMetadataTemplate", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "ActionIpfsMetadataTemplate",
+      [cid],
+      context,
+    );
+  }
+}
+
+export class SoulPostIpfsMetadataTemplate extends DataSourceTemplate {
+  static create(cid: string): void {
+    DataSourceTemplate.create("SoulPostIpfsMetadataTemplate", [cid]);
+  }
+
+  static createWithContext(cid: string, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "SoulPostIpfsMetadataTemplate",
+      [cid],
+      context,
+    );
+  }
+}

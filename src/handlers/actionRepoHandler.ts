@@ -3,7 +3,8 @@ import {
   ActionAdded,
   ActionURI
 } from "../../generated/ActionRepo/ActionRepo";
-import { ActionIpfsMetadataTemplate } from "../../../generated/templates";
+import { ActionIpfsMetadataTemplate } from "../../generated/templates"; // Corrected path
+import { DataSourceContext } from "@graphprotocol/graph-ts"; // Added import
 // import { loadOrCreateClaim } from "../utils";
 
 /**
@@ -33,8 +34,9 @@ export function handleActionURI(event: ActionURI): void {
 
   // Extract IPFS hash from URI
   let ipfsHash = "";
-  if (entity.uri) {
-    let parts = entity.uri.split("/");
+  // Ensure entity.uri is not null before calling split
+  if (entity.uri && (entity.uri as string).length > 0) {
+    let parts = (entity.uri as string).split("/");
     if (parts.length > 0) {
       ipfsHash = parts[parts.length - 1];
     }
@@ -42,7 +44,9 @@ export function handleActionURI(event: ActionURI): void {
 
   // If IPFS hash is found, call the template
   if (ipfsHash != "") {
-    ActionIpfsMetadataTemplate.createWithContext(ipfsHash, entity.id);
+    let context = new DataSourceContext();
+    context.setString("entityId", entity.id);
+    ActionIpfsMetadataTemplate.createWithContext(ipfsHash, context);
   }
 
   entity.metadata = null; //Set to null (will be populated by IPFS handler)

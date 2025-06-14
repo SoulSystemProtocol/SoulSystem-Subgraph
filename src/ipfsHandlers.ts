@@ -1,75 +1,68 @@
-import { Bytes, dataSource, json, log } from "@graphprotocol/graph-ts";
-import { Soul } from "../generated/schema";
+import { Bytes, dataSource, json, log, JSONValueKind } from "@graphprotocol/graph-ts"; // Added JSONValueKind
+import { Soul, SoulPost, GamePost, GameRole, Action } from "../generated/schema";
 
 // Handler for processing IPFS metadata for Soul entities
 export function handleSoulIpfsMetadata(data: Bytes): void {
-  // The IPFS hash that triggered this handler can be used as an ID.
-  // Assuming the dataSource name/param is set to the IPFS hash or contains it.
-  // For a file data source, dataSource.stringParam() is often the IPFS hash.
-  let ipfsHash = dataSource.stringParam();
+  let ipfsHash = dataSource.stringParam(); // This is the IPFS hash the template was created with
+  log.info("[Soul IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
 
-  // Attempt to load the Soul entity.
-  // This assumes that Soul.uri (or another designated field) has been set
-  // to this exact IPFS hash by the on-chain event handler before this
-  // IPFS handler was triggered.
-  // If Soul entities use the tokenID as their primary ID, we need a way to map
-  // ipfsHash back to the soulID. For now, let's assume Soul.id could be the ipfsHash
-  // if we design it that way, or that Soul.uri is reliably the ipfsHash.
-  // A more robust way would be to use context if the Soul.id (tokenId) was passed
-  // when .createWithContext() was called.
-  // For now, let's try to load by ipfsHash assuming it might be the ID of a related entity,
-  // or we find a Soul entity that has this ipfsHash in its 'uri' field.
-  // This part is tricky: The direct ID of the Soul is its tokenId.
-  // We need to find the Soul whose `uri` matches `ipfsHash`.
-  // This direct lookup isn't straightforward in handlers.
+  let context = dataSource.context();
+  let soulId = context.getString("entityId"); // Get the Soul ID passed in context
 
-  // Alternative: Assume the IPFS content itself has the Soul's ID (tokenId).
-  // This is not ideal as it requires a specific structure in the IPFS JSON.
+  if (soulId == null || soulId == "") {
+    log.error("[Soul IPFS] Soul ID not found in context for IPFS hash: {}. Cannot link metadata.", [ipfsHash]);
+    return;
+  }
 
-  // Best Approach: The entity that *triggered* this IPFS fetch should have its ID
-  // passed via context. dataSource.context()
-  // For now, let's log the data and plan to refine the linking mechanism.
+  let soul = Soul.load(soulId);
+  if (!soul) {
+    log.warning("[Soul IPFS] Soul entity with ID {} not found for IPFS hash: {}. Cannot link metadata.", [soulId, ipfsHash]);
+    return;
+  }
 
   let jsonData = json.try_fromBytes(data);
   if (jsonData.isError) {
     log.warning("[Soul IPFS] Failed to parse JSON data for IPFS hash: {}", [ipfsHash]);
+    // Optionally, still save the raw metadata if parsing fails but soul is found
+    // soul.metadata = data;
+    // soul.save();
     return;
   }
   let value = jsonData.value.toObject();
 
-  // Log extracted data for now. Actual entity updates will require robust linking.
-  log.info("[Soul IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
-
-  let name = value.get("name");
-  if (name) {
-    log.info("[Soul IPFS] Name: {}", [name.toString()]);
+  // Populate Soul fields from JSON
+  let nameValue = value.get("name");
+  if (nameValue && !nameValue.isNull()) {
+    soul.name = nameValue.toString();
+  } else {
+    soul.name = null; // Or "" if your schema expects non-null after all and you made a mistake
   }
 
-  let image = value.get("image");
-  if (image) {
-    log.info("[Soul IPFS] Image: {}", [image.toString()]);
+  let imageValue = value.get("image");
+  if (imageValue && !imageValue.isNull()) {
+    soul.image = imageValue.toString();
+  } else {
+    soul.image = null; // Or ""
   }
 
-  let description = value.get("description");
-  if (description) {
-    log.info("[Soul IPFS] Description: {}", [description.toString()]);
+  let descriptionValue = value.get("description"); // Assuming 'description' might be a field
+  if (descriptionValue && !descriptionValue.isNull()) {
+    // Assuming Soul entity has a 'description' field (add to schema if needed)
+    // soul.description = descriptionValue.toString();
   }
 
   let tagsValue = value.get("tags");
-  if (tagsValue && tagsValue.kind == json.JSONValueKind.ARRAY) {
-    let tagsArray = tagsValue.toArray().map<string>((tag) => tag.toString());
-    log.info("[Soul IPFS] Tags: {}", [tagsArray.join(", ")]);
+  if (tagsValue && !tagsValue.isNull() && tagsValue.kind == JSONValueKind.ARRAY) { // Used JSONValueKind directly and added isNull check
+    soul.tags = tagsValue.toArray().map<string>((tag) => tag.toString());
+  } else {
+    soul.tags = []; // Reset or leave as is if not provided / wrong type
   }
 
-  // TODO: Implement robust loading and updating of the Soul entity.
-  // This typically involves:
-  // 1. The main event handler (e.g., handleURI for Soul) calls:
-  //    `SoulIpfsMetadataTemplate.createWithContext(ipfsHash, contextEntityId)`
-  // 2. In this IPFS handler, retrieve contextEntityId from `dataSource.context()`.
-  // 3. Load Soul: `let soul = Soul.load(contextEntityId);`
-  // 4. Populate fields: `soul.name = name.toString();` etc.
-  // 5. `soul.metadata = data;` // Store the raw bytes
-  // 6. `soul.save();`
+  // Store the raw metadata
+  soul.metadata = data;
+
+  soul.save();
+  log.info("[Soul IPFS] Successfully processed and linked metadata for Soul ID {} from IPFS hash: {}", [soulId, ipfsHash]);
 }
 
 // Add similar handlers for GamePost, GameRole, Action if their IPFS JSON structures differ
@@ -79,54 +72,96 @@ export function handleSoulIpfsMetadata(data: Bytes): void {
 
 // Handler for processing IPFS metadata for GamePost entities
 export function handleGamePostIpfsMetadata(data: Bytes): void {
-  let ipfsHash = dataSource.stringParam(); // Assuming IPFS hash is the dataSource name/param
+  let ipfsHash = dataSource.stringParam();
   log.info("[GamePost IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
-  let jsonData = json.try_fromBytes(data);
-  if (jsonData.isError) {
-    log.warning("[GamePost IPFS] Failed to parse JSON data for IPFS hash: {}", [ipfsHash]);
+
+  let context = dataSource.context();
+  let entityId = context.getString("entityId");
+
+  if (entityId == null || entityId == "") {
+    log.error("[GamePost IPFS] Entity ID not found in context for IPFS hash: {}. Cannot link metadata.", [ipfsHash]);
     return;
   }
-  // TODO: Implement robust loading/updating of the GamePost entity using context.
-  // For now, just log that it was called.
-  // Example: GamePost.load(contextEntityId) and populate its 'metadata' field.
+
+  let entity = GamePost.load(entityId);
+  if (!entity) {
+    log.warning("[GamePost IPFS] Entity with ID {} not found for IPFS hash: {}. Cannot link metadata.", [entityId, ipfsHash]);
+    return;
+  }
+
+  entity.metadata = data; // Store the raw bytes
+  entity.save();
+  log.info("[GamePost IPFS] Successfully processed and linked metadata for Entity ID {} from IPFS hash: {}", [entityId, ipfsHash]);
 }
 
 // Handler for processing IPFS metadata for GameRole entities
 export function handleGameRoleIpfsMetadata(data: Bytes): void {
   let ipfsHash = dataSource.stringParam();
   log.info("[GameRole IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
-  let jsonData = json.try_fromBytes(data);
-  if (jsonData.isError) {
-    log.warning("[GameRole IPFS] Failed to parse JSON data for IPFS hash: {}", [ipfsHash]);
+
+  let context = dataSource.context();
+  let entityId = context.getString("entityId");
+
+  if (entityId == null || entityId == "") {
+    log.error("[GameRole IPFS] Entity ID not found in context for IPFS hash: {}. Cannot link metadata.", [ipfsHash]);
     return;
   }
-  // TODO: Implement robust loading/updating of the GameRole entity using context.
-  // Example: GameRole.load(contextEntityId) and populate its 'metadata' field.
+
+  let entity = GameRole.load(entityId);
+  if (!entity) {
+    log.warning("[GameRole IPFS] Entity with ID {} not found for IPFS hash: {}. Cannot link metadata.", [entityId, ipfsHash]);
+    return;
+  }
+
+  entity.metadata = data; // Store the raw bytes
+  entity.save();
+  log.info("[GameRole IPFS] Successfully processed and linked metadata for Entity ID {} from IPFS hash: {}", [entityId, ipfsHash]);
 }
 
 // Handler for processing IPFS metadata for Action entities
 export function handleActionIpfsMetadata(data: Bytes): void {
   let ipfsHash = dataSource.stringParam();
   log.info("[Action IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
-  let jsonData = json.try_fromBytes(data);
-  if (jsonData.isError) {
-    log.warning("[Action IPFS] Failed to parse JSON data for IPFS hash: {}", [ipfsHash]);
+
+  let context = dataSource.context();
+  let entityId = context.getString("entityId");
+
+  if (entityId == null || entityId == "") {
+    log.error("[Action IPFS] Entity ID not found in context for IPFS hash: {}. Cannot link metadata.", [ipfsHash]);
     return;
   }
-  // TODO: Implement robust loading/updating of the Action entity using context.
-  // Example: Action.load(contextEntityId) and populate its 'metadata' field.
+
+  let entity = Action.load(entityId);
+  if (!entity) {
+    log.warning("[Action IPFS] Entity with ID {} not found for IPFS hash: {}. Cannot link metadata.", [entityId, ipfsHash]);
+    return;
+  }
+
+  entity.metadata = data; // Store the raw bytes
+  entity.save();
+  log.info("[Action IPFS] Successfully processed and linked metadata for Entity ID {} from IPFS hash: {}", [entityId, ipfsHash]);
 }
 
 // Handler for processing IPFS metadata for SoulPost entities
 export function handleSoulPostIpfsMetadata(data: Bytes): void {
-  let ipfsHash = dataSource.stringParam(); // Assuming IPFS hash is the dataSource name/param
+  let ipfsHash = dataSource.stringParam();
   log.info("[SoulPost IPFS] Processing metadata for IPFS hash: {}", [ipfsHash]);
-  let jsonData = json.try_fromBytes(data);
-  if (jsonData.isError) {
-    log.warning("[SoulPost IPFS] Failed to parse JSON data for IPFS hash: {}", [ipfsHash]);
+
+  let context = dataSource.context();
+  let entityId = context.getString("entityId");
+
+  if (entityId == null || entityId == "") {
+    log.error("[SoulPost IPFS] Entity ID not found in context for IPFS hash: {}. Cannot link metadata.", [ipfsHash]);
     return;
   }
-  // TODO: Implement robust loading/updating of the SoulPost entity using context.
-  // For now, just log that it was called.
-  // Example: SoulPost.load(contextEntityId) and populate its 'metadata' field.
+
+  let entity = SoulPost.load(entityId);
+  if (!entity) {
+    log.warning("[SoulPost IPFS] Entity with ID {} not found for IPFS hash: {}. Cannot link metadata.", [entityId, ipfsHash]);
+    return;
+  }
+
+  entity.metadata = data; // Store the raw bytes
+  entity.save();
+  log.info("[SoulPost IPFS] Successfully processed and linked metadata for Entity ID {} from IPFS hash: {}", [entityId, ipfsHash]);
 }

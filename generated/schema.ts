@@ -891,69 +891,38 @@ export class Soul extends Entity {
     }
   }
 
-  get uriImage(): string {
-    let value = this.get("uriImage");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set uriImage(value: string) {
-    this.set("uriImage", Value.fromString(value));
-  }
-
-  get uriFirstName(): string {
-    let value = this.get("uriFirstName");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set uriFirstName(value: string) {
-    this.set("uriFirstName", Value.fromString(value));
-  }
-
-  get uriLastName(): string {
-    let value = this.get("uriLastName");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set uriLastName(value: string) {
-    this.set("uriLastName", Value.fromString(value));
-  }
-
-  get image(): string {
+  get image(): string | null {
     let value = this.get("image");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set image(value: string) {
-    this.set("image", Value.fromString(value));
+  set image(value: string | null) {
+    if (!value) {
+      this.unset("image");
+    } else {
+      this.set("image", Value.fromString(<string>value));
+    }
   }
 
-  get name(): string {
+  get name(): string | null {
     let value = this.get("name");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
+  set name(value: string | null) {
+    if (!value) {
+      this.unset("name");
+    } else {
+      this.set("name", Value.fromString(<string>value));
+    }
   }
 
   get tags(): Array<string> | null {
