@@ -19,3 +19,4 @@
 ### Deployments
 - Mumbai - https://thegraph.com/hosted-service/subgraph/toledoroy/bountyprotocol
 - Aurora - https://thegraph.com/hosted-service/subgraph/toledoroy/soulsystem_aurora
+- https://thegraph.com/studio/subgraph/soulsystem/
