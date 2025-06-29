@@ -2989,6 +2989,23 @@ export class SoulPart extends Entity {
   set qty(value: BigInt) {
     this.set("qty", Value.fromBigInt(value));
   }
+
+  get uri(): string | null {
+    let value = this.get("uri");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set uri(value: string | null) {
+    if (!value) {
+      this.unset("uri");
+    } else {
+      this.set("uri", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class SoulAttr extends Entity {

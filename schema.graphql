@@ -354,6 +354,7 @@ type SoulPart
   role: String! #can I get the role name here? (e.g. "admin")
   roleId: String!
   qty: BigInt! # Quantity?
+  uri: String
 }
 
 type SoulAttr
